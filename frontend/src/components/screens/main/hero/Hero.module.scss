@@ -1,0 +1,68 @@
+.base {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 100vw;
+	margin-top: 1.74vw;
+	position: relative;
+}
+.main_container {
+	display: flex;
+	flex-direction: column;
+	width: 100vw;
+	height: 31.25vw;
+	background: #f7efe9;
+	h1 {
+		color: #444444;
+		font-size: 2.22vw;
+		line-height: 6.6vw;
+		text-align: center;
+	}
+	.row {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		gap: 5.28vw;
+		.card {
+			display: flex;
+			flex-direction: column;
+			gap: 1.46vw;
+			.box1 {
+				height: 13.19vw;
+				width: 13.19vw;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				background: white;
+				.box2 {
+					height: 11.1vw;
+					width: 11.1vw;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					background: #f7efe9;
+				}
+				img, video {
+					max-width: 105%;
+					height: 105%;
+				}
+			}
+			.text {
+				height: 2.29vw;
+				width: 13.19vw;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				p {
+					font-size: 1.67vw;
+					line-height: 1.67vw;
+					color: #888888;
+					font-weight: 400;
+					text-align: center;
+				}
+			}
+		}
+	}
+}

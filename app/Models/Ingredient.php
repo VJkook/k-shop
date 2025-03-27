@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $measurement
  * @property float|null $quantity_in_stock
  */
-
 class Ingredient extends Model
 {
     use HasFactory;
@@ -20,6 +19,10 @@ class Ingredient extends Model
 
     public $timestamps = false;
 
+    /**
+     * список полей к которым можно получить доступ для передачи в респонс клиенту
+     * @var string[]
+     */
     protected $fillable = [
         'name',
         'measurement',

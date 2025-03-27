@@ -52,19 +52,32 @@ class IngredientsController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Ingredient $ingredient)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Ingredient $ingredient)
+    public function update(Request $request, Ingredient $ingredient): JsonResponse
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => ['string'],
+            'measurement' => ['string'],
+            'quantity_in_stock' => ['decimal:0,2', 'nullable'],
+        ]);
+
+        if ($validator->fails()) {
+            return \response()->json($validator->errors()->getMessages(), 400);
+        }
+
+        if (!is_null($request->name)) {
+            $ingredient->name = $request->name;
+        }
+        if (!is_null($request->measurement)) {
+            $ingredient->measurement = $request->measurement;
+        }
+        if (!is_null($request->quantity_in_stock)) {
+            $ingredient->quantity_in_stock = $request->quantity_in_stock;
+        }
+
+        $ingredient->save();
+        return response()->json($ingredient);
     }
 
     /**
@@ -72,7 +85,11 @@ class IngredientsController extends Controller
      */
     public function destroy(Ingredient $ingredient): JsonResponse
     {
-        Ingredient::query()->find($ingredient->id)->delete();
+        $isSuccess = Ingredient::query()->find($ingredient->id)->delete();
+        if (!$isSuccess) {
+            return response()->json(['result' => 'error'], 500);
+        }
+
         return response()->json(['result' => 'success']);
     }
 }

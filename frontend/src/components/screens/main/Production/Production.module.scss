@@ -1,0 +1,68 @@
+.base {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100vw;
+	position: relative;
+}
+.main_container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 100vw;
+	height: 43.06vw;
+	background: #ffffff;
+	gap: 3.89vw;
+	.text {
+		height: 5.56vw;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		h2 {
+			color: #444444;
+			font-size: 2.22vw;
+			text-align: center;
+		}
+		h3 {
+			color: #888888;
+			font-size: 1.67vw;
+			text-align: center;
+		}
+		p {
+			color: #444444;
+			font-size: 2.22vw;
+			text-align: center;
+		}
+	}
+	.row {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		gap: 3.96vw;
+		.card {
+			background: #f5f5f5;
+			box-shadow: 0 4px 4px 0 #00000025;
+			display: flex;
+			flex-direction: column; /* Изменяем направление флексов на колонку */
+			align-items: center; /* Выравниваем элементы по центру */
+			justify-content: center;
+			width: 27.68vw;
+			height: 20.42vw;
+			.img{
+				
+				max-width: 95%;
+				height: 76%;
+				margin-bottom: -5px;
+				margin-top: 10px;
+				
+			}
+			.p{
+				text-align: center; 
+				font-size: 30px;
+				font-weight: 400;
+			}
+		}
+	}
+}

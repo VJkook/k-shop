@@ -1,0 +1,50 @@
+@font-face {
+	font-family: 'Alice';
+	src:
+		local('Alice'),
+		url('../assets/fonts/alice-regular.ttf') format('truetype');
+	font-weight: 400;
+}
+@font-face {
+	font-family: 'Onest';
+	src:
+		local('Montserrat'),
+		url('../assets/fonts/montserrat-medium.ttf') format('truetype');
+	font-weight: 500;
+}
+@font-face {
+	font-family: 'Montserrat';
+	src:
+		local('Onest'),
+		url('../assets/fonts/montserrat-semibold.ttf') format('truetype');
+	font-weight: 600;
+}
+@font-face {
+	font-family: 'Montserrat';
+	src:
+		local('Onest'),
+		url('../assets/fonts/montserrat-bold.ttf') format('truetype');
+	font-weight: 700;
+}
+
+@font-face {
+	font-family: 'Manrope';
+	src:
+		local('Manrope'),
+		url('../assets/fonts/manrope-medium.ttf') format('truetype');
+	font-weight: 500;
+}
+@font-face {
+	font-family: 'Manrope';
+	src:
+		local('Manrope'),
+		url('../assets/fonts/manrope-semibold.ttf') format('truetype');
+	font-weight: 600;
+}
+@font-face {
+	font-family: 'Manrope';
+	src:
+		local('Manrope'),
+		url('../assets/fonts/manrope-bold.ttf') format('truetype');
+	font-weight: 700;
+}

@@ -1,0 +1,50 @@
+.text {
+	.line {
+		animation:
+			fade-in 0.7s infinite,
+			slide-up 1s ease-in-out infinite;
+	}
+}
+
+.animatedText {
+	@apply relative w-fit;
+	color: #ff7f41;
+}
+
+@keyframes typing {
+	from {
+		width: 0;
+	}
+	to {
+		width: 100%;
+	}
+}
+
+@keyframes blink-caret {
+	from,
+	to {
+		border-color: transparent;
+	}
+	50% {
+		border-color: #333;
+	}
+}
+
+@keyframes fade-in {
+	from,
+	to {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0;
+	}
+}
+
+@keyframes slide-up {
+	from {
+		transform: translateY(1em);
+	}
+	to {
+		transform: translateY(0);
+	}
+}

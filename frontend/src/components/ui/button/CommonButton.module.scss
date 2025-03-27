@@ -1,0 +1,261 @@
+$color-primary: #007bff;
+$color-orange: #ff7f00;
+$color-gray: #616161;
+$color-gray02: #495057;
+$color-disabled: #cccccc;
+$color-ghost: transparent;
+$color-black: #252525;
+
+$font-weight: 700;
+$line-height: 33px;
+
+@mixin button-size($size) {
+	@if $size == l {
+		width: 664px;
+		height: 80px;
+		border-radius: 24px;
+		font-size: 24px;
+		@media (max-width: 1600px) {
+			width: 530px;
+			height: 60px;
+			border-radius: 18px;
+			font-size: 18px;
+		}
+		@media (max-width: 1300px) {
+			width: 400px;
+			height: 50px;
+			border-radius: 15px;
+			font-size: 14px;
+		}
+		@media (max-width: 992px) {
+			width: 270px;
+			height: 40px;
+			border-radius: 11px;
+			font-size: 11px;
+		}
+		@media (max-width: 768px) {
+			width: 92vw;
+			height: 14.4vw;
+			border-radius: 5.3vw;
+			font-size: 4vw;
+		}
+	} @else if $size == m {
+		width: 505px;
+		height: 80px;
+		border-radius: 24px;
+		font-size: 24px;
+		@media (max-width: 1600px) {
+			width: 380px;
+			height: 60px;
+			border-radius: 18px;
+			font-size: 18px;
+		}
+		@media (max-width: 1300px) {
+			width: 295px;
+			height: 50px;
+			border-radius: 15px;
+			font-size: 14px;
+		}
+		@media (max-width: 992px) {
+			width: 190px;
+			height: 40px;
+			border-radius: 11px;
+			font-size: 11px;
+		}
+		@media (max-width: 768px) {
+			width: 92vw;
+			height: 14.4vw;
+			border-radius: 5.3vw;
+			font-size: 4vw;
+		}
+	} @else if $size == s {
+		width: 360px;
+		height: 80px;
+		border-radius: 24px;
+		font-size: 24px;
+		@media (max-width: 1600px) {
+			width: 270px;
+			height: 60px;
+			border-radius: 18px;
+			font-size: 18px;
+		}
+		@media (max-width: 1300px) {
+			width: 210px;
+			height: 50px;
+			border-radius: 15px;
+			font-size: 14px;
+		}
+		@media (max-width: 992px) {
+			width: 140px;
+			height: 40px;
+			border-radius: 11px;
+			font-size: 11px;
+		}
+		@media (max-width: 768px) {
+			width: 92vw;
+			height: 14.4vw;
+			border-radius: 5.3vw;
+			font-size: 4vw;
+		}
+	} @else if $size == xs {
+		width: 120px;
+		height: 80px;
+		border-radius: 24px;
+		font-size: 24px;
+		@media (max-width: 1600px) {
+			width: 100px;
+			height: 60px;
+			border-radius: 18px;
+			font-size: 18px;
+		}
+		@media (max-width: 1300px) {
+			width: 80px;
+			height: 50px;
+			border-radius: 15px;
+			font-size: 14px;
+		}
+		@media (max-width: 992px) {
+			width: 60px;
+			height: 40px;
+			border-radius: 11px;
+			font-size: 11px;
+		}
+		@media (max-width: 768px) {
+			width: 92vw;
+			height: 14.4vw;
+			border-radius: 5.3vw;
+			font-size: 4vw;
+		}
+	} @else if $size == fill {
+		width: 100%;
+		height: 80px;
+		border-radius: 24px;
+		font-size: 24px;
+		@media (max-width: 1600px) {
+			height: 60px;
+			border-radius: 18px;
+			font-size: 18px;
+		}
+		@media (max-width: 1300px) {
+			height: 50px;
+			border-radius: 15px;
+			font-size: 14px;
+		}
+		@media (max-width: 992px) {
+			height: 40px;
+			border-radius: 11px;
+			font-size: 11px;
+		}
+		@media (max-width: 768px) {
+			width: 92vw;
+			height: 14.4vw;
+			border-radius: 5.3vw;
+			font-size: 4vw;
+		}
+	}
+}
+
+@mixin button-color($color) {
+	@if $color == primary {
+		background: $color-primary;
+		color: #fff;
+	} @else if $color == orange {
+		background: $color-orange;
+		color: #fff;
+	} @else if $color == gray {
+		background: $color-gray;
+		color: #fff;
+	} @else if $color == gray02 {
+		background: $color-gray02;
+		color: #fff;
+	} @else if $color == ghost {
+		background: $color-ghost;
+		color: #000;
+	} @else if $color == black {
+		background: $color-black;
+		color: #fff;
+	}
+}
+
+@mixin button-hover($color) {
+	@if $color == primary {
+		&:hover {
+			background: #1f62ed;
+		}
+	} @else if $color == orange {
+		&:hover {
+			background: #f0673d;
+		}
+	} @else if $color == gray {
+		&:hover {
+			background: #414141;
+		}
+	} @else if $color == gray02 {
+		&:hover {
+			background: #293139;
+		}
+	} @else if $color == ghost {
+		&:hover {
+			background: #ff7043;
+		}
+	} @else if $color == black {
+		&:hover {
+			background: #246bfd;
+		}
+	}
+}
+
+.button {
+	transition: 0.5s ease;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: $font-weight;
+	line-height: $line-height;
+	user-select: none;
+	@include button-size(xs);
+	@include button-color(primary);
+	@include button-hover(primary);
+	&.m {
+		@include button-size(m);
+	}
+	&.s {
+		@include button-size(s);
+	}
+	&.l {
+		@include button-size(l);
+	}
+	&.fill {
+		@include button-size(fill);
+	}
+	&.orange {
+		@include button-color(orange);
+		@include button-hover(orange);
+	}
+	&.gray {
+		@include button-color(gray);
+		@include button-hover(gray);
+	}
+	&.gray02 {
+		@include button-color(gray02);
+		@include button-hover(gray02);
+	}
+	&.ghost {
+		@include button-color(ghost);
+		@include button-hover(ghost);
+	}
+	&.black {
+		@include button-color(black);
+		@include button-hover(black);
+	}
+	&:active {
+		background: #bec0ca !important;
+	}
+	&[disabled] {
+		background: $color-disabled;
+		cursor: not-allowed;
+		&:hover {
+			background: $color-disabled;
+		}
+	}
+}

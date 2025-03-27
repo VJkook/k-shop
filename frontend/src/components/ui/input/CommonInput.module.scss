@@ -1,0 +1,181 @@
+.main_container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+
+	.input_container {
+		display: flex;
+		flex-direction: column;
+		gap: 48px;
+		width: 664px;
+
+		@media (max-width: 1600px) {
+			width: 530px;
+			gap: 28px;
+		}
+
+		@media (max-width: 1300px) {
+			width: 400px;
+			gap: 24px;
+		}
+
+		@media (max-width: 992px) {
+			width: 270px;
+			gap: 18px;
+		}
+
+		@media (max-width: 768px) {
+			width: 92vw;
+			gap: 4.8vw;
+		}
+
+		.input {
+			display: flex;
+			flex-direction: column;
+			gap: 24px;
+
+			.custom_input {
+				background: #fff;
+				border: 1px solid transparent;
+				padding: 0 16px;
+				border-radius: 12px;
+				font-size: 24px;
+				font-weight: 500;
+				line-height: 32.78px;
+				text-align: left;
+				width: 100%;
+				height: 80px;
+			}
+
+			@media (max-width: 1600px) {
+				gap: 24px;
+
+				.custom-input {
+					padding: 0 16px;
+					border-radius: 12px;
+					font-size: 18px;
+					line-height: 33px;
+					height: 60px;
+				}
+			}
+
+			@media (max-width: 1300px) {
+				gap: 16px;
+
+				.custom_input {
+					padding: 0 14px;
+					border-radius: 8px;
+					font-size: 15px;
+					line-height: 33px;
+					height: 50px;
+				}
+			}
+
+			@media (max-width: 992px) {
+				gap: 12px;
+
+				.custom_input {
+					padding: 0 12px;
+					border-radius: 8px;
+					font-size: 11px;
+					line-height: 33px;
+					height: 40px;
+				}
+			}
+
+			@media (max-width: 768px) {
+				gap: 6.4vw;
+
+				.custom_input {
+					background: #f0f0f0;
+					padding: 0 4vw;
+					border-radius: 2.1vw;
+					font-size: 3.8vw;
+					line-height: 4vw;
+					height: 10.7vw;
+				}
+			}
+		}
+
+		.checkbox_container {
+			display: flex;
+			flex-direction: row;
+			gap: 12px;
+			font-size: 19px;
+			font-weight: 500;
+			line-height: 27.32px;
+			text-align: left;
+			p {
+				color: #00000099;
+			}
+
+			span {
+				color: #000;
+				font-weight: 600;
+			}
+
+			.checkbox {
+				color: #007bff;
+				border-radius: 8px;
+				width: 24px;
+				height: 24px;
+				cursor: pointer;
+				outline: none;
+			}
+
+			@media (max-width: 1600px) {
+				gap: 12px;
+				font-size: 15px;
+				line-height: 20px;
+
+				.checkbox {
+					border-radius: 8px;
+					width: 20px;
+					height: 20px;
+				}
+			}
+
+			input[type='checkbox']:focus {
+				outline: none;
+				visibility: hidden;
+			}
+
+			@media (max-width: 1300px) {
+				gap: 12px;
+				font-size: 11px;
+				line-height: 13px;
+
+				.checkbox {
+					border-radius: 8px;
+					width: 18px;
+					height: 18px;
+				}
+			}
+
+			@media (max-width: 992px) {
+				gap: 8px;
+				font-size: 7.5px;
+				line-height: 10px;
+
+				.checkbox {
+					border-radius: 4px;
+					width: 12px;
+					height: 12px;
+				}
+			}
+
+			@media (max-width: 768px) {
+				gap: 2.1vw;
+				font-size: 3.2vw;
+				line-height: 4vw;
+
+				.checkbox {
+					border-radius: 2.1vw;
+					width: 6.4vw;
+					height: 6.4vw;
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,174 @@
+.base {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    margin-top: 1.74vw;
+    margin-bottom: 1.74vw;
+    position: relative;
+}
+
+.main_container {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    background: #ffffff;
+    padding: 0 2.22vw 0 2.98vw;
+    .first_box {
+        display: flex;
+        flex-direction: row;
+        gap: 2.57vw;
+        .banner {
+            width: 24.26vw;
+            height: 65.625vw;
+            border: 0.21vw dashed #F3BDA8;
+            font-size: 1.39vw;
+            line-height: 2.29vw;
+            font-weight: 400;
+
+           
+              
+              .category_list {
+                width: 24.26vw;
+                height: 65.625vw;
+                list-style: none;
+                padding: 0;
+                margin-left: 15%;
+                margin-top: 10%;
+              }
+              
+              .category {
+                margin-bottom: 20px;
+              
+                a {
+                  text-decoration: none;
+                  color: #333;
+                  
+              
+                  &:hover {
+                    color: #F3BDA8;
+                  }
+                }
+              }
+              
+              .subcategory_list {
+                list-style: none;
+                padding: 0 0 0 20px;
+                margin: 10px 0 0;
+              
+                li {
+                  margin-bottom: 10px;
+              
+                  a {
+                    text-decoration: none;
+                    color: #666;
+              
+                    &:hover {
+                      color: #F3BDA8;
+                    }
+                  }
+                }
+              }
+
+
+
+        }
+        .right {
+            display: flex;
+            flex-direction: column;
+            gap: 4.58vw;
+
+
+
+
+            
+        .product_container { 
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 3.96vw; 
+          } 
+           
+          .product_card { 
+            background-color: #fff; 
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+            overflow: hidden; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+            text-align: left; 
+            width: 18vw; 
+            
+            padding: 10px;
+          
+            .image_wrapper { 
+              position: relative; 
+              width: 100%; 
+              padding-top: 100%; // Makes the wrapper a square 
+              background-color: #F7EFE9; 
+              display: flex; 
+              align-items: center; 
+              justify-content: center; 
+              margin-bottom: 10px; 
+              box-sizing: border-box;
+          
+              img { 
+                position: absolute; 
+                top: 10px; 
+                bottom: 10px; 
+                left: 10px; 
+                right: 10px; 
+                width: calc(100% - 20px); 
+                height: calc(100% - 20px); 
+                object-fit: cover; 
+              } 
+            }
+          
+            h2 { 
+              font-size: 18px; 
+              margin: 10px 0; 
+              text-align: left; 
+            } 
+          
+            .price_weight { 
+              display: flex; 
+              justify-content: space-between; 
+              margin-bottom: 10px;
+          
+              .price, 
+              .weight { 
+                color: #666; 
+                margin: 0; 
+              } 
+            }
+          
+            button { 
+              background-color: #f3bda881; 
+              color: #fff; 
+              border: none; 
+              padding: 10px; 
+              cursor: pointer; 
+              width: 100%; 
+              transition: background-color 0.3s; 
+              text-align: center; 
+          
+              &:hover { 
+                background-color: #F3BDA8; 
+              } 
+            } 
+          }
+
+        }
+
+
+        
+          
+          
+          
+    }
+
+
+
+
+}
