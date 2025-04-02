@@ -3,18 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Repositories\ProductRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class ProductsController extends Controller
 {
+    public function __construct(protected ProductRepository $productRepo)
+    {
+    }
     /**
      * Display a listing of the resource.
      */
     public function index(): JsonResponse
     {
-        return response()->json(Product::all()->toArray());
+        $products = $this->productRepo->products();
+        return response()->json($products);
     }
 
     /**
@@ -42,17 +47,17 @@ class ProductsController extends Controller
             'description' => $request->description ?? null,
         ];
 
-        $product = Product::query()->create($attributes);
-        $product = Product::query()->find($product->id);
-        return \response()->json($product);
+        $productResponse = $this->productRepo->createProduct($attributes);
+        return \response()->json($productResponse);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Product $product): JsonResponse
+    public function show(int $id): JsonResponse
     {
-        return response()->json($product->toArray());
+        $response = $this->productRepo->getProductById($id);
+        return response()->json($response);
     }
 
     /**

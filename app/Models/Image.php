@@ -14,6 +14,8 @@ class Image extends Model
 {
     use HasFactory;
 
+    public const PATH = 'http://localhost:8000/api/images/';
+
     protected $table = 'images';
 
     public $timestamps = false;

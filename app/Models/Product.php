@@ -35,8 +35,8 @@ class Product extends Model
         return $this->belongsToMany(
             Image::class,
             'product_image_relations',
-            'product_id',
-            'image_id'
+            'id_product',
+            'id_image'
         );
     }
 }

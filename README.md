@@ -7,17 +7,28 @@ docker run --rm \
     laravelsail/php83-composer:latest \
     composer install --ignore-platform-reqs
 ```
-Запустить приложение
+
+Запустить приложение первый раз
 ```bash
 docker compose up -d
 
 docker compose exec app php artisan migrate
 
 # сбросить кэш (подходит при добавлении новых маршрутов api)
-docker compose exec app artisan optimize
+docker compose exec app php artisan optimize
 
+# установить фронт
 docker compose exec app bash -c "cd frontend && npm i --legacy-peer-deps"
 
+# запустить фронт
+docker compose exec app bash -c "cd frontend && npm run dev"
+```
+
+Запустить приложение второй раз
+```bash
+docker compose up -d
+
+# запустить фронт
 docker compose exec app bash -c "cd frontend && npm run dev"
 ```
 

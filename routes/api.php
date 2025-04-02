@@ -45,6 +45,7 @@ Route::prefix('images')->group(function () {
     Route::post('/', [ImagesController::class, 'create']);
     Route::get('/', [ImagesController::class, 'index']);
     Route::get('/{image}', [ImagesController::class, 'show']);
+    Route::post('/{image}', [ImagesController::class, 'update']);
     Route::delete('/{image}', [ImagesController::class, 'destroy']);
 });
 

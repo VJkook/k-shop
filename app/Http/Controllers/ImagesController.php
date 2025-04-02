@@ -88,12 +88,12 @@ class ImagesController extends Controller
             return response()->json(['msg' => 'Failed load image', 500]);
         }
 
-        $isDeleted = $s3Client->deleteImg($image->url);
+        $isDeleted = $image->deleteFromS3();
         if (!$isDeleted) {
             return response()->json(['msg' => 'Failed delete oldImage image', 500]);
         }
 
-        $image->url = $newImgPath;
+        $image->address = $newImgPath;
         $image->save();
         return response()->json($image);
     }

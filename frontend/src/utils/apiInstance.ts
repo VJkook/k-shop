@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const baseURL = 'http://localhost:8083'
+const baseURL = 'http://localhost:8000'
 
 const instance = axios.create({
 	baseURL,
@@ -25,11 +25,11 @@ instance.interceptors.response.use(
 		return response
 	},
 	error => {
-		if (error.response.status === 401 && window.location.pathname !== '/auth') {
-			localStorage.removeItem('auth')
-			//window.location.replace('/auth')
-		}
-		console.error(error.response)
+		// if (error.response.status === 401 && window.location.pathname !== '/auth') {
+		// 	localStorage.removeItem('auth')
+		// 	//window.location.replace('/auth')
+		// }
+		// console.error(error.response)
 
 		return error.response
 	},

@@ -23,8 +23,8 @@ class ProductImageRelationsController extends Controller
     public function create(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'product_id' => ['integer', 'numeric', 'required'],
-            'image_id' => ['integer', 'numeric', 'required'],
+            'id_product' => ['integer', 'numeric', 'required'],
+            'id_image' => ['integer', 'numeric', 'required'],
         ]);
 
         if ($validator->fails()) {
@@ -32,8 +32,8 @@ class ProductImageRelationsController extends Controller
         }
 
         $attributes = [
-            'product_id' => $request->product_id,
-            'image_id' => $request->image_id
+            'id_product' => $request->id_product,
+            'id_image' => $request->id_image
         ];
 
         $productImageRelation = ProductImageRelation::query()->create($attributes);
