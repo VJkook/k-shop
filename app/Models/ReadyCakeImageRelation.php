@@ -7,19 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int $id
- * @property int $id_product
+ * @property int $id_ready_cake
  * @property int $id_image
  */
-class ProductImageRelation extends Model
+class ReadyCakeImageRelation extends Model
 {
     use HasFactory;
 
-    protected $table = 'product_image_relations';
+    protected $table = 'ready_cake_image_relations';
 
     public $timestamps = false;
 
     protected $fillable = [
-        'id_product',
+        'id_ready_cake',
         'id_image',
     ];
 }

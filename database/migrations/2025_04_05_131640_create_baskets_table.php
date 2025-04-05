@@ -4,20 +4,22 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('product_image_relations', function (Blueprint $table) {
+        Schema::create('baskets', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_product');
-            $table->unsignedBigInteger('id_image');
+            $table->unsignedBigInteger('id_user');
+            $table->integer('count')->default(1);
 
             $table->foreign('id_product')->references('id')->on('products');
-            $table->foreign('id_image')->references('id')->on('images');
-
+            $table->foreign('id_user')->references('id')->on('users');
+            $table->timestamps();
         });
     }
 
@@ -26,6 +28,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('product_image_relations');
+        Schema::dropIfExists('baskets');
     }
 };

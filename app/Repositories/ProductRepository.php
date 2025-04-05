@@ -2,87 +2,30 @@
 
 namespace App\Repositories;
 
-use App\Models\Image;
 use App\Models\Product;
-use App\Models\Responses\ImageResponse;
-use App\Models\Responses\ProductResponse;
+use App\Models\ReadyCake;
 
 class ProductRepository
 {
-    public function createProduct(array $attributes): ProductResponse
+    public function create(): Product
     {
-        $product = Product::query()->create($attributes);
         /** @var Product $product */
-        $product = Product::query()->with('images')->find($product->id);
-        $productResponse = new ProductResponse(
-            $product->id,
-            $product->name,
-            $product->description,
-            $product->composition,
-            $product->weight,
-            $product->price,
-        );
-
-        return $productResponse;
+        $product = Product::query()->create();
+        return $product;
     }
 
     /**
-     * @return ProductResponse[]
+     * @return Product[]
      */
-    public function products(): array
+    public function all(): array
     {
-        $result = [];
-        $products = Product::query()->with('images')->get();
-        /** @var Product $product */
-        foreach ($products as $product) {
-            $productResponse = new ProductResponse(
-                $product->id,
-                $product->name,
-                $product->description,
-                $product->composition,
-                $product->weight,
-                $product->price,
-            );
-
-            $images = [];
-            /** @var Image $image */
-            foreach ($product->images as $image) {
-                $images[] = new ImageResponse(
-                    $image->id,
-                    Image::PATH . $image->id
-                );
-            }
-
-            $productResponse->setImages($images);
-            $result[] = $productResponse;
-        }
-
-        return $result;
+        return Product::query()->get();
     }
 
-    public function getProductById(int $id): ProductResponse
+    public function getById(int $id): Product
     {
         /** @var Product $product */
-        $product = Product::query()->with('images')->find($id);
-        $productResponse = new ProductResponse(
-            $product->id,
-            $product->name,
-            $product->description,
-            $product->composition,
-            $product->weight,
-            $product->price,
-        );
-
-        $images = [];
-        /** @var Image $image */
-        foreach ($product->images as $image) {
-            $images[] = new ImageResponse(
-                $image->id,
-                Image::PATH . $image->id
-            );
-        }
-
-        $productResponse->setImages($images);
-        return $productResponse;
+        $product = ReadyCake::query()->find($id);
+        return $product;
     }
 }

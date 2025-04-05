@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ProductImageRelation;
+use App\Models\ReadyCakeImageRelation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class ProductImageRelationsController extends Controller
+class ReadyCakeImageRelationsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index(): JsonResponse
     {
-        return response()->json(ProductImageRelation::all()->toArray());
+        return response()->json(ReadyCakeImageRelation::all()->toArray());
     }
 
     /**
@@ -23,7 +23,7 @@ class ProductImageRelationsController extends Controller
     public function create(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'id_product' => ['integer', 'numeric', 'required'],
+            'id_ready_cake' => ['integer', 'numeric', 'required'],
             'id_image' => ['integer', 'numeric', 'required'],
         ]);
 
@@ -32,29 +32,29 @@ class ProductImageRelationsController extends Controller
         }
 
         $attributes = [
-            'id_product' => $request->id_product,
+            'id_ready_cake' => $request->id_ready_cake,
             'id_image' => $request->id_image
         ];
 
-        $productImageRelation = ProductImageRelation::query()->create($attributes);
-        $productImageRelation = ProductImageRelation::query()->find($productImageRelation->id);
-        return response()->json($productImageRelation);
+        $readyCakeImageRelation = ReadyCakeImageRelation::query()->create($attributes);
+        $readyCakeImageRelation = ReadyCakeImageRelation::query()->find($readyCakeImageRelation->id);
+        return response()->json($readyCakeImageRelation);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(ProductImageRelation $productImageRelation): JsonResponse
+    public function show(ReadyCakeImageRelation $readyCakeImageRelation): JsonResponse
     {
-        return response()->json($productImageRelation->toArray());
+        return response()->json($readyCakeImageRelation->toArray());
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ProductImageRelation $productImageRelation): JsonResponse
+    public function destroy(ReadyCakeImageRelation $readyCakeImageRelation): JsonResponse
     {
-        $isSuccess = ProductImageRelation::query()->find($productImageRelation->id)->delete();
+        $isSuccess = ReadyCakeImageRelation::query()->find($readyCakeImageRelation->id)->delete();
         if (!$isSuccess) {
             return response()->json(['result' => 'error'], 500);
         }

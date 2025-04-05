@@ -1,5 +1,5 @@
-import Home from '@/screens/basket/home/Home'
+import Basket from '@/screens/basket/home/Basket'
 
 export default function BasketPage() {
-	return <Home />
+	return <Basket />
 }

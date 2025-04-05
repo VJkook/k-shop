@@ -2,23 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
-use App\Repositories\ProductRepository;
+use App\Models\ReadyCake;
+use App\Repositories\ReadyCakeRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class ProductsController extends Controller
+class ReadyCakesController extends Controller
 {
-    public function __construct(protected ProductRepository $productRepo)
+    public function __construct(protected ReadyCakeRepository $productRepo)
     {
     }
+
     /**
      * Display a listing of the resource.
      */
     public function index(): JsonResponse
     {
-        $products = $this->productRepo->products();
+        $products = $this->productRepo->all();
         return response()->json($products);
     }
 
@@ -47,7 +48,7 @@ class ProductsController extends Controller
             'description' => $request->description ?? null,
         ];
 
-        $productResponse = $this->productRepo->createProduct($attributes);
+        $productResponse = $this->productRepo->create($attributes);
         return \response()->json($productResponse);
     }
 
@@ -56,21 +57,21 @@ class ProductsController extends Controller
      */
     public function show(int $id): JsonResponse
     {
-        $response = $this->productRepo->getProductById($id);
+        $response = $this->productRepo->getById($id);
         return response()->json($response);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Product $product): JsonResponse
+    public function update(Request $request, ReadyCake $cake): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'name' => ['string'],
             'price' => ['decimal:0,2'],
             'weight' => ['decimal:0,2', 'nullable'],
             'composition' => ['string', 'nullable'],
-            '' => ['string', 'nullable'],
+            'description' => ['string', 'nullable'],
         ]);
 
         if ($validator->fails()) {
@@ -78,31 +79,31 @@ class ProductsController extends Controller
         }
 
         if (!is_null($request->name)) {
-            $product->name = $request->name;
+            $cake->name = $request->name;
         }
         if (!is_null($request->price)) {
-            $product->price = $request->price;
+            $cake->price = $request->price;
         }
         if (!is_null($request->weight)) {
-            $product->weight = $request->weight;
+            $cake->weight = $request->weight;
         }
         if (!is_null($request->composition)) {
-            $product->composition = $request->composition;
+            $cake->composition = $request->composition;
         }
         if (!is_null($request->description)) {
-            $product->description = $request->description;
+            $cake->description = $request->description;
         }
 
-        $product->save();
-        return response()->json($product);
+        $cake->save();
+        return response()->json($cake);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product): JsonResponse
+    public function destroy(ReadyCake $cake): JsonResponse
     {
-        $isSuccess = Product::query()->find($product->id)->delete();
+        $isSuccess = ReadyCake::query()->find($cake->id)->delete();
         if (!$isSuccess) {
             return response()->json(['result' => 'error'], 500);
         }

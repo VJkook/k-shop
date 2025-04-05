@@ -2,9 +2,9 @@
 
 namespace App\Models\Responses;
 
-use App\Models\Product;
+use App\Models\ReadyCake;
 
-class ProductResponse
+class ReadyCakeResponse
 {
     /**
      * @param int $id
@@ -13,6 +13,7 @@ class ProductResponse
      * @param string|null $composition
      * @param float|null $weight
      * @param float $price
+     * @param int $id_product
      * @param ImageResponse[] $images
      */
     public function __construct(
@@ -22,6 +23,7 @@ class ProductResponse
         public string|null $composition,
         public float|null  $weight,
         public float       $price,
+        public int         $id_product,
         public array       $images = [],
     )
     {
@@ -36,15 +38,16 @@ class ProductResponse
         $this->images = $images;
     }
 
-    public static function fromProduct(Product $product): self
+    public static function fromReadyCake(ReadyCake $readyCake): self
     {
-        return new ProductResponse(
-            $product->id,
-            $product->name,
-            $product->description,
-            $product->composition,
-            $product->weight,
-            $product->price,
+        return new ReadyCakeResponse(
+            $readyCake->id,
+            $readyCake->name,
+            $readyCake->description,
+            $readyCake->composition,
+            $readyCake->weight,
+            $readyCake->price,
+            $readyCake->id_product
         );
     }
 }

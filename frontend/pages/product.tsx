@@ -1,5 +1,5 @@
-import Home from '@/screens/product/home/Home'
+import ReadyCakes from '@/screens/product/home/ReadyCake'
 
 export default function ProductPage() {
-	return <Home />
+	return <ReadyCakes />
 }

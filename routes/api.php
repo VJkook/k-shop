@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\BasketController;
 use App\Http\Controllers\ImagesController;
 use App\Http\Controllers\IngredientsController;
-use App\Http\Controllers\ProductImageRelationsController;
-use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\ReadyCakeImageRelationsController;
+use App\Http\Controllers\ReadyCakesController;
 use App\Http\Controllers\TestController;
+use App\Models\Basket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -33,12 +35,12 @@ Route::prefix('ingredients')->group(function () {
     Route::delete('/{ingredient}', [IngredientsController::class, 'destroy']);
 });
 
-Route::prefix('products')->group(function () {
-    Route::post('/', [ProductsController::class, 'create']);
-    Route::get('/', [ProductsController::class, 'index']);
-    Route::get('/{product}', [ProductsController::class, 'show']);
-    Route::post('/{product}', [ProductsController::class, 'update']);
-    Route::delete('/{product}', [ProductsController::class, 'destroy']);
+Route::prefix('ready-cakes')->group(function () {
+    Route::post('/', [ReadyCakesController::class, 'create']);
+    Route::get('/', [ReadyCakesController::class, 'index']);
+    Route::get('/{cake}', [ReadyCakesController::class, 'show']);
+    Route::post('/{cake}', [ReadyCakesController::class, 'update']);
+    Route::delete('/{cake}', [ReadyCakesController::class, 'destroy']);
 });
 
 Route::prefix('images')->group(function () {
@@ -49,9 +51,16 @@ Route::prefix('images')->group(function () {
     Route::delete('/{image}', [ImagesController::class, 'destroy']);
 });
 
-Route::prefix('product-image-relations')->group(function () {
-    Route::post('/', [ProductImageRelationsController::class, 'create']);
-    Route::get('/', [ProductImageRelationsController::class, 'index']);
-    Route::get('/{productImageRelation}', [ProductImageRelationsController::class, 'show']);
-    Route::delete('/{productImageRelation}', [ProductImageRelationsController::class, 'destroy']);
+Route::prefix('ready-cake-image-relations')->group(function () {
+    Route::post('/', [ReadyCakeImageRelationsController::class, 'create']);
+    Route::get('/', [ReadyCakeImageRelationsController::class, 'index']);
+    Route::get('/{readyCakeImageRelation}', [ReadyCakeImageRelationsController::class, 'show']);
+    Route::delete('/{readyCakeImageRelation}', [ReadyCakeImageRelationsController::class, 'destroy']);
+});
+
+Route::prefix('baskets')->group(function () {
+    Route::post('/', [BasketController::class, 'create']);
+    Route::post('/{id}', [BasketController::class, 'update']);
+    Route::get('/', [BasketController::class, 'index']);
+    Route::delete('/{id}', [BasketController::class, 'destroy']);
 });

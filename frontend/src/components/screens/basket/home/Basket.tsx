@@ -5,7 +5,7 @@ import styles from './Home.module.scss'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 
-const Home: FC = () => {
+const Basket: FC = () => {
 	const nextBlockRef = useRef<HTMLDivElement>(null)
 	const router = useRouter()
 	const pathSegments = router.asPath.split(`/`).filter(Boolean)
@@ -18,10 +18,10 @@ const Home: FC = () => {
 				<Hero/>
 
 
-				
+
 			</div>
 		</Meta>
 	)
 }
 
-export default Home
+export default Basket

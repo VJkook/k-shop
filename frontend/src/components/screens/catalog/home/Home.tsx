@@ -1,6 +1,6 @@
 import React, { FC, useRef } from 'react'
 import Meta from '@/utils/meta/Meta'
-import Hero from '@/screens/catalog/hero/Hero'
+import Cakes from '@/screens/catalog/hero/Cakes'
 import styles from './Home.module.scss'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
@@ -15,10 +15,10 @@ const Home: FC = () => {
 				<div className={styles.bread_crumbs}>
 					<Link href={'/'}>Главная страница</Link> {'>'} <Link href={'/constructor'}>Каталог</Link>
 				</div>
-				<Hero/>
+				<Cakes/>
 
 
-				
+
 			</div>
 		</Meta>
 	)
