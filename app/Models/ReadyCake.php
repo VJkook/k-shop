@@ -37,8 +37,8 @@ class ReadyCake extends Model
     {
         return $this->belongsToMany(
             Image::class,
-            'ready_cake_image_relations',
-            'id_ready_cake',
+            ProductImageRelation::TABLE_NAME,
+            'id_product',
             'id_image'
         );
     }

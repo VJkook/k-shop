@@ -3,10 +3,10 @@
 use App\Http\Controllers\BasketController;
 use App\Http\Controllers\ImagesController;
 use App\Http\Controllers\IngredientsController;
+use App\Http\Controllers\ProductImageRelationsController;
 use App\Http\Controllers\ReadyCakeImageRelationsController;
 use App\Http\Controllers\ReadyCakesController;
 use App\Http\Controllers\TestController;
-use App\Models\Basket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -56,6 +56,13 @@ Route::prefix('ready-cake-image-relations')->group(function () {
     Route::get('/', [ReadyCakeImageRelationsController::class, 'index']);
     Route::get('/{readyCakeImageRelation}', [ReadyCakeImageRelationsController::class, 'show']);
     Route::delete('/{readyCakeImageRelation}', [ReadyCakeImageRelationsController::class, 'destroy']);
+});
+
+Route::prefix('product-image-relations')->group(function () {
+    Route::post('/', [ProductImageRelationsController::class, 'create']);
+    Route::get('/', [ProductImageRelationsController::class, 'index']);
+    Route::get('/{productImageRelation}', [ProductImageRelationsController::class, 'show']);
+    Route::delete('/{productImageRelation}', [ProductImageRelationsController::class, 'destroy']);
 });
 
 Route::prefix('baskets')->group(function () {

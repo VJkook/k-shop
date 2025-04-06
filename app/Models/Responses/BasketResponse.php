@@ -11,7 +11,13 @@ class BasketResponse
         public readonly float  $price,
         public readonly int    $count,
         public readonly int    $id_product,
+        public string          $image = ''
     )
     {
+    }
+
+    public function setImage(string $image): void
+    {
+        $this->image = $image;
     }
 }

@@ -3,14 +3,11 @@
 namespace App\Repositories;
 
 use App\Models\Basket;
-use App\Models\ReadyCake;
 use App\Models\Responses\BasketResponse;
-use Illuminate\Support\Facades\DB;
-use function Symfony\Component\String\b;
 
 class BasketRepository
 {
-    public function create(int $userId, int $productId, int $count = 1): Basket
+    public function create(int $userId, int $productId, int $count = 1): BasketResponse
     {
         /** @var Basket $basket */
         $basket = Basket::query()->create([
@@ -19,15 +16,7 @@ class BasketRepository
             'count' => $count
         ]);
 
-        return $basket;
-    }
-
-    /**
-     * @return Basket[]
-     */
-    public function all(): array
-    {
-        return Basket::query()->get();
+        return $this->getItemById($basket->id, $userId);
     }
 
     /**
@@ -49,9 +38,10 @@ class BasketRepository
             ->where('id_user', $userId)
             ->get();
 
+        $imageRepo = new ImageRepository();
         $response = [];
-
         foreach ($rows as $row) {
+            $url = $imageRepo->getUrlFirstByProductId($row['id_product']);
             $arr = $row->toArray();
             $response[] = new BasketResponse(
                 $arr['id'],
@@ -59,7 +49,8 @@ class BasketRepository
                 $arr['weight'],
                 $arr['price'],
                 $arr['count'],
-                $arr['id_product']
+                $arr['id_product'],
+                $url
             );
         }
 
@@ -83,6 +74,9 @@ class BasketRepository
             ->where('baskets.id', $id)
             ->first();
 
+        $imageRepo = new ImageRepository();
+        $url = $imageRepo->getUrlFirstByProductId($row->id_product);
+
         $arr = $row->toArray();
         return new BasketResponse(
             $arr['id'],
@@ -90,7 +84,8 @@ class BasketRepository
             $arr['weight'],
             $arr['price'],
             $arr['count'],
-            $arr['id_product']
+            $arr['id_product'],
+            $url
         );
     }
 

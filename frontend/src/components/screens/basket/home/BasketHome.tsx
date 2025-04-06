@@ -1,11 +1,11 @@
 import React, { FC, useRef } from 'react'
 import Meta from '@/utils/meta/Meta'
-import Hero from '@/screens/basket/hero/Hero'
 import styles from './Home.module.scss'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
+import Basket from "@/screens/basket/hero/Basket";
 
-const Basket: FC = () => {
+const BasketHome: FC = () => {
 	const nextBlockRef = useRef<HTMLDivElement>(null)
 	const router = useRouter()
 	const pathSegments = router.asPath.split(`/`).filter(Boolean)
@@ -15,7 +15,7 @@ const Basket: FC = () => {
 				<div className={styles.bread_crumbs}>
 					<Link href={'/'}>Главная страница</Link> {'>'} <Link href={'/constructor'}>корзина</Link>
 				</div>
-				<Hero/>
+				<Basket/>
 
 
 
@@ -24,4 +24,4 @@ const Basket: FC = () => {
 	)
 }
 
-export default Basket
+export default BasketHome

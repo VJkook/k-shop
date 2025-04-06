@@ -1,13 +1,12 @@
-import {list} from "postcss";
 import {Image} from "./Image";
 
 export interface ReadyCake {
-    id: number
-    name: string
-    price: number
-    weight: number | null
     composition: string | null
     description: string | null
-    images: list<Image[]>,
+    id: number
     id_product: number
+    images: Image[]
+    name: string
+    price: number,
+    weight: number | null
 }

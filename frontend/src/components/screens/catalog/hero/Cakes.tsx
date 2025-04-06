@@ -7,14 +7,7 @@ import Link from 'next/link'
 import {apiGet} from "@/utils/apiInstance";
 import {ReadyCake} from "../../../../models/responses/ReadyCake";
 
-interface CatData {
-    img: React.ReactNode | null
-    title: string
-    price: number
-    weight: number
-    category: number
-}
-
+// @ts-ignore
 const Cakes: FC = (id: number) => {
     const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
     const [products, setCakes] = useState<ReadyCake[]>([]);
@@ -99,7 +92,7 @@ const Cakes: FC = (id: number) => {
                         <div className={styles.product_container}>
 
                             {products
-                                .filter((item) => selectedCategories.length === 0 || selectedCategories.includes(item.category)) // Фильтрация данных
+                                .filter((item) => selectedCategories.length === 0 || selectedCategories.includes(0)) // Фильтрация данных
                                 .map((item: ReadyCake, index) => (
                                     <div className={styles.product_card} key={index}>
                                         <div className={styles.image_wrapper}>
