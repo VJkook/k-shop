@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Logo1 from '../../../../assets/img/construct3.jpg';
 import {apiDelete, apiGet, apiPost} from "@/utils/apiInstance";
 import {Basket, Basket as t} from "../../../../models/responses/Basket";
+import {router} from "next/client";
 
 const Basket: FC = () => {
     const [baskets, setBaskets] = useState<t[]>()
@@ -45,6 +46,21 @@ const Basket: FC = () => {
                 }
             }).catch((error) => {
             console.log(error)
+        })
+    };
+
+    const createOrder = () => {
+        apiPost('/api/orders', {
+            id_delivery_address: 1
+        })
+            .then((response) => {
+                if (response.data != undefined) {
+                    console.log(response.data)
+                }
+            }).catch((error) => {
+            console.log(error)
+        }).finally(() => {
+            router.push('/orders')
         })
     };
 
@@ -176,7 +192,7 @@ const Basket: FC = () => {
                             </div>
 
 
-                            <button>Оформить заказ</button>
+                            <button onClick={() => createOrder()}>Оформить заказ</button>
                         </div>
 
                     </div>

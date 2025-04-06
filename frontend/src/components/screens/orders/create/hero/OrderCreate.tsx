@@ -59,8 +59,8 @@ const orders = [
       ],
     },
   ];
-const Hero: FC = () => {
-  
+const OrderCreate: FC = () => {
+
 
   return (
     <div className={styles.ordersContainer}>
@@ -105,11 +105,7 @@ const Hero: FC = () => {
   </div>
   );
 
-  
+
 };
 
-
-
-
-
-export default Hero;
+export default OrderCreate;

@@ -1,5 +1,5 @@
-import Home from '@/screens/orders/home/Home'
+import OrdersHome from '@/screens/orders/home/OrdersHome'
 
 export default function OrdersPage() {
-	return <Home />
+	return <OrdersHome />
 }

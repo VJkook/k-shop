@@ -3,6 +3,7 @@
 use App\Http\Controllers\BasketController;
 use App\Http\Controllers\ImagesController;
 use App\Http\Controllers\IngredientsController;
+use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\ProductImageRelationsController;
 use App\Http\Controllers\ReadyCakeImageRelationsController;
 use App\Http\Controllers\ReadyCakesController;
@@ -70,4 +71,9 @@ Route::prefix('baskets')->group(function () {
     Route::post('/{id}', [BasketController::class, 'update']);
     Route::get('/', [BasketController::class, 'index']);
     Route::delete('/{id}', [BasketController::class, 'destroy']);
+});
+
+Route::prefix('orders')->group(function () {
+    Route::post('/', [OrdersController::class, 'create']);
+    Route::get('/', [OrdersController::class, 'index']);
 });

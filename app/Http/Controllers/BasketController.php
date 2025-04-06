@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Repositories\BasketRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -9,8 +10,6 @@ use Illuminate\Support\Facades\Validator;
 
 class BasketController extends Controller
 {
-    private const USER_ID = 1;
-
     public function __construct(public BasketRepository $basketRepo)
     {
     }
@@ -20,7 +19,7 @@ class BasketController extends Controller
      */
     public function index(): JsonResponse
     {
-        $baskets = $this->basketRepo->getItemsByUserId(self::USER_ID);
+        $baskets = $this->basketRepo->getItemsByUserId(User::SYSTEM_USER_ID);
         return response()->json($baskets);
     }
 
@@ -38,7 +37,7 @@ class BasketController extends Controller
             return response()->json($validator->errors()->getMessages(), 400);
         }
 
-        $basket = $this->basketRepo->create(self::USER_ID, $request->id_product, $request->count ?: 1);
+        $basket = $this->basketRepo->create(User::SYSTEM_USER_ID, $request->id_product, $request->count ?: 1);
         return response()->json($basket);
     }
 
@@ -56,10 +55,10 @@ class BasketController extends Controller
         }
 
         if (!is_null($request->count) && $request->count < 1) {
-            return response()->json($this->basketRepo->getItemById($id, self::USER_ID));
+            return response()->json($this->basketRepo->getItemById($id, User::SYSTEM_USER_ID));
         }
 
-        return response()->json($this->basketRepo->updateById($id, self::USER_ID, $request->count));
+        return response()->json($this->basketRepo->updateById($id, User::SYSTEM_USER_ID, $request->count));
     }
 
     /**

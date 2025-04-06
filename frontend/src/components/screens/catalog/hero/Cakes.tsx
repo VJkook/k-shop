@@ -1,4 +1,4 @@
-import React, {FC, useState, useEffect, useRef} from 'react';
+import React, {FC, useState, useEffect} from 'react';
 import styles from './Hero.module.scss';
 import cn from 'classnames';
 

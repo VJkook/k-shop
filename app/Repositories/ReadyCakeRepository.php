@@ -72,7 +72,7 @@ class ReadyCakeRepository
         foreach ($readyCake->images as $image) {
             $images[] = new ImageResponse(
                 $image->id,
-                Image::PATH . $image->id
+                $image->getUrl()
             );
         }
 

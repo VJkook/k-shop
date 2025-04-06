@@ -103,4 +103,9 @@ class BasketRepository
     {
         return (bool)Basket::query()->where('id', '=', $id)->delete();
     }
+
+    public function clearBasket(int $userId): bool
+    {
+        return (bool)Basket::query()->where('id_user', '=', $userId)->delete();
+    }
 }
