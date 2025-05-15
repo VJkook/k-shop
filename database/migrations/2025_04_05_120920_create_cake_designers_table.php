@@ -15,9 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('name', 150);
             $table->decimal('weight', 12, 2)->nullable();
-            $table->integer('number_of_cake_tiers');
-            $table->string('coverage');
             $table->decimal('total_cost', 12, 2);
+
+            $table->unsignedBigInteger('id_coverage');
+            $table->foreign('id_coverage')->references('id')->on('coverages');
 
             $table->unsignedBigInteger('id_product');
             $table->foreign('id_product')->references('id')->on('products');
