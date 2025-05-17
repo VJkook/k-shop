@@ -16,6 +16,9 @@ return new class extends Migration
             $table->string('name', 150);
             $table->text('description');
             $table->decimal('price_by_kg', 12, 2);
+
+            $table->unsignedBigInteger('id_image');
+            $table->foreign('id_image')->references('id')->on('images');
         });
     }
 

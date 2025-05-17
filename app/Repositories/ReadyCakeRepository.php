@@ -67,16 +67,17 @@ class ReadyCakeRepository
             $readyCake->id_product
         );
 
-        $images = [];
+        $images = $readyCake->images()->get();
+        $imagesResponses = [];
         /** @var Image $image */
-        foreach ($readyCake->images as $image) {
-            $images[] = new ImageResponse(
+        foreach ($images as $image) {
+            $imagesResponses[] = new ImageResponse(
                 $image->id,
                 $image->getUrl()
             );
         }
 
-        $productResponse->setImages($images);
+        $productResponse->setImages($imagesResponses);
         return $productResponse;
     }
 }
