@@ -14,21 +14,21 @@ class ReadyCakeRepository
     {
         $readyCake = null;
         Db::transaction(function () use ($attributes, &$readyCake) {
-            $productRepo = new ProductRepository();
-            $product = $productRepo->create();
-
-            $attributes['id_product'] = $product->id;
-            $readyCake = ReadyCake::query()->create($attributes);
             /** @var ReadyCake $readyCake */
-            $readyCake = ReadyCake::query()->with('images')->find($readyCake->id);
+            $readyCake = ReadyCake::query()->create($attributes);
+
+            $productRepo = new ProductRepository();
+            $productRepo->create($readyCake->id);
+
+            /** @var ReadyCake $readyCake */
+            $readyCake = ReadyCake::query()->find($readyCake->id);
         });
 
         if (is_null($readyCake)) {
             return null;
         }
 
-        $readyCakeResponse = $this->buildReadyCakeResponse($readyCake);
-        return $readyCakeResponse;
+        return $this->buildReadyCakeResponse($readyCake);
     }
 
     /**
@@ -37,7 +37,7 @@ class ReadyCakeRepository
     public function all(): array
     {
         $result = [];
-        $products = ReadyCake::query()->with('images')->get();
+        $products = ReadyCake::query()->get();
         /** @var ReadyCake $readyCake */
         foreach ($products as $readyCake) {
             $productResponse = $this->buildReadyCakeResponse($readyCake);
@@ -50,7 +50,7 @@ class ReadyCakeRepository
     public function getById(int $id): ReadyCakeResponse
     {
         /** @var ReadyCake $readyCake */
-        $readyCake = ReadyCake::query()->with('images')->find($id);
+        $readyCake = ReadyCake::query()->find($id);
         $productResponse = $this->buildReadyCakeResponse($readyCake);
         return $productResponse;
     }

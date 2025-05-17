@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\BasketController;
+use App\Http\Controllers\CakeDesignersController;
+use App\Http\Controllers\CoveragesController;
+use App\Http\Controllers\FillingsController;
 use App\Http\Controllers\ImagesController;
 use App\Http\Controllers\IngredientsController;
 use App\Http\Controllers\OrdersController;
@@ -8,6 +11,7 @@ use App\Http\Controllers\ProductImageRelationsController;
 use App\Http\Controllers\ReadyCakeImageRelationsController;
 use App\Http\Controllers\ReadyCakesController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\TiersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -39,9 +43,9 @@ Route::prefix('ingredients')->group(function () {
 Route::prefix('ready-cakes')->group(function () {
     Route::post('/', [ReadyCakesController::class, 'create']);
     Route::get('/', [ReadyCakesController::class, 'index']);
-    Route::get('/{cake}', [ReadyCakesController::class, 'show']);
-    Route::post('/{cake}', [ReadyCakesController::class, 'update']);
-    Route::delete('/{cake}', [ReadyCakesController::class, 'destroy']);
+    Route::get('/{id}', [ReadyCakesController::class, 'show']);
+    Route::post('/{id}', [ReadyCakesController::class, 'update']);
+    Route::delete('/{id}', [ReadyCakesController::class, 'destroy']);
 });
 
 Route::prefix('images')->group(function () {
@@ -76,4 +80,35 @@ Route::prefix('baskets')->group(function () {
 Route::prefix('orders')->group(function () {
     Route::post('/', [OrdersController::class, 'create']);
     Route::get('/', [OrdersController::class, 'index']);
+});
+
+Route::prefix('fillings')->group(function () {
+    Route::post('/', [FillingsController::class, 'create']);
+    Route::get('/', [FillingsController::class, 'index']);
+    Route::get('/{id}', [FillingsController::class, 'show']);
+    Route::post('/{id}', [FillingsController::class, 'update']);
+    Route::delete('/{id}', [FillingsController::class, 'destroy']);
+});
+
+Route::prefix('coverages')->group(function () {
+    Route::post('/', [CoveragesController::class, 'create']);
+    Route::get('/', [CoveragesController::class, 'index']);
+    Route::get('/{id}', [CoveragesController::class, 'show']);
+    Route::post('/{id}', [CoveragesController::class, 'update']);
+    Route::delete('/{id}', [CoveragesController::class, 'destroy']);
+});
+
+Route::prefix('tiers')->group(function () {
+    Route::post('/', [TiersController::class, 'create']);
+    Route::get('/', [TiersController::class, 'index']);
+    Route::get('/{id}', [TiersController::class, 'show']);
+    Route::delete('/{id}', [TiersController::class, 'destroy']);
+});
+
+Route::prefix('cake-designers')->group(function () {
+    Route::post('/', [CakeDesignersController::class, 'create']);
+    Route::get('/', [CakeDesignersController::class, 'index']);
+    Route::get('/{id}', [CakeDesignersController::class, 'show']);
+    Route::post('/{id}', [CakeDesignersController::class, 'update']);
+    Route::delete('/{id}', [CakeDesignersController::class, 'destroy']);
 });

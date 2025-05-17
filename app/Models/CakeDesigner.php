@@ -4,40 +4,42 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property int $id
  * @property string $name
- * @property float $weight
- * @property string $composition
- * @property string $description
- * @property float $price
+ * @property string|null $weight
+ * @property float|null $total_cost
+ * @property int $id_coverage
  * @property int $id_product
  */
-class ReadyCake extends Model
+class CakeDesigner extends Model
 {
     use HasFactory;
 
-    protected $table = 'ready_cakes';
+    protected $fillable = [
+        'name',
+        'description',
+        'price_by_kg',
+        'id_image',
+    ];
+
+    protected $table = 'cakes_designers';
 
     public $timestamps = false;
 
-    protected $fillable = [
-        'name',
-        'weight',
-        'composition',
-        'description',
-        'price',
-        'id_product'
-    ];
+    public function image(): HasOne
+    {
+        return $this->hasOne(Image::class, 'id', 'id_image');
+    }
 
     public function images(): BelongsToMany
     {
         return $this->belongsToMany(
-            Image::class,
-            ReadyCakeImageRelation::TABLE_NAME,
+            Tier::class,
+            ProductImageRelation::TABLE_NAME,
             'id',
             'id_image'
         );

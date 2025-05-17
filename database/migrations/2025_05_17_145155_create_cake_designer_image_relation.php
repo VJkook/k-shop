@@ -10,14 +10,15 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('fillings', function (Blueprint $table) {
+        Schema::create('cake_designer_image_relation', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 150);
-            $table->text('description')->nullable();
-            $table->decimal('price_by_kg', 12, 2);
+            $table->unsignedBigInteger('id_cake_designer');
+            $table->foreign('id_cake_designer')->references('id')->on('ready_cakes');
 
-            $table->unsignedBigInteger('id_image')->nullable();
+            $table->unsignedBigInteger('id_image');
             $table->foreign('id_image')->references('id')->on('images');
+
+            $table->unique(['id_cake_designer', 'id_image']);
         });
     }
 
@@ -26,6 +27,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('fillings');
+        Schema::dropIfExists('cake_designer_image_relation');
     }
 };

@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('decors', function (Blueprint $table) {
             $table->id();
             $table->string('name', 150);
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->decimal('price', 12, 2);
 
-            $table->unsignedBigInteger('id_image');
+            $table->unsignedBigInteger('id_image')->nullable();
             $table->foreign('id_image')->references('id')->on('images');
         });
     }

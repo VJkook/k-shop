@@ -7,10 +7,15 @@ use App\Models\ReadyCake;
 
 class ProductRepository
 {
-    public function create(): Product
+    public function create(?int $id_ready_cake = null, ?int $id_cake_designer = null): Product
     {
+        $attributes = [
+            'id_cake_designer' => $id_cake_designer,
+            'id_ready_cake' => $id_ready_cake,
+        ];
+
         /** @var Product $product */
-        $product = Product::query()->create();
+        $product = Product::query()->create($attributes);
         return $product;
     }
 
