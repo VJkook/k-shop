@@ -49,6 +49,7 @@ docker compose exec app php artisan migrate
 # откатить миграцию на кол-во шагов
 docker compose exec app php artisan migrate:rollback --step=1
 ```
+
 Контроллеры
 
 ```bash
