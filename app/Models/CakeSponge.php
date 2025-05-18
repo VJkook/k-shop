@@ -5,27 +5,26 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property int $id
  * @property string $name
- * @property string $description
- * @property float $price_by_kg
+ * @property string|null $description
+ * @property float $price
  * @property int|null $id_image
  */
-class Filling extends Model
+class CakeSponge extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'name',
         'description',
-        'price_by_kg',
+        'price',
         'id_image',
     ];
 
-    protected $table = 'fillings';
+    protected $table = 'cake_sponges';
 
     public $timestamps = false;
 

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Requests\DecorRequest;
+use App\Models\Requests\TierRequest;
 use App\Repositories\CakeDesignerRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -29,10 +31,19 @@ class CakeDesignersController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => ['string', 'required'],
-            'weight' => ['decimal:0,2', 'required'],
+            'description' => ['string', 'nullable'],
+            'weight' => ['decimal:0,2',],
             'id_coverage' => ['integer', 'numeric', 'required'],
+
+            'tiers' => ['array', 'required'],
+            'tiers.*.id_cake_sponge' => ['integer', 'required'],
+            'tiers.*.id_filling' => ['integer', 'required'],
+
+            'decors' => ['array', 'required'],
+            'decors.*.id' => ['integer', 'required'],
+            'decors.*.count' => ['integer', 'required'],
+
             'total_cost' => ['decimal:0,2'],
-            'id_image' => ['integer', 'numeric'],
         ]);
 
         if ($validator->fails()) {
@@ -41,9 +52,27 @@ class CakeDesignersController extends Controller
 
         $attributes = [
             'name' => $request->name,
-            'price_by_kg' => $request->price_by_kg,
-            'description' => $request->description ?? null,
+            'weight' => $request->weight,
+            'id_coverage' => $request->id_coverage,
+            'total_cost' => $request->total_cost,
+            'description' => $request->description,
         ];
+
+        $tiersRequest = [];
+        if (isset($request->tiers)) {
+            foreach ($request->tiers as $tier) {
+                $tiersRequest[] = new TierRequest($tier['id_cake_sponge'], $tier['id_filling']);
+            }
+        }
+        $attributes['tiers'] = $tiersRequest;
+
+        $decorsRequest = [];
+        if (isset($request->decors)) {
+            foreach ($request->decors as $decor) {
+                $decorsRequest[] = new DecorRequest($decor['id'], $decor['count']);
+            }
+        }
+        $attributes['decors'] = $decorsRequest;
 
         $fillingResponse = $this->cakeDesignerRepo->create($attributes);
         return \response()->json($fillingResponse);
@@ -64,10 +93,20 @@ class CakeDesignersController extends Controller
     public function update(Request $request, int $id): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'name' => ['string'],
-            'price_by_kg' => ['decimal:0,2'],
+            'name' => ['string', 'required'],
             'description' => ['string', 'nullable'],
-            'id_image' => ['integer', 'numeric',],
+            'weight' => ['decimal:0,2',],
+            'id_coverage' => ['integer', 'numeric', 'required'],
+
+            'tiers' => ['array', 'required'],
+            'tiers.*.id_cake_sponge' => ['integer', 'required'],
+            'tiers.*.id_filling' => ['integer', 'required'],
+
+            'decors' => ['array', 'required'],
+            'decors.*.id' => ['integer', 'required'],
+            'decors.*.count' => ['integer', 'required'],
+
+            'total_cost' => ['decimal:0,2'],
         ]);
 
         if ($validator->fails()) {

@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\FillingRepository;
+use App\Repositories\CakeSpongesRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class FillingsController extends Controller
+class CakeSpongesController extends Controller
 {
-    public function __construct(protected FillingRepository $fillingRepo)
+    public function __construct(protected CakeSpongesRepository $cakeSpongesRepo)
     {
     }
 
@@ -18,7 +18,7 @@ class FillingsController extends Controller
      */
     public function index(): JsonResponse
     {
-        $fillings = $this->fillingRepo->all();
+        $fillings = $this->cakeSpongesRepo->all();
         return response()->json($fillings);
     }
 
@@ -29,7 +29,7 @@ class FillingsController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => ['string', 'required'],
-            'price_by_kg' => ['decimal:0,2', 'required'],
+            'price' => ['decimal:0,2', 'required'],
             'description' => ['string', 'nullable'],
             'id_image' => ['integer', 'numeric',],
         ]);
@@ -40,12 +40,12 @@ class FillingsController extends Controller
 
         $attributes = [
             'name' => $request->name,
-            'price_by_kg' => $request->price_by_kg,
+            'price' => $request->price,
             'description' => $request->description ?? null,
             'id_image' => $request->id_image ?? null,
         ];
 
-        $fillingResponse = $this->fillingRepo->create($attributes);
+        $fillingResponse = $this->cakeSpongesRepo->create($attributes);
         return \response()->json($fillingResponse);
     }
 
@@ -54,7 +54,7 @@ class FillingsController extends Controller
      */
     public function show(int $id): JsonResponse
     {
-        $response = $this->fillingRepo->getById($id);
+        $response = $this->cakeSpongesRepo->getById($id);
         return response()->json($response);
     }
 
@@ -65,7 +65,7 @@ class FillingsController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => ['string'],
-            'price_by_kg' => ['decimal:0,2'],
+            'price' => ['decimal:0,2'],
             'description' => ['string', 'nullable'],
             'id_image' => ['integer', 'numeric',],
         ]);
@@ -78,8 +78,8 @@ class FillingsController extends Controller
         if (!is_null($request->name)) {
             $attributes['name'] = $request->name;
         }
-        if (!is_null($request->price_by_kg)) {
-            $attributes['price_by_kg'] = $request->price_by_kg;
+        if (!is_null($request->price)) {
+            $attributes['price'] = $request->price;
         }
         if (!is_null($request->description)) {
             $attributes['description'] = $request->description;
@@ -89,11 +89,11 @@ class FillingsController extends Controller
         }
 
         if (empty($attributes)) {
-            $fillingResponse = $this->fillingRepo->getById($id);
+            $fillingResponse = $this->cakeSpongesRepo->getById($id);
             return response()->json($fillingResponse);
         }
 
-        $fillingResponse = $this->fillingRepo->updateById($id, $attributes);
+        $fillingResponse = $this->cakeSpongesRepo->updateById($id, $attributes);
         return response()->json($fillingResponse);
     }
 
@@ -103,7 +103,7 @@ class FillingsController extends Controller
     public function destroy(int $id): JsonResponse
     {
 
-        $isSuccess = $this->fillingRepo->deleteById($id);
+        $isSuccess = $this->cakeSpongesRepo->deleteById($id);
         if (!$isSuccess) {
             return response()->json(['result' => 'error'], 500);
         }

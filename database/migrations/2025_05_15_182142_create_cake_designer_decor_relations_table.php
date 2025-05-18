@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -14,11 +13,12 @@ return new class extends Migration
         Schema::create('cake_designer_decor_relations', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_decor');
-            $table->unsignedBigInteger('id_cake_designer');
-            $table->integer('count');
+            $table->foreign('id_decor')->references('id')->on('decors')->cascadeOnDelete();
 
-            $table->foreign('id_decor')->references('id')->on('decors');
-            $table->foreign('id_cake_designer')->references('id')->on('cake_designers');
+            $table->unsignedBigInteger('id_cake_designer');
+            $table->foreign('id_cake_designer')->references('id')->on('cake_designers')->cascadeOnDelete();
+
+            $table->integer('count');
         });
     }
 

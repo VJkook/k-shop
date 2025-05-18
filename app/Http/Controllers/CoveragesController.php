@@ -42,6 +42,7 @@ class CoveragesController extends Controller
             'name' => $request->name,
             'price' => $request->price,
             'description' => $request->description ?? null,
+            'id_image' => $request->id_image ?? null,
         ];
 
         $fillingResponse = $this->coveragesRepo->create($attributes);

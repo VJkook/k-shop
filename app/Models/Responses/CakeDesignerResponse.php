@@ -2,32 +2,48 @@
 
 namespace App\Models\Responses;
 
+use App\Models\CakeDesigner;
 use App\Models\Filling;
 
 class CakeDesignerResponse
 {
+    /**
+     * @param int $id
+     * @param string $name
+     * @param string|null $description
+     * @param float|null $weight
+     * @param float|null $total_cost
+     * @param int $id_coverage
+     * @param ImageResponse[] $images
+     */
     public function __construct(
-        public int                $id,
-        public string             $name,
-        public string|null        $description,
-        public float              $price_by_kg,
-        public ImageResponse|null $image = null,
+        public int         $id,
+        public string      $name,
+        public string|null $description,
+        public float|null  $weight,
+        public float|null  $total_cost,
+        public int         $id_coverage,
+        public array       $images = [],
     )
     {
     }
 
-    public function setImage(ImageResponse $image): void
+    /**
+     * @param ImageResponse[] $images
+     * @return void
+     */
+    public function setImages(array $images): void
     {
-        $this->image = $image;
+        $this->images = $images;
     }
 
-    public static function fromFilling(Filling $filling): self
+    public static function fromDto(CakeDesigner $cakeDesigner): self
     {
         return new CakeDesignerResponse(
-            $filling->id,
-            $filling->name,
-            $filling->description,
-            $filling->price_by_kg
+            $cakeDesigner->id,
+            $cakeDesigner->name,
+            $cakeDesigner->description,
+            $cakeDesigner->price_by_kg
         );
     }
 }

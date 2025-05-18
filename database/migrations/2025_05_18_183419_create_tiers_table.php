@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -15,12 +14,13 @@ return new class extends Migration
             $table->id();
 
             $table->unsignedBigInteger('id_cake_designer');
-            $table->foreign('id_cake_designer')->references('id')->on('cake_designers');
+            $table->foreign('id_cake_designer')->references('id')->on('cake_designers')->cascadeOnDelete();
 
             $table->unsignedBigInteger('id_filling');
             $table->foreign('id_filling')->references('id')->on('fillings');
 
-            $table->integer('count');
+            $table->unsignedBigInteger('id_cake_sponge');
+            $table->foreign('id_cake_sponge')->references('id')->on('cake_sponges');
         });
     }
 

@@ -89,7 +89,7 @@ class OrderRepository
         return $response;
     }
 
-    private function buildResponse(Order $order)
+    private function buildResponse(Order $order): OrderResponse
     {
         $readyCakesResponses = [];
 

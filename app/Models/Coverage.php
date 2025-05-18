@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $id
@@ -27,8 +27,8 @@ class Coverage extends Model
 
     public $timestamps = false;
 
-    public function image(): HasOne
+    public function image(): BelongsTo
     {
-        return $this->hasOne(Image::class, 'id', 'id_image');
+        return $this->belongsTo(Image::class, 'id_image', 'id');
     }
 }

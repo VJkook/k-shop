@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -15,7 +14,8 @@ return new class extends Migration
             $table->id();
             $table->string('name', 150);
             $table->decimal('weight', 12, 2)->nullable();
-            $table->decimal('total_cost', 12, 2);
+            $table->text('description')->nullable();
+            $table->decimal('total_cost', 12, 2)->nullable();
 
             $table->unsignedBigInteger('id_coverage');
             $table->foreign('id_coverage')->references('id')->on('coverages');

@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\BasketController;
 use App\Http\Controllers\CakeDesignersController;
+use App\Http\Controllers\CakeSpongesController;
 use App\Http\Controllers\CoveragesController;
+use App\Http\Controllers\DecorsController;
 use App\Http\Controllers\FillingsController;
 use App\Http\Controllers\ImagesController;
 use App\Http\Controllers\IngredientsController;
@@ -90,12 +92,28 @@ Route::prefix('fillings')->group(function () {
     Route::delete('/{id}', [FillingsController::class, 'destroy']);
 });
 
+Route::prefix('cake-sponges')->group(function () {
+    Route::post('/', [CakeSpongesController::class, 'create']);
+    Route::get('/', [CakeSpongesController::class, 'index']);
+    Route::get('/{id}', [CakeSpongesController::class, 'show']);
+    Route::post('/{id}', [CakeSpongesController::class, 'update']);
+    Route::delete('/{id}', [CakeSpongesController::class, 'destroy']);
+});
+
 Route::prefix('coverages')->group(function () {
     Route::post('/', [CoveragesController::class, 'create']);
     Route::get('/', [CoveragesController::class, 'index']);
     Route::get('/{id}', [CoveragesController::class, 'show']);
     Route::post('/{id}', [CoveragesController::class, 'update']);
     Route::delete('/{id}', [CoveragesController::class, 'destroy']);
+});
+
+Route::prefix('decors')->group(function () {
+    Route::post('/', [DecorsController::class, 'create']);
+    Route::get('/', [DecorsController::class, 'index']);
+    Route::get('/{id}', [DecorsController::class, 'show']);
+    Route::post('/{id}', [DecorsController::class, 'update']);
+    Route::delete('/{id}', [DecorsController::class, 'destroy']);
 });
 
 Route::prefix('tiers')->group(function () {
