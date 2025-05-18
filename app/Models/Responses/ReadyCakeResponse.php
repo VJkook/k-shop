@@ -38,7 +38,7 @@ class ReadyCakeResponse
         $this->images = $images;
     }
 
-    public static function fromReadyCake(ReadyCake $readyCake): self
+    public static function fromReadyCake(ReadyCake $readyCake, int $id_product): self
     {
         return new ReadyCakeResponse(
             $readyCake->id,
@@ -47,7 +47,7 @@ class ReadyCakeResponse
             $readyCake->composition,
             $readyCake->weight,
             $readyCake->price,
-            $readyCake->id_product
+            $id_product
         );
     }
 }

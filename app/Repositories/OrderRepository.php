@@ -97,8 +97,7 @@ class OrderRepository
         foreach ($order->products()->get() as $product) {
             /** @var ReadyCake $readyCake */
             $readyCake = $product->readyCake()->first();
-
-            $readyCakesResponse = ReadyCakeResponse::fromReadyCake($readyCake);
+            $readyCakesResponse = ReadyCakeResponse::fromReadyCake($readyCake, $product->id);
 
             /** @var Image[] $image */
             $images = $readyCake->images()->get();

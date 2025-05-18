@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Image;
+use App\Models\Product;
 use App\Models\ReadyCake;
 use App\Models\Responses\ImageResponse;
 use App\Models\Responses\ReadyCakeResponse;
@@ -47,24 +48,29 @@ class ReadyCakeRepository
         return $result;
     }
 
-    public function getById(int $id): ReadyCakeResponse
+    public function getById(int $id): ?ReadyCakeResponse
     {
         /** @var ReadyCake $readyCake */
         $readyCake = ReadyCake::query()->find($id);
-        $productResponse = $this->buildReadyCakeResponse($readyCake);
-        return $productResponse;
+        if (is_null($readyCake)) {
+            return null;
+        }
+
+        return $this->buildReadyCakeResponse($readyCake);
     }
 
     private function buildReadyCakeResponse(ReadyCake $readyCake): ReadyCakeResponse
     {
-        $productResponse = new ReadyCakeResponse(
+        /** @var Product $product */
+        $product = $readyCake->product()->first();
+        $readyCakeResponse = new ReadyCakeResponse(
             $readyCake->id,
             $readyCake->name,
             $readyCake->description,
             $readyCake->composition,
             $readyCake->weight,
             $readyCake->price,
-            $readyCake->id_product
+            $product->id
         );
 
         $images = $readyCake->images()->get();
@@ -77,7 +83,7 @@ class ReadyCakeRepository
             );
         }
 
-        $productResponse->setImages($imagesResponses);
-        return $productResponse;
+        $readyCakeResponse->setImages($imagesResponses);
+        return $readyCakeResponse;
     }
 }

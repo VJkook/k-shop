@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @property int $id
+ * @property int $id_ready_cake
+ * @property int $id_cake_designer
  */
 class Product extends Model
 {
@@ -18,6 +20,11 @@ class Product extends Model
     protected $table = 'products';
 
     public $timestamps = false;
+
+    protected $fillable = [
+        'id_cake_designer',
+        'id_ready_cake'
+    ];
 
     public function images(): BelongsToMany
     {
@@ -31,6 +38,6 @@ class Product extends Model
 
     public function readyCake(): BelongsTo
     {
-        return $this->belongsTo(ReadyCake::class, 'id', 'id_product');
+        return $this->belongsTo(ReadyCake::class, 'id_ready_cake', 'id');
     }
 }

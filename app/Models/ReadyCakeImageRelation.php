@@ -16,7 +16,7 @@ class ReadyCakeImageRelation extends Model
 
     public const TABLE_NAME = 'ready_cake_image_relations';
 
-    protected $table = 'ready_cake_image_relations';
+    protected $table = self::TABLE_NAME;
 
     public $timestamps = false;
 

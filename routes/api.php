@@ -70,7 +70,7 @@ Route::prefix('product-image-relations')->group(function () {
     Route::delete('/{productImageRelation}', [ProductImageRelationsController::class, 'destroy']);
 });
 
-Route::prefix('baskets')->group(function () {
+Route::prefix('basket')->group(function () {
     Route::post('/', [BasketController::class, 'create']);
     Route::post('/{id}', [BasketController::class, 'update']);
     Route::get('/', [BasketController::class, 'index']);

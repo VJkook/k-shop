@@ -32,16 +32,18 @@ class BasketRepository
                 'count',
                 'rp.weight',
                 'rp.price',
+                'p.id_ready_cake',
                 'rp.name AS product_name'
             )
-            ->join('ready_cakes AS rp', 'baskets.id_product', '=', 'rp.id_product')
+            ->join('products AS p', 'baskets.id_product', '=', 'p.id')
+            ->join('ready_cakes AS rp', 'p.id_ready_cake', '=', 'rp.id')
             ->where('id_user', $userId)
             ->get();
 
         $imageRepo = new ImageRepository();
         $response = [];
         foreach ($rows as $row) {
-            $url = $imageRepo->getUrlFirstByProductId($row['id_product']);
+            $url = $imageRepo->getUrlFirstByReadyCakeId($row['id_ready_cake']);
             $arr = $row->toArray();
             $response[] = new BasketResponse(
                 $arr['id'],
@@ -69,13 +71,14 @@ class BasketRepository
                 'rp.price',
                 'rp.name AS product_name'
             )
-            ->join('ready_cakes AS rp', 'baskets.id_product', '=', 'rp.id_product')
+            ->join('products AS p', 'baskets.id_product', '=', 'p.id')
+            ->join('ready_cakes AS rp', 'p.id_ready_cake', '=', 'rp.id')
             ->where('id_user', $userId)
             ->where('baskets.id', $id)
             ->first();
 
         $imageRepo = new ImageRepository();
-        $url = $imageRepo->getUrlFirstByProductId($row->id_product);
+        $url = $imageRepo->getUrlFirstByReadyCakeId($row->id_product);
 
         $arr = $row->toArray();
         return new BasketResponse(

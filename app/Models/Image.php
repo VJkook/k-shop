@@ -17,7 +17,9 @@ class Image extends Model
 
     public const PATH = 'http://localhost:8000/api/images/';
 
-    protected $table = 'images';
+    public const TABLE_NAME = 'images';
+
+    protected $table = self::TABLE_NAME;
 
     public $timestamps = false;
 
@@ -29,6 +31,7 @@ class Image extends Model
     {
         return self::PATH . $this->id;
     }
+
     public function getMimeType(): string
     {
         /** @var S3Client $s3Client */

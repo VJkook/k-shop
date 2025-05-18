@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property int $id
@@ -14,7 +15,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property string $composition
  * @property string $description
  * @property float $price
- * @property int $id_product
  */
 class ReadyCake extends Model
 {
@@ -30,7 +30,6 @@ class ReadyCake extends Model
         'composition',
         'description',
         'price',
-        'id_product'
     ];
 
     public function images(): BelongsToMany
@@ -38,8 +37,13 @@ class ReadyCake extends Model
         return $this->belongsToMany(
             Image::class,
             ReadyCakeImageRelation::TABLE_NAME,
-            'id',
+            'id_ready_cake',
             'id_image'
         );
+    }
+
+    public function product(): HasOne
+    {
+        return $this->hasOne(Product::class, 'id_ready_cake', 'id');
     }
 }

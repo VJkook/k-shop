@@ -4,21 +4,23 @@ namespace App\Repositories;
 
 use App\Models\Image;
 use App\Models\ProductImageRelation;
+use App\Models\ReadyCakeImageRelation;
 
 class ImageRepository
 {
-    public function getUrlFirstByProductId(int $productId): string
+    public function getUrlFirstByReadyCakeId(int $readyCakeId): string|null
     {
         /** @var Image $image */
         $image = Image::query()
-            ->join(ProductImageRelation::TABLE_NAME . ' as pi', 'pi.id_image', '=', 'images.id')
-            ->where('id_product', '=', $productId)
+            ->select(Image::TABLE_NAME . '.id')
+            ->join(ReadyCakeImageRelation::TABLE_NAME . ' as rci', 'rci.id_image', '=', 'images.id')
+            ->where('id_ready_cake', '=', $readyCakeId)
             ->first();
 
-        if ($image) {
+        if (isset($image)) {
             return $image->getUrl();
         }
 
-        return '';
+        return null;
     }
 }

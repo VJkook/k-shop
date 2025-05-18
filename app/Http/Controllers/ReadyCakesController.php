@@ -58,6 +58,10 @@ class ReadyCakesController extends Controller
     public function show(int $id): JsonResponse
     {
         $response = $this->productRepo->getById($id);
+        if (is_null($response)) {
+            return \response()->json(null, 404);
+        }
+
         return response()->json($response);
     }
 

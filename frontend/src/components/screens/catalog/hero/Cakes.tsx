@@ -106,7 +106,7 @@ const Cakes: FC = (id: number) => {
                                             <p className={styles.weight}>{item.weight} кг</p>
 
                                         </div>
-                                        <Link href={'/products/' + item.id_product}>
+                                        <Link href={'/products/' + item.id}>
                                             <button>В корзину</button>
                                         </Link>
                                     </div>

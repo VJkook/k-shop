@@ -16,7 +16,7 @@ const Cake: FC = (params: { id: number }) => {
 
 
     const addToBasket = (idProduct: number) => {
-        apiPost('/api/baskets', {
+        apiPost('/api/basket', {
             id_product: idProduct
         })
             .then((response) => {

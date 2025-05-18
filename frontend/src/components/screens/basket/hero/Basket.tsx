@@ -12,7 +12,7 @@ const Basket: FC = () => {
     const [sumPrice, setSumPrice] = useState<number>(0)
 
     const loadBasket = () => {
-        apiGet('/api/baskets')
+        apiGet('/api/basket')
             .then((response) => {
                 if (response.data != undefined) {
                     setBaskets(response.data)
@@ -29,7 +29,7 @@ const Basket: FC = () => {
         baskets?.map((item: Basket) => {
             sum = sum + (item.price * item.count)
         })
-        setSumPrice(sum)
+        setSumPrice(parseFloat(sum.toFixed(2)))
     }
 
     useEffect(() => {
@@ -37,7 +37,7 @@ const Basket: FC = () => {
     }, [baskets]);
 
     const updateBasket = (id: number, count: number) => {
-        apiPost('/api/baskets/' + id, {
+        apiPost('/api/basket/' + id, {
             count: count
         })
             .then((response) => {
@@ -65,7 +65,7 @@ const Basket: FC = () => {
     };
 
     const deleteFromBasket = (id: number) => {
-        apiDelete('/api/baskets/' + id)
+        apiDelete('/api/basket/' + id)
             .then((response) => {
                 if (response.data != undefined) {
                     loadBasket()
