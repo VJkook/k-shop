@@ -35,9 +35,8 @@ class CakeDesignersController extends Controller
             'weight' => ['decimal:0,2',],
             'id_coverage' => ['integer', 'numeric', 'required'],
 
-            'tiers' => ['array', 'required'],
-            'tiers.*.id_cake_sponge' => ['integer', 'required'],
-            'tiers.*.id_filling' => ['integer', 'required'],
+            'filling_ids' => ['array', 'required'],
+            'filling_ids.*' => ['integer', 'required'],
 
             'decors' => ['array', 'required'],
             'decors.*.id' => ['integer', 'required'],
@@ -56,15 +55,8 @@ class CakeDesignersController extends Controller
             'id_coverage' => $request->id_coverage,
             'total_cost' => $request->total_cost,
             'description' => $request->description,
+            'filling_ids' => $request->filling_ids,
         ];
-
-        $tiersRequest = [];
-        if (isset($request->tiers)) {
-            foreach ($request->tiers as $tier) {
-                $tiersRequest[] = new TierRequest($tier['id_cake_sponge'], $tier['id_filling']);
-            }
-        }
-        $attributes['tiers'] = $tiersRequest;
 
         $decorsRequest = [];
         if (isset($request->decors)) {

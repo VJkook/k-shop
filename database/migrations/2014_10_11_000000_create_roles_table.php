@@ -11,14 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cake_sponges', function (Blueprint $table) {
+        Schema::create('roles', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 150);
-            $table->text('description')->nullable();
-            $table->decimal('price', 12, 2);
-
-            $table->unsignedBigInteger('id_image')->nullable();
-            $table->foreign('id_image')->references('id')->on('images');
+            $table->string('name');
         });
     }
 
@@ -27,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cake_sponges');
+        Schema::dropIfExists('roles');
     }
 };

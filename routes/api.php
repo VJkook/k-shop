@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BasketController;
 use App\Http\Controllers\CakeDesignersController;
 use App\Http\Controllers\CakeSpongesController;
@@ -31,6 +32,12 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::post('/register', [AuthController::class, 'register'])->name('register');
+//Route::get('/token', [AuthController::class, 'getToken'])->name('getToken');
+Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/user', [AuthController::class, 'getUser'])->name('user');
 
 Route::get('/test', [TestController::class, 'index']);
 

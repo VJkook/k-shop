@@ -2,7 +2,7 @@
 
 namespace App\Models\Responses;
 
-use App\Models\Coverage;
+use App\Models\Decor;
 
 class DecorResponse
 {
@@ -21,13 +21,13 @@ class DecorResponse
         $this->image = $image;
     }
 
-    public static function fromDecor(Coverage $filling): self
+    public static function fromDecor(Decor $decor): self
     {
         return new DecorResponse(
-            $filling->id,
-            $filling->name,
-            $filling->description,
-            $filling->price
+            $decor->id,
+            $decor->name,
+            $decor->description,
+            $decor->price
         );
     }
 }

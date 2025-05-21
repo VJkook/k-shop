@@ -23,6 +23,7 @@ connect:
 	@$(PSQL_CMD)
 
 fill-db:
+	@make insert-roles
 	@make insert-user
 	@make insert-address
 	@make insert-payment-statuses
@@ -33,9 +34,13 @@ select-users:
 	@echo "Содержимое таблицы users:"
 	@$(PSQL_CMD) -c "SELECT * FROM users;"
 
+insert-roles:
+	@echo "Заполнение таблицы roles:"
+	@$(PSQL_CMD) -c "INSERT INTO public.roles (name) VALUES ('admin'), ('client')"
+
 insert-user:
 	@echo "Заполнение таблицы users:"
-	@$(PSQL_CMD) -c "INSERT INTO public.users (id, name, email, email_verified_at, password, remember_token, created_at, updated_at) VALUES (1, 'marina', 'test@test.ru', null, '123', null, null, null)"
+	@$(PSQL_CMD) -c "INSERT INTO public.users (name, email, email_verified_at, password, remember_token, created_at, updated_at, id_role) VALUES ('marina', 'test@test.ru', null, '123', null, null, null, 1)"
 
 insert-address:
 	@echo "Заполнение таблицы delivery_addresses:"

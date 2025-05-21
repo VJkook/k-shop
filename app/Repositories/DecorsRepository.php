@@ -11,9 +11,9 @@ class DecorsRepository
 {
     public function create(array $attributes): ?DecorResponse
     {
-        /** @var Decor $coverage */
-        $coverage = Decor::query()->create($attributes);
-        return $this->buildResponse($coverage);
+        /** @var Decor $decor */
+        $decor = Decor::query()->create($attributes);
+        return $this->buildResponse($decor);
     }
 
     /**
@@ -22,11 +22,11 @@ class DecorsRepository
     public function all(): array
     {
         $result = [];
-        $coverages = Decor::query()->get();
-        /** @var Decor $filling */
-        foreach ($coverages as $coverage) {
-            $fillingResponse = $this->buildResponse($coverage);
-            $result[] = $fillingResponse;
+        $decors = Decor::query()->get();
+        /** @var Decor $decor */
+        foreach ($decors as $decor) {
+            $response = $this->buildResponse($decor);
+            $result[] = $response;
         }
 
         return $result;
@@ -52,17 +52,17 @@ class DecorsRepository
         return Decor::query()->find($id)->delete();
     }
 
-    private function buildResponse(Decor $coverage): DecorResponse
+    private function buildResponse(Decor $decor): DecorResponse
     {
         $response = new DecorResponse(
-            $coverage->id,
-            $coverage->name,
-            $coverage->description,
-            $coverage->price,
+            $decor->id,
+            $decor->name,
+            $decor->description,
+            $decor->price,
         );
 
         /** @var Image $image */
-        $image = $coverage->image()->first();
+        $image = $decor->image()->first();
         if (!is_null($image)) {
             $response->setImage(new ImageResponse($image->id, $image->getUrl()));
         }

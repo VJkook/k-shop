@@ -18,9 +18,6 @@ return new class extends Migration {
 
             $table->unsignedBigInteger('id_filling');
             $table->foreign('id_filling')->references('id')->on('fillings');
-
-            $table->unsignedBigInteger('id_cake_sponge');
-            $table->foreign('id_cake_sponge')->references('id')->on('cake_sponges');
         });
     }
 

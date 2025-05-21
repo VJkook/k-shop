@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $id
  * @property int $id_cake_designer
  * @property int $id_filling
- * @property int $id_cake_sponge
  */
 class Tier extends Model
 {
