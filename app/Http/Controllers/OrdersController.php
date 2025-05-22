@@ -9,6 +9,7 @@ use App\Repositories\BasketRepository;
 use App\Repositories\OrderRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class OrdersController extends Controller
@@ -22,7 +23,9 @@ class OrdersController extends Controller
      */
     public function index(): JsonResponse
     {
-        return response()->json($this->orderRepo->getAll(User::SYSTEM_USER_ID));
+        /** @var User $user */
+        $user = Auth::user();
+        return response()->json($this->orderRepo->getAll($user->id));
     }
 
     /**
@@ -44,21 +47,22 @@ class OrdersController extends Controller
             $deliveryDate = BasicDate::fromString($request->delivery_date);
         }
 
-        $userId = User::SYSTEM_USER_ID;
+        /** @var User $user */
+        $user = Auth::user();
         $basketRepo = new BasketRepository();
-        $baskets = $basketRepo->getItemsByUserId($userId);
+        $baskets = $basketRepo->getItemsByUserId($user->id);
         if (count($baskets) === 0) {
             return response()->json(['result' => 'basket is empty'], 400);
         }
 
         $response = $this->orderRepo->create(
-            $userId,
+            $user->id,
             $request->id_delivery_address,
             $baskets,
             $deliveryDate
         );
 
-        $basketRepo->clearBasket($userId);
+        $basketRepo->clearBasket($user->id);
         return response()->json($response);
     }
 

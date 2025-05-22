@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, {useEffect, useState} from 'react'
 import styles from './ModalSupport.module.scss'
 import { EIcons, Icon as IconInstance } from '../../../../assets/icons/icon'
 import cn from 'classnames'
@@ -6,6 +6,8 @@ import InputMask from 'react-input-mask'
 import { useFormik } from 'formik'
 import themelight from '../../../../styles/colors'
 import Link from 'next/link'
+import {apiLogin} from "@/utils/apiInstance";
+import {router} from "next/client";
 
 interface ModalProps {
 	isOpen: boolean
@@ -13,7 +15,9 @@ interface ModalProps {
 }
 
 const ModalSupport: React.FC<ModalProps> = ({ isOpen, onClose }) => {
-	const [isClosing, setIsClosing] = React.useState(false)
+	const [isClosing, setIsClosing] = useState(false)
+    const [password, setPassword] = useState<string>('')
+    const [email, setEmail] = useState<string>('')
 
 	useEffect(() => {
 		if (!isOpen) {
@@ -31,53 +35,20 @@ const ModalSupport: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 		}
 	}
 
-	const onSubmit = async (values: any) => {
-		try {
-			const response = await fetch(``, {
-				method: 'POST',
-			})
-			if (response.ok) {
-				console.log('Данные успешно отправлены', response)
-				onClose
-				setTimeout(() => formik.resetForm(), 1000)
-			} else {
-				console.error('Ошибка при отправке данных:', response.statusText)
-			}
-		} catch (error) {
-			console.error('Ошибка при отправке данных:', error)
-		}
+	const login = async (email: string, password: string) => {
+        apiLogin(email, password)
+            .then((response) => {
+                if (response.data != undefined) {
+                    console.log(response.data)
+                    console.log('Авторизация прошла успешно')
+                }
+            }).catch((error) => {
+            console.log(error)
+        }).finally(() => {
+            setIsClosing(true)
+            router.push('/catalog')
+        })
 	}
-
-	const initialValues = {
-		phoneNumber: '',
-		consent: false,
-		isValidForm: false,
-	}
-
-	const validate = (values: any) => {
-		const errors: any = {}
-		if (!values.phoneNumber) {
-			errors.phoneNumber = 'Введите корректный номер телефона'
-		}
-		if (!values.consent) {
-			errors.consent = 'Необходимо дать согласие'
-		}
-		return errors
-	}
-
-	const formik = useFormik({
-		initialValues,
-		onSubmit,
-		validate,
-	})
-
-	useEffect(() => {
-		const isValidForm =
-			formik.values.phoneNumber !== '' &&
-			formik.values.phoneNumber.replace(/[()-]/g, '').trim().length === 14 &&
-			formik.values.consent
-		formik.setFieldValue('isValidForm', isValidForm)
-	}, [formik.values])
 
 	return (
 		<noindex>
@@ -90,25 +61,29 @@ const ModalSupport: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 			>
 				<div className={styles.modal}>
 					<p className={styles.title}>Авторизация</p>
-					<p className={styles.label}>Введите номер телефона</p>
-					<form onSubmit={formik.handleSubmit}>
+					<p className={styles.label}>Введите почту:</p>
+					<form >
 						<InputMask
-							mask="+7 (999) 999-99-99"
 							maskChar=" "
 							type="text"
-							name="phoneNumber"
-							placeholder="Номер телефона"
+							name="email"
+							placeholder="example@email.com"
 							className={styles.custom_input}
-							value={formik.values.phoneNumber}
-							onChange={formik.handleChange}
+                            onChange={event => setEmail(event.target.value)}
 						/>
+                        <InputMask
+                            maskChar=" "
+                            type="text"
+                            name="password"
+                            placeholder="пароль"
+                            className={styles.custom_input}
+                            onChange={event => setPassword(event.target.value)}
+                        />
 						<label className={styles.checkbox_container}>
 							<input
 								type="checkbox"
 								name="consent"
 								className={styles.checkbox}
-								checked={formik.values.consent}
-								onChange={formik.handleChange}
 							/>
 							<p>
 								<Link href={'/'}>
@@ -116,12 +91,7 @@ const ModalSupport: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 								</Link>
 							</p>
 						</label>
-						<button
-							disabled={!formik.isValid || !formik.values.isValidForm}
-							type={'submit'}
-						>
-							Войти
-						</button>
+                        <button onClick={() => login(email, password)}>Войти</button>
 					</form>
 				</div>
 			</div>

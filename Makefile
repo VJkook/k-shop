@@ -18,6 +18,13 @@ help:
 	@echo "  start-db     - Запустить контейнер с PostgreSQL"
 	@echo "  stop-db      - Остановить контейнер"
 
+optimize:
+	@docker compose exec app php artisan optimize
+	@docker compose exec app php artisan cache:clear
+	@docker compose exec app php artisan config:clear
+	@docker compose exec app php artisan config:cache
+	@docker compose exec app php artisan view:clear
+
 # Интерактивное подключение
 connect:
 	@$(PSQL_CMD)

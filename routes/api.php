@@ -79,14 +79,14 @@ Route::prefix('product-image-relations')->group(function () {
     Route::delete('/{productImageRelation}', [ProductImageRelationsController::class, 'destroy']);
 });
 
-Route::prefix('basket')->group(function () {
+Route::middleware('auth:sanctum')->prefix('basket')->group(function () {
     Route::post('/', [BasketController::class, 'create']);
     Route::post('/{id}', [BasketController::class, 'update']);
     Route::get('/', [BasketController::class, 'index']);
     Route::delete('/{id}', [BasketController::class, 'destroy']);
 });
 
-Route::prefix('orders')->group(function () {
+Route::middleware('auth:sanctum')->prefix('orders')->group(function () {
     Route::post('/', [OrdersController::class, 'create']);
     Route::get('/', [OrdersController::class, 'index']);
 });

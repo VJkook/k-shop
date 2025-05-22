@@ -102,9 +102,12 @@ class BasketRepository
         return $this->getItemById($id, $userId);
     }
 
-    public function deleteById(int $id): bool
+    public function deleteById(int $id, int $userId): bool
     {
-        return (bool)Basket::query()->where('id', '=', $id)->delete();
+        return (bool)Basket::query()
+            ->where('id', '=', $id)
+            ->where('id_user', '=', $userId)
+            ->delete();
     }
 
     public function clearBasket(int $userId): bool

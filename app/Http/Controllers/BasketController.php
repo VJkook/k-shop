@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Repositories\BasketRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class BasketController extends Controller
@@ -19,7 +20,9 @@ class BasketController extends Controller
      */
     public function index(): JsonResponse
     {
-        $baskets = $this->basketRepo->getItemsByUserId(User::SYSTEM_USER_ID);
+        /** @var User $user */
+        $user = Auth::user();
+        $baskets = $this->basketRepo->getItemsByUserId($user->id);
         return response()->json($baskets);
     }
 
@@ -37,7 +40,9 @@ class BasketController extends Controller
             return response()->json($validator->errors()->getMessages(), 400);
         }
 
-        $basket = $this->basketRepo->create(User::SYSTEM_USER_ID, $request->id_product, $request->count ?: 1);
+        /** @var User $user */
+        $user = Auth::user();
+        $basket = $this->basketRepo->create($user->id, $request->id_product, $request->count ?: 1);
         return response()->json($basket);
     }
 
@@ -54,11 +59,13 @@ class BasketController extends Controller
             return response()->json($validator->errors()->getMessages(), 400);
         }
 
+        /** @var User $user */
+        $user = Auth::user();
         if (!is_null($request->count) && $request->count < 1) {
-            return response()->json($this->basketRepo->getItemById($id, User::SYSTEM_USER_ID));
+            return response()->json($this->basketRepo->getItemById($id, $user->id));
         }
 
-        return response()->json($this->basketRepo->updateById($id, User::SYSTEM_USER_ID, $request->count));
+        return response()->json($this->basketRepo->updateById($id, $user->id, $request->count));
     }
 
     /**
@@ -66,7 +73,9 @@ class BasketController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $isSuccess = $this->basketRepo->deleteById($id);
+        /** @var User $user */
+        $user = Auth::user();
+        $isSuccess = $this->basketRepo->deleteById($id, $user->id);
         if (!$isSuccess) {
             return response()->json(['result' => 'error'], 500);
         }

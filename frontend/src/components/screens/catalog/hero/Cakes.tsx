@@ -34,12 +34,6 @@ const Cakes: FC = (id: number) => {
     useEffect(() => {
         console.log('Current selected categories:', selectedCategories); // Лог текущих выбранных категорий
     }, [selectedCategories]);
-
-    const handleSubcategoryChange = (category: number) => (event: React.MouseEvent<HTMLLIElement>) => {
-        event.stopPropagation(); // Предотвращение распространения события на родительские элементы
-        handleCategoryChange([category]);
-    };
-
     const handleAllTortas = () => {
         handleCategoryChange([1, 2, 3, 4]); // Показать все торты
     };

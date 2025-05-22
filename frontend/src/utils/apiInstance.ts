@@ -1,57 +1,81 @@
-import axios from 'axios'
+import axios, {AxiosInstance, InternalAxiosRequestConfig} from 'axios'
+import {router} from "next/client";
 
 const baseURL = 'http://localhost:8000'
 
+axios.defaults.withCredentials = false;
+axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+axios.defaults.headers.common['Content-Type'] = 'application/json';
+axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+
+// {
+//     'Content-Type': 'application/json',
+//     'Access-Control-Allow-Origin': '*',
+//     'Access-Control-Allow-Headers':
+//     'Origin, X-Requested-With, Content-Type, Accept, Z-Key',
+//         'Access-Control-Allow-Methods': 'GET, HEAD, POST, PUT, DELETE, OPTIONS',
+// }
+
+const csrfApi = axios.create({
+    baseURL: '/',
+    withCredentials: true,
+    withXSRFToken: true,
+    headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+    },
+});
+
 const instance = axios.create({
-	baseURL,
-	headers: {
-		'Content-Type': 'application/json',
-		'Access-Control-Allow-Origin': '*',
-		'Access-Control-Allow-Headers':
-			'Origin, X-Requested-With, Content-Type, Accept, Z-Key',
-		'Access-Control-Allow-Methods': 'GET, HEAD, POST, PUT, DELETE, OPTIONS',
-	},
-})
+    baseURL: baseURL,
+    withCredentials: true,
+    withXSRFToken: true,
+    headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
 
-instance.interceptors.request.use(config => {
-	const auth = localStorage.getItem('auth')
-	config.headers['Bearer'] = auth
+    },
+});
 
-	return config
-})
+instance.interceptors.request.use(
+    async (config: InternalAxiosRequestConfig) => {
+        if (config.url && config.url.includes('/login')) {
+            await instance.get('http://localhost:8000/sanctum/csrf-cookie');
+        }
+        return config;
+    },
+    error => {
+        return Promise.reject(error);
+    }
+);
 
-instance.interceptors.response.use(
-	response => {
-		return response
-	},
-	error => {
-		// if (error.response.status === 401 && window.location.pathname !== '/auth') {
-		// 	localStorage.removeItem('auth')
-		// 	//window.location.replace('/auth')
-		// }
-		// console.error(error.response)
-
-		return error.response
-	},
-)
+export function apiLogin(email: string, password: string) {
+    return apiPost('/api/login', {
+        email: email,
+        password: password
+    })
+}
 
 export function apiGet(url: string) {
-	return instance.get(`${url}`).then(response => response)
+    return instance.get(`${url}`).then(response => response)
 }
 
 export function apiPost(url: string, payload: any) {
-	return instance.post(`${url}`, payload).then(response => response)
+    return instance.post(`${url}`, payload).then(response => response)
 }
+
 export function apiPut(url: string, payload: any) {
-	return instance.put(`${url}`, payload).then(response => response)
+    return instance.put(`${url}`, payload).then(response => response)
 }
 
 export function apiDelete(url: string) {
-	return instance.delete(`${url}`).then(response => response)
+    return instance.delete(`${url}`).then(response => response)
 }
 
 export function apiSearchUsers(url: string) {
-	return instance.get(url).then(response => response)
+    return instance.get(url).then(response => response)
 }
 
 export default instance
