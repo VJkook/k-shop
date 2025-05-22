@@ -1,16 +1,505 @@
-.base {
+// === Цвета и переменные ===
+$bg-main: white;
+$font-main: sans-serif;
+$text-color: #3a2a23;
+$border-color: #e9cfc1;
+$bg-light: #f9f7f6;
+$bg-option: #F7EFE9;
+$highlight-color: #e9cfc1;
+$placeholder-color: #d9cfc6;
+
+
+
+
+// === Обёртка ===
+.wrapper {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100vw;
-    margin-top: 1.74vw;
-    position: relative;
+    max-width: 100%;
+    margin: 0 auto;
 }
 
-.main_container {
+// === Хлебные крошки ===
+.bread_crumbs {
+    padding: 2.5vw;
+    font-size: 1.67vw;
+}
+
+// === Контейнер ===
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 16px 24px;
+    user-select: none;
+}
+
+// === Страница ===
+.page {
     display: flex;
     flex-direction: column;
-    width: 100vw;
-    background: #ffffff;
+    gap: 16px;
+}
+
+// === Заголовок страницы ===
+.page__title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+// === Вопрос (fieldset) ===
+.question {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid $border-color;
+    background-color: $bg-light;
+    padding: 16px;
+    border-radius: 8px;
+    gap: 8px;
+
+    &__title {
+        font-weight: bold;
+        font-size: 15px;
+    }
+
+    &__desc {
+        font-size: 13px;
+        color: darken($text-color, 10%);
+    }
+
+    &__options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    &__input-wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    &__input {
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: 1px solid $border-color;
+        background-color: white;
+        font-size: 13px;
+        color: $text-color;
+
+        &:focus {
+            outline: none;
+            border-color: $highlight-color;
+        }
+
+        &::placeholder {
+            color: $placeholder-color;
+        }
+    }
+}
+
+// === Вариант ответа ===
+.option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid $border-color;
+    background-color: $bg-option;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+        background-color: lighten($bg-option, 3%);
+    }
+
+    &__check {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 16px;
+        height: 16px;
+        border: 1px solid $text-color;
+        border-radius: 4px;
+    }
+
+    &__text {
+        font-size: 13px;
+    }
+
+    &--selected {
+        background-color: $highlight-color;
+    }
+}
+
+// === Навигация ===
+.page__nav {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+// === Кнопка ===
+.button {
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: $text-color;
+    color: white;
+    border: none;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+        background-color: darken($text-color, 10%);
+    }
+}
+
+
+// Переменные
+$bg-main: white;
+$font-main: sans-serif;
+$text-color: #3a2a23;
+$border-color: #e9cfc1;
+$bg-light: #f9f7f6;
+$bg-option: #F7EFE9;
+$highlight-color: #e9cfc1;
+$placeholder-color: #d9cfc6;
+
+
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+// Layout
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 16px 24px;
+    user-select: none;
+}
+
+// Options
+.options-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-bottom: 16px;
+
+    .option-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+}
+
+// Кнопки управления
+.control-button {
+    width: 24px;
+    height: 24px;
+    border: 1px solid $border-color;
+    color: $border-color;
+    font-size: 20px;
+    line-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 2px;
+    user-select: none;
+}
+
+.weight-value {
+    width: 48px;
+    text-align: center;
+    border: 1px solid $border-color;
+    border-radius: 2px;
+    padding: 2px;
+}
+
+// Кнопки уровней
+.tier-buttons {
+    display: flex;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+
+    .tier-button {
+        width: 20px;
+        height: 20px;
+        border: 1px solid $border-color;
+        border-radius: 2px;
+        cursor: pointer;
+
+        &.active {
+            color: $text-color;
+            background-color: $border-color;
+        }
+    }
+}
+
+// Выпадающий список
+.form-select {
+    border: 1px solid $border-color;
+    border-radius: 2px;
+    font-size: 11px;
+    color: $text-color;
+    background-color: $bg-light;
+    padding: 2px 8px;
+    cursor: pointer;
+}
+
+// Выбор уровня
+.tier-selection {
+    border: 1px solid $border-color;
+    border-radius: 2px;
+    font-size: 11px;
+    color: $text-color;
+
+    .tier-tabs {
+        display: flex;
+        border-bottom: 1px solid $border-color;
+
+        .tier-tab {
+            padding: 4px 12px;
+            color: $border-color;
+
+            &.active {
+                border-bottom: 2px solid $border-color;
+                color: $text-color;
+                font-weight: 600;
+            }
+        }
+    }
+
+    .tier-content {
+        padding: 16px;
+    }
+}
+
+.selection-title {
+    text-align: center;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.selection-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.arrow-button {
+    color: $border-color;
+    font-size: 20px;
+    font-weight: bold;
+    user-select: none;
+}
+
+// Элементы выбора
+.selection-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    width: 100%;
+    box-sizing: border-box;
+
+    .option-item {
+        border: 1px solid $border-color;
+        padding: 8px;
+        text-align: center;
+        border-radius: 4px;
+        background-color: $bg-light;
+
+        .option-image {
+            margin: 0 auto 10px;
+        }
+
+        span {
+            display: block;
+            font-size: 13px;
+            color: $text-color;
+        }
+    }
+}
+
+// Карточка продукта
+.grid-item {
+    background-color: #fff;
+    border: 1px solid $border-color;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 18vw;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+
+    // Вариант для .options-grid
+    &.alt {
+        width: 88%;
+        background: #ddd;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+.option-image {
+    position: relative;
+    width: 100%;
+    padding-top: 100%;
+    background-color: $bg-option;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    border: none;
+
+    img {
+        position: absolute;
+        top: 10px;
+        bottom: 10px;
+        left: 10px;
+        right: 10px;
+        width: calc(100% - 20px);
+        height: calc(100% - 20px);
+        object-fit: cover;
+    }
+}
+
+// Контроль количества
+.quantity-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: $text-color;
+    user-select: none;
+    width: 100%;
+    justify-content: center;
+
+    .quantity-button {
+        width: 24px;
+        height: 24px;
+        border: 1px solid $border-color;
+        border-radius: 2px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: $bg-light;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        &:hover {
+            background-color: $highlight-color;
+        }
+    }
+
+    .quantity-value {
+        width: 16px;
+        text-align: center;
+    }
+}
+
+// Блоки и сетки
+.block {
+    margin-top: 40px;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 17px;
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+    .selection-options,
+    .options-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+// Комментарии
+.comments-section {
+    margin-top: 32px;
+
+    label {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 11px;
+        color: $text-color;
+    }
+
+    textarea {
+        width: 100%;
+        resize: none;
+        border-radius: 2px;
+        border: 1px solid transparent;
+        background-color: $bg-light;
+        padding: 8px 12px;
+        font-size: 11px;
+        color: $text-color;
+
+        &::placeholder {
+            color: $placeholder-color;
+        }
+
+        &:focus {
+            outline: none;
+        }
+    }
+}
+
+// Разделитель
+.divider {
+    margin: 24px 0;
+    border-top: 1px solid $border-color;
+}
+
+// Футер
+.footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: $text-color;
+
+    .footer-total {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+
+        .total-price {
+            font-weight: 600;
+        }
+    }
+
+    .order-button {
+        background-color: $border-color;
+        color: $text-color;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 4px 16px;
+        border-radius: 2px;
+        cursor: pointer;
+    }
 }

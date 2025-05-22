@@ -4,6 +4,7 @@ import MainProvider from '../src/providers/MainProvider'
 import { TypeComponentAuthFields } from '@/shared/types/auth.types'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
+
 type TypeAppProps = AppProps & TypeComponentAuthFields
 export default function App({ Component, pageProps }: TypeAppProps) {
 	const router = useRouter()
