@@ -30,7 +30,7 @@ class ProductRepository
     public function getById(int $id): Product
     {
         /** @var Product $product */
-        $product = ReadyCake::query()->find($id);
+        $product = Product::query()->find($id);
         return $product;
     }
 }

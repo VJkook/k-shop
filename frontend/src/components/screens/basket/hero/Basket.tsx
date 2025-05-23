@@ -4,7 +4,7 @@ import cn from 'classnames';
 import Image from 'next/image';
 import Logo1 from '../../../../assets/img/construct3.jpg';
 import {apiDelete, apiGet, apiPost} from "@/utils/apiInstance";
-import {Basket, Basket as t} from "../../../../models/responses/Basket";
+import {BasketResponse} from "../../../../models/responses/BasketResponse";
 import {router} from "next/client";
 
 const Basket: FC = () => {
@@ -86,7 +86,7 @@ const Basket: FC = () => {
                     <div className={styles.banner}>
                         <div className={styles.products}>
                             {
-                                baskets?.map((item: t) => (
+                                baskets?.map((item: BasketResponse) => (
                                     <div className={styles.product}>
                                         <div className={styles.image}>
                                             {
@@ -100,7 +100,7 @@ const Basket: FC = () => {
                                                         />
                                                     ) :
                                                     (
-                                                        <Image src={Logo1}
+                                                        <Image
                                                                alt={'Изображение отсутствует'}
                                                                width={50}
                                                                height={50}

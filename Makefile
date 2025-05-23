@@ -29,12 +29,24 @@ optimize:
 connect:
 	@$(PSQL_CMD)
 
+refill-db:
+	@make optimize
+	@docker compose exec app php artisan migrate:reset
+	@docker compose exec app php artisan migrate
+	@make fill-db
+	@echo "Пересборка завершена"
+
 fill-db:
 	@make insert-roles
 	@make insert-user
 	@make insert-address
 	@make insert-payment-statuses
 	@make insert-order-statutes
+	@make fill-by-api
+
+fill-by-api:
+	@echo "Заполнение по api:----------------------------------------------------------"
+	./scripts/api-fill.sh
 
 # Выборка данных из таблицы users
 select-users:

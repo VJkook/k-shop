@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Requests\DecorRequest;
 use App\Models\Requests\TierRequest;
+use App\Models\User;
 use App\Repositories\CakeDesignerRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class CakeDesignersController extends Controller
@@ -32,8 +34,9 @@ class CakeDesignersController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => ['string', 'required'],
             'description' => ['string', 'nullable'],
-            'weight' => ['decimal:0,2',],
+            'weight' => ['decimal:0,2', 'required'],
             'id_coverage' => ['integer', 'numeric', 'required'],
+            'id_cake_form' => ['integer', 'numeric', 'required'],
 
             'filling_ids' => ['array', 'required'],
             'filling_ids.*' => ['integer', 'required'],
@@ -56,6 +59,7 @@ class CakeDesignersController extends Controller
             'total_cost' => $request->total_cost,
             'description' => $request->description,
             'filling_ids' => $request->filling_ids,
+            'id_cake_form' => $request->id_cake_form,
         ];
 
         $decorsRequest = [];
@@ -66,6 +70,9 @@ class CakeDesignersController extends Controller
         }
         $attributes['decors'] = $decorsRequest;
 
+        /** @var User $user */
+        $user = Auth::user();
+        $attributes['id_user'] = $user->id;
         $fillingResponse = $this->cakeDesignerRepo->create($attributes);
         return \response()->json($fillingResponse);
     }
@@ -89,6 +96,7 @@ class CakeDesignersController extends Controller
             'description' => ['string', 'nullable'],
             'weight' => ['decimal:0,2',],
             'id_coverage' => ['integer', 'numeric', 'required'],
+            'id_cake_form' => ['integer', 'numeric', 'required'],
 
             'tiers' => ['array', 'required'],
             'tiers.*.id_cake_sponge' => ['integer', 'required'],
@@ -117,6 +125,9 @@ class CakeDesignersController extends Controller
         }
         if (!is_null($request->id_image)) {
             $attributes['id_image'] = $request->id_image;
+        }
+        if (!is_null($request->id_cake_form)) {
+            $attributes['id_cake_form'] = $request->id_cake_form;
         }
 
         if (empty($attributes)) {

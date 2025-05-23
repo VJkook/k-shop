@@ -2,20 +2,28 @@
 
 namespace App\Repositories;
 
+use App\Models\CakeDesigner;
 use App\Models\Image;
-use App\Models\ProductImageRelation;
-use App\Models\ReadyCakeImageRelation;
+use App\Models\ReadyCake;
 
 class ImageRepository
 {
-    public function getUrlFirstByReadyCakeId(int $readyCakeId): string|null
+    public function getUrlFirstByReadyCakeId(int $productId): string|null
     {
-        /** @var Image $image */
-        $image = Image::query()
-            ->select(Image::TABLE_NAME . '.id')
-            ->join(ReadyCakeImageRelation::TABLE_NAME . ' as rci', 'rci.id_image', '=', 'images.id')
-            ->where('id_ready_cake', '=', $readyCakeId)
-            ->first();
+        $productRepo = new ProductRepository();
+        $product = $productRepo->getById($productId);
+
+        if (!is_null($product->id_ready_cake)) {
+            /** @var ReadyCake $readyCake */
+            $readyCake = $product->readyCake()->first();
+            /** @var Image $image */
+            $image = $readyCake->images()->first();
+        } elseif (!is_null($product->id_cake_designer)) {
+            /** @var CakeDesigner $cakeDesigner */
+            $cakeDesigner = $product->cakeDesigner()->first();
+            /** @var Image $image */
+            $image = $cakeDesigner->images()->first();
+        }
 
         if (isset($image)) {
             return $image->getUrl();

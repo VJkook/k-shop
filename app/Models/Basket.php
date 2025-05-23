@@ -31,19 +31,8 @@ class Basket extends Model
     {
         return $this->belongsTo(
             Product::class,
-            'products',
             'id_product',
-            'id'
-        );
-    }
-
-    public function readyCakes(): BelongsTo
-    {
-        return $this->belongsTo(
-            ReadyCake::class,
-            'ready_cakes',
-            'id_product',
-            'id'
+            'id',
         );
     }
 }

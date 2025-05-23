@@ -19,6 +19,12 @@ return new class extends Migration {
 
             $table->unsignedBigInteger('id_coverage');
             $table->foreign('id_coverage')->references('id')->on('coverages');
+
+            $table->unsignedBigInteger('id_cake_form');
+            $table->foreign('id_cake_form')->references('id')->on('cake_forms');
+
+            $table->unsignedBigInteger('id_user');
+            $table->foreign('id_user')->references('id')->on('users');
         });
     }
 

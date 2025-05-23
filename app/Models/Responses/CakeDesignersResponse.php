@@ -2,10 +2,7 @@
 
 namespace App\Models\Responses;
 
-use App\Models\CakeDesigner;
-use App\Models\Filling;
-
-class CakeDesignerResponse
+class CakeDesignersResponse
 {
     /**
      * @param int $id
@@ -14,7 +11,10 @@ class CakeDesignerResponse
      * @param float|null $weight
      * @param float|null $total_cost
      * @param int $id_coverage
+     * @param int $id_cake_form
+     * @param int $id_product
      * @param ImageResponse[] $images
+     * @param int $count
      */
     public function __construct(
         public int         $id,
@@ -23,7 +23,10 @@ class CakeDesignerResponse
         public float|null  $weight,
         public float|null  $total_cost,
         public int         $id_coverage,
+        public int         $id_cake_form,
+        public int         $id_product,
         public array       $images = [],
+        public int         $count = 1
     )
     {
     }
@@ -37,13 +40,21 @@ class CakeDesignerResponse
         $this->images = $images;
     }
 
-    public static function fromDto(CakeDesigner $cakeDesigner): self
+    public function setCount(int $count): void
     {
-        return new CakeDesignerResponse(
-            $cakeDesigner->id,
-            $cakeDesigner->name,
-            $cakeDesigner->description,
-            $cakeDesigner->price_by_kg
-        );
+        $this->$count = $count;
     }
+
+//    public static function fromDto(CakeDesigner $cakeDesigner): self
+//    {
+//        return new CakeDesignersResponse(
+//            $cakeDesigner->id,
+//            $cakeDesigner->name,
+//            $cakeDesigner->description,
+//            $cakeDesigner->weight,
+//            $cakeDesigner->total_cost,
+//            $cakeDesigner->id_coverage,
+//            $cakeDesigner->id_cake_form,
+//        );
+//    }
 }

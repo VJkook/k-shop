@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\CoveragesRepository;
+use App\Repositories\CakeFormsRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class CoveragesController extends Controller
+class CakeFormsController extends Controller
 {
-    public function __construct(protected CoveragesRepository $coverageRepo)
+    public function __construct(protected CakeFormsRepository $cakeForms)
     {
     }
 
@@ -18,7 +18,7 @@ class CoveragesController extends Controller
      */
     public function index(): JsonResponse
     {
-        $fillings = $this->coverageRepo->all();
+        $fillings = $this->cakeForms->all();
         return response()->json($fillings);
     }
 
@@ -29,9 +29,6 @@ class CoveragesController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => ['string', 'required'],
-            'price' => ['decimal:0,2', 'required'],
-            'description' => ['string', 'nullable'],
-            'id_image' => ['integer', 'numeric',],
         ]);
 
         if ($validator->fails()) {
@@ -40,12 +37,9 @@ class CoveragesController extends Controller
 
         $attributes = [
             'name' => $request->name,
-            'price' => $request->price,
-            'description' => $request->description ?? null,
-            'id_image' => $request->id_image ?? null,
         ];
 
-        $fillingResponse = $this->coverageRepo->create($attributes);
+        $fillingResponse = $this->cakeForms->create($attributes);
         return \response()->json($fillingResponse);
     }
 
@@ -54,7 +48,7 @@ class CoveragesController extends Controller
      */
     public function show(int $id): JsonResponse
     {
-        $response = $this->coverageRepo->getById($id);
+        $response = $this->cakeForms->getById($id);
         return response()->json($response);
     }
 
@@ -65,9 +59,6 @@ class CoveragesController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => ['string'],
-            'price' => ['decimal:0,2'],
-            'description' => ['string', 'nullable'],
-            'id_image' => ['integer', 'numeric',],
         ]);
 
         if ($validator->fails()) {
@@ -78,8 +69,8 @@ class CoveragesController extends Controller
         if (!is_null($request->name)) {
             $attributes['name'] = $request->name;
         }
-        if (!is_null($request->price)) {
-            $attributes['price'] = $request->price;
+        if (!is_null($request->price_by_kg)) {
+            $attributes['price_by_kg'] = $request->price_by_kg;
         }
         if (!is_null($request->description)) {
             $attributes['description'] = $request->description;
@@ -89,12 +80,12 @@ class CoveragesController extends Controller
         }
 
         if (empty($attributes)) {
-            $coverageResponse = $this->coverageRepo->getById($id);
-            return response()->json($coverageResponse);
+            $fillingResponse = $this->cakeForms->getById($id);
+            return response()->json($fillingResponse);
         }
 
-        $coverageResponse = $this->coverageRepo->updateById($id, $attributes);
-        return response()->json($coverageResponse);
+        $fillingResponse = $this->cakeForms->updateById($id, $attributes);
+        return response()->json($fillingResponse);
     }
 
     /**
@@ -102,7 +93,8 @@ class CoveragesController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $isSuccess = $this->coverageRepo->deleteById($id);
+
+        $isSuccess = $this->cakeForms->deleteById($id);
         if (!$isSuccess) {
             return response()->json(['result' => 'error'], 500);
         }

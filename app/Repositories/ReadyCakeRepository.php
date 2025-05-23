@@ -23,6 +23,8 @@ class ReadyCakeRepository
 
             /** @var ReadyCake $readyCake */
             $readyCake = ReadyCake::query()->find($readyCake->id);
+
+            Product::query()->create(['id_ready_cake' => $readyCake->id]);
         });
 
         if (is_null($readyCake)) {

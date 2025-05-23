@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BasketController;
 use App\Http\Controllers\CakeDesignersController;
+use App\Http\Controllers\CakeFormsController;
 use App\Http\Controllers\CakeSpongesController;
 use App\Http\Controllers\CoveragesController;
 use App\Http\Controllers\DecorsController;
@@ -37,7 +38,7 @@ Route::post('/register', [AuthController::class, 'register'])->name('register');
 //Route::get('/token', [AuthController::class, 'getToken'])->name('getToken');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-Route::post('/user', [AuthController::class, 'getUser'])->name('user');
+Route::middleware('auth:sanctum')->post('/user', [AuthController::class, 'getUser'])->name('user');
 
 Route::get('/test', [TestController::class, 'index']);
 
@@ -79,7 +80,7 @@ Route::prefix('product-image-relations')->group(function () {
     Route::delete('/{productImageRelation}', [ProductImageRelationsController::class, 'destroy']);
 });
 
-Route::middleware('auth:sanctum')->prefix('basket')->group(function () {
+Route::prefix('basket')->group(function () {
     Route::post('/', [BasketController::class, 'create']);
     Route::post('/{id}', [BasketController::class, 'update']);
     Route::get('/', [BasketController::class, 'index']);
@@ -115,6 +116,14 @@ Route::prefix('coverages')->group(function () {
     Route::delete('/{id}', [CoveragesController::class, 'destroy']);
 });
 
+Route::prefix('cake-forms')->group(function () {
+    Route::post('/', [CakeFormsController::class, 'create']);
+    Route::get('/', [CakeFormsController::class, 'index']);
+    Route::get('/{id}', [CakeFormsController::class, 'show']);
+    Route::post('/{id}', [CakeFormsController::class, 'update']);
+    Route::delete('/{id}', [CakeFormsController::class, 'destroy']);
+});
+
 Route::prefix('decors')->group(function () {
     Route::post('/', [DecorsController::class, 'create']);
     Route::get('/', [DecorsController::class, 'index']);
@@ -130,10 +139,10 @@ Route::prefix('tiers')->group(function () {
     Route::delete('/{id}', [TiersController::class, 'destroy']);
 });
 
-Route::prefix('cake-designers')->group(function () {
+Route::middleware('auth:sanctum')->prefix('cake-designers')->group(function () {
     Route::post('/', [CakeDesignersController::class, 'create']);
     Route::get('/', [CakeDesignersController::class, 'index']);
     Route::get('/{id}', [CakeDesignersController::class, 'show']);
-    Route::post('/{id}', [CakeDesignersController::class, 'update']);
+//    Route::post('/{id}', [CakeDesignersController::class, 'update']);
     Route::delete('/{id}', [CakeDesignersController::class, 'destroy']);
 });

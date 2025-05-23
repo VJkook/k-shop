@@ -1,5 +1,4 @@
-import axios, {AxiosInstance, InternalAxiosRequestConfig} from 'axios'
-import {router} from "next/client";
+import axios, {InternalAxiosRequestConfig} from 'axios'
 
 const baseURL = 'http://localhost:8000'
 
@@ -8,24 +7,6 @@ axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 
-// {
-//     'Content-Type': 'application/json',
-//     'Access-Control-Allow-Origin': '*',
-//     'Access-Control-Allow-Headers':
-//     'Origin, X-Requested-With, Content-Type, Accept, Z-Key',
-//         'Access-Control-Allow-Methods': 'GET, HEAD, POST, PUT, DELETE, OPTIONS',
-// }
-
-const csrfApi = axios.create({
-    baseURL: '/',
-    withCredentials: true,
-    withXSRFToken: true,
-    headers: {
-        'X-Requested-With': 'XMLHttpRequest',
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-    },
-});
 
 const instance = axios.create({
     baseURL: baseURL,

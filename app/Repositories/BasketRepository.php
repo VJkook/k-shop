@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Basket;
 use App\Models\Responses\BasketResponse;
+use Illuminate\Database\Eloquent\Builder;
 
 class BasketRepository
 {
@@ -24,26 +25,16 @@ class BasketRepository
      */
     public function getItemsByUserId(int $userId): array
     {
-        $rows = Basket::query()
-            ->select(
-                'baskets.id',
-                'baskets.id_product',
-                'id_user',
-                'count',
-                'rp.weight',
-                'rp.price',
-                'p.id_ready_cake',
-                'rp.name AS product_name'
-            )
-            ->join('products AS p', 'baskets.id_product', '=', 'p.id')
-            ->join('ready_cakes AS rp', 'p.id_ready_cake', '=', 'rp.id')
-            ->where('id_user', $userId)
-            ->get();
+        $rows = $this->buildBasketQuery($userId)->get();
 
         $imageRepo = new ImageRepository();
         $response = [];
         foreach ($rows as $row) {
-            $url = $imageRepo->getUrlFirstByReadyCakeId($row['id_ready_cake']);
+            $url = null;
+            if (!is_null($row['id_product'])) {
+                $url = $imageRepo->getUrlFirstByReadyCakeId($row['id_product']);
+            }
+
             $arr = $row->toArray();
             $response[] = new BasketResponse(
                 $arr['id'],
@@ -61,21 +52,7 @@ class BasketRepository
 
     public function getItemById(int $id, int $userId): BasketResponse
     {
-        $row = Basket::query()
-            ->select(
-                'baskets.id',
-                'baskets.id_product',
-                'id_user',
-                'count',
-                'rp.weight',
-                'rp.price',
-                'rp.name AS product_name'
-            )
-            ->join('products AS p', 'baskets.id_product', '=', 'p.id')
-            ->join('ready_cakes AS rp', 'p.id_ready_cake', '=', 'rp.id')
-            ->where('id_user', $userId)
-            ->where('baskets.id', $id)
-            ->first();
+        $row = $this->buildBasketQuery($userId)->where('baskets.id', $id)->first();
 
         $imageRepo = new ImageRepository();
         $url = $imageRepo->getUrlFirstByReadyCakeId($row->id_product);
@@ -90,6 +67,25 @@ class BasketRepository
             $arr['id_product'],
             $url
         );
+    }
+
+    private function buildBasketQuery(string $userId): Builder
+    {
+        return Basket::query()
+            ->select(
+                'baskets.id',
+                'baskets.id_product',
+                'baskets.id_user',
+                'count',
+                'rp.price',
+            )
+            ->selectRaw('COALESCE(rp.name, cd.name) AS product_name')
+            ->selectRaw('COALESCE(rp.weight, cd.weight) AS weight')
+            ->selectRaw('COALESCE(rp.price, cd.total_cost) AS price')
+            ->join('products AS p', 'baskets.id_product', '=', 'p.id')
+            ->leftJoin('ready_cakes AS rp', 'p.id_ready_cake', '=', 'rp.id')
+            ->leftJoin('cake_designers AS cd', 'p.id_cake_designer', '=', 'cd.id')
+            ->where('baskets.id_user', $userId);
     }
 
     public function updateById(int $id, int $userId, int $count): BasketResponse

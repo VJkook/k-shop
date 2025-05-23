@@ -40,4 +40,9 @@ class Product extends Model
     {
         return $this->belongsTo(ReadyCake::class, 'id_ready_cake', 'id');
     }
+
+    public function cakeDesigner(): BelongsTo
+    {
+        return $this->belongsTo(CakeDesigner::class, 'id_cake_designer', 'id');
+    }
 }

@@ -5,15 +5,16 @@ namespace App\Repositories;
 use App\Models\CakeDesigner;
 use App\Models\CakeDesignerDecorRelation;
 use App\Models\Image;
+use App\Models\Product;
 use App\Models\Requests\DecorRequest;
-use App\Models\Responses\CakeDesignerResponse;
+use App\Models\Responses\CakeDesignersResponse;
 use App\Models\Responses\ImageResponse;
 use App\Models\Tier;
 use Illuminate\Support\Facades\DB;
 
 class CakeDesignerRepository
 {
-    public function create(array $attributes): ?CakeDesignerResponse
+    public function create(array $attributes): ?CakeDesignersResponse
     {
         /** @var CakeDesigner|null $cakeDesigner */
         $cakeDesigner = null;
@@ -43,35 +44,37 @@ class CakeDesignerRepository
 
                 CakeDesignerDecorRelation::query()->create($arr);
             }
+
+            Product::query()->create(['id_cake_designer' => $cakeDesigner->id]);
         });
 
         return $this->getById($cakeDesigner->id);
     }
 
     /**
-     * @return CakeDesignerResponse[]
+     * @return CakeDesignersResponse[]
      */
     public function all(): array
     {
         $result = [];
-        $fillings = CakeDesigner::query()->get();
+        $cakeDesigners = CakeDesigner::query()->get();
         /** @var CakeDesigner $filling */
-        foreach ($fillings as $filling) {
-            $fillingResponse = $this->buildResponse($filling);
+        foreach ($cakeDesigners as $cakeDesigner) {
+            $fillingResponse = $this->buildResponse($cakeDesigner);
             $result[] = $fillingResponse;
         }
 
         return $result;
     }
 
-    public function getById(int $id): CakeDesignerResponse
+    public function getById(int $id): CakeDesignersResponse
     {
         /** @var CakeDesigner $cakeDesigner */
         $cakeDesigner = CakeDesigner::query()->find($id);
         return $this->buildResponse($cakeDesigner);
     }
 
-    public function updateById(int $id, array $attributes): CakeDesignerResponse
+    public function updateById(int $id, array $attributes): CakeDesignersResponse
     {
         /** @var CakeDesigner $cakeDesigner */
         $cakeDesigner = CakeDesigner::query()->find($id);
@@ -84,15 +87,19 @@ class CakeDesignerRepository
         return CakeDesigner::query()->find($id)->delete();
     }
 
-    private function buildResponse(CakeDesigner $cakeDesigner): CakeDesignerResponse
+    private function buildResponse(CakeDesigner $cakeDesigner): CakeDesignersResponse
     {
-        $fillingResponse = new CakeDesignerResponse(
+        /** @var Product $product */
+        $product = $cakeDesigner->product()->first();
+        $fillingResponse = new CakeDesignersResponse(
             $cakeDesigner->id,
             $cakeDesigner->name,
             $cakeDesigner->description,
             $cakeDesigner->weight,
             $cakeDesigner->total_cost,
             $cakeDesigner->id_coverage,
+            $cakeDesigner->id_cake_form,
+            $product->id
         );
 
         /** @var Image $image */

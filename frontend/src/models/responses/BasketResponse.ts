@@ -1,4 +1,4 @@
-export interface Basket {
+export interface BasketResponse {
     id: number
     product_name: string
     weight: number,
