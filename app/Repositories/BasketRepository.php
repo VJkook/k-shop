@@ -3,11 +3,14 @@
 namespace App\Repositories;
 
 use App\Models\Basket;
+use App\Models\Product;
 use App\Models\Responses\BasketResponse;
 use Illuminate\Database\Eloquent\Builder;
 
 class BasketRepository
 {
+    const CAKE_DESIGNER_TYPE = 'cake-designer';
+    const READY_CAKE_TYPE = 'ready-cake';
     public function create(int $userId, int $productId, int $count = 1): BasketResponse
     {
         /** @var Basket $basket */
@@ -28,13 +31,12 @@ class BasketRepository
         $rows = $this->buildBasketQuery($userId)->get();
 
         $imageRepo = new ImageRepository();
+        $productRepo = new ProductRepository();
         $response = [];
         foreach ($rows as $row) {
-            $url = null;
-            if (!is_null($row['id_product'])) {
-                $url = $imageRepo->getUrlFirstByReadyCakeId($row['id_product']);
-            }
-
+            $url = $imageRepo->getUrlFirstByReadyCakeId($row['id_product']);
+            $product = $productRepo->getById($row['id_product']);
+            $itemType = $this->getItemTypeByProduct($product);
             $arr = $row->toArray();
             $response[] = new BasketResponse(
                 $arr['id'],
@@ -43,11 +45,25 @@ class BasketRepository
                 $arr['price'],
                 $arr['count'],
                 $arr['id_product'],
+                $itemType,
                 $url
             );
         }
 
         return $response;
+    }
+
+    private function getItemTypeByProduct(Product $product): string
+    {
+        if (!is_null($product->id_cake_designer)) {
+            return self::CAKE_DESIGNER_TYPE;
+        }
+
+        if (!is_null($product->id_ready_cake)) {
+            return self::READY_CAKE_TYPE;
+        }
+
+        return '';
     }
 
     public function getItemById(int $id, int $userId): BasketResponse
@@ -57,6 +73,10 @@ class BasketRepository
         $imageRepo = new ImageRepository();
         $url = $imageRepo->getUrlFirstByReadyCakeId($row->id_product);
 
+        $productRepo = new ProductRepository();
+        $product = $productRepo->getById($row['id_product']);
+        $itemType = $this->getItemTypeByProduct($product);
+
         $arr = $row->toArray();
         return new BasketResponse(
             $arr['id'],
@@ -65,6 +85,7 @@ class BasketRepository
             $arr['price'],
             $arr['count'],
             $arr['id_product'],
+            $itemType,
             $url
         );
     }

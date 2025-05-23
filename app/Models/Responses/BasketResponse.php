@@ -11,6 +11,7 @@ class BasketResponse
         public readonly float|null $price,
         public readonly int        $count,
         public readonly int        $id_product,
+        public readonly string     $item_type,
         public string|null         $image = ''
     )
     {

@@ -2,13 +2,12 @@ import React, {FC, useEffect, useState} from 'react';
 import styles from './Hero.module.scss';
 import cn from 'classnames';
 import Image from 'next/image';
-import Logo1 from '../../../../assets/img/construct3.jpg';
 import {apiDelete, apiGet, apiPost} from "@/utils/apiInstance";
 import {BasketResponse} from "../../../../models/responses/BasketResponse";
 import {router} from "next/client";
 
 const Basket: FC = () => {
-    const [baskets, setBaskets] = useState<t[]>()
+    const [baskets, setBaskets] = useState<BasketResponse[]>()
     const [sumPrice, setSumPrice] = useState<number>(0)
 
     const loadBasket = () => {
@@ -26,7 +25,7 @@ const Basket: FC = () => {
 
     const updateSumPrice = () => {
         let sum = 0
-        baskets?.map((item: Basket) => {
+        baskets?.map((item: BasketResponse) => {
             sum = sum + (item.price * item.count)
         })
         setSumPrice(parseFloat(sum.toFixed(2)))
