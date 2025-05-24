@@ -16,4 +16,5 @@ export interface CakeDesignerRequest {
     id_cake_form: number;
     tiers: TierRequest[];
     decors: DecorRequest[];
+    total_cost: number;
 }

@@ -46,7 +46,7 @@ class CakeDesignersController extends Controller
             'decors.*.id' => ['integer', 'required'],
             'decors.*.count' => ['integer', 'required'],
 
-            'total_cost' => ['decimal:0,2'],
+            'total_cost' => ['decimal:0,2', 'required'],
         ]);
 
         if ($validator->fails()) {

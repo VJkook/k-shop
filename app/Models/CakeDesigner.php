@@ -32,6 +32,7 @@ class CakeDesigner extends Model
         'id_coverage',
         'id_cake_form',
         'id_user',
+        'total_cost',
     ];
 
     protected $table = 'cake_designers';

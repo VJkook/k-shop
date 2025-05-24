@@ -1,25 +1,25 @@
-import React, {FC, useEffect, useState} from 'react'
-import styles from './Hero.module.scss'
-import cn from 'classnames'
-import {propoData} from '@/screens/main/hero/propo-data'
-import {ReadyCake} from "../../../../models/responses/ReadyCake";
+import React, {FC, useEffect, useState, useMemo} from 'react';
+import styles from './Hero.module.scss';
+import cn from 'classnames';
 import {apiGet, apiPost} from "@/utils/apiInstance";
 import {CakeForm} from "../../../../models/responses/CakeForm";
 import {Filling} from "../../../../models/responses/Filling";
-import {Property} from "csstype";
-import Fill = Property.Fill;
 import {Coverage} from "../../../../models/responses/Coverage";
 import {Decor} from "../../../../models/responses/Decor";
 import {router} from "next/client";
 import {CakeDesigner} from "../../../../models/responses/CakeDesigner";
 import {CakeDesignerRequest, DecorRequest, TierRequest} from "../../../../models/requests/CakeDesignerRequest";
 
-interface PropoData {
-    img: React.ReactNode | null
-    title: string
-}
-
 const CakeDesignerForm: FC = () => {
+    // Ограничения по весу для разного количества ярусов
+    const TIER_WEIGHT_LIMITS = [
+        { tiers: 5, minWeight: 12, maxWeight: 15 },
+        { tiers: 4, minWeight: 8, maxWeight: 15 },
+        { tiers: 3, minWeight: 4, maxWeight: 15 },
+        { tiers: 2, minWeight: 3, maxWeight: 15 },
+        { tiers: 1, minWeight: 2, maxWeight: 15 }
+    ];
+
     const [weight, setWeight] = useState(2);
     const [tiersCount, setTiersCount] = useState(1);
     const [selectedTab, setSelectedTab] = useState(1);
@@ -43,19 +43,94 @@ const CakeDesignerForm: FC = () => {
     const [description, setDescription] = useState<string>('');
     const [cakeDesigner, setCakeDesigner] = useState<CakeDesigner>();
 
-    // Инициализация состояний для ярусов
+    // Функция для расчета веса каждого яруса по формуле: wi = ((W + n(n-1)/2)/n) - (i-1)
+    const calculateTierWeights = (totalWeight: number, tiers: number): number[] => {
+        const weights: number[] = [];
+        const base = (totalWeight + (tiers * (tiers - 1)) / 2) / tiers;
+
+        for (let i = 1; i <= tiers; i++) {
+            weights.push(parseFloat((base - (i - 1)).toFixed(2)));
+        }
+
+        return weights;
+    };
+
+    // Функция для определения доступного количества ярусов
+    const getAvailableTiersCount = (currentWeight: number): number => {
+        const limit = TIER_WEIGHT_LIMITS.find(limit =>
+            currentWeight >= limit.minWeight && currentWeight <= limit.maxWeight
+        );
+        return limit ? limit.tiers : 1;
+    };
+
+    // Обновляем количество ярусов при изменении веса
     useEffect(() => {
+        const maxTiers = getAvailableTiersCount(weight);
+        if (tiersCount > maxTiers) {
+            setTiersCount(maxTiers);
+        }
+    }, [weight]);
+
+    // Инициализация состояний для ярусов с расчетом веса по формуле
+    useEffect(() => {
+        const tierWeights = calculateTierWeights(weight, tiersCount);
         const initialTiers: Record<number, {id_filling: number | null, weight: number}> = {};
         const initialSelected: Record<number, number | null> = {};
 
         for (let i = 1; i <= tiersCount; i++) {
-            initialTiers[i] = tiers[i] || {id_filling: null, weight: weight / tiersCount};
+            initialTiers[i] = tiers[i] || {
+                id_filling: null,
+                weight: tierWeights[i - 1]
+            };
             initialSelected[i] = selectedFillings[i] || null;
         }
 
         setTiers(initialTiers);
         setSelectedFillings(initialSelected);
     }, [tiersCount, weight]);
+
+    // Функция для изменения веса с проверкой ограничений
+    const handleWeightChange = (newWeight: number) => {
+        const clampedWeight = Math.max(2, Math.min(15, newWeight));
+        setWeight(clampedWeight);
+
+        // Обновляем количество ярусов
+        const maxTiers = getAvailableTiersCount(clampedWeight);
+        if (tiersCount > maxTiers) {
+            setTiersCount(maxTiers);
+        }
+    };
+
+    // Расчет итоговой цены
+    const totalPrice = useMemo(() => {
+        let price = 0;
+
+        // Стоимость начинок
+        Object.values(tiers).forEach(tier => {
+            if (tier.id_filling) {
+                const filling = fillings.find(f => f.id === tier.id_filling);
+                if (filling) {
+                    price += filling.price_by_kg * tier.weight;
+                }
+            }
+        });
+
+        // Стоимость покрытия
+        const coverage = coverages.find(c => c.id === coverageId);
+        if (coverage) {
+            price += coverage.price;
+        }
+
+        // Стоимость декора
+        decorRequests.forEach(decorReq => {
+            const decor = decors.find(d => d.id === decorReq.id);
+            if (decor) {
+                price += decor.price * decorReq.count;
+            }
+        });
+
+        return parseFloat(price.toFixed(2));
+    }, [tiers, fillings, coverageId, coverages, decorRequests, decors]);
 
     const updateQuantity = (id: number, change: number) => {
         setQuantities(prev => ({
@@ -100,7 +175,6 @@ const CakeDesignerForm: FC = () => {
         loadCoverages()
         loadDecors()
     }, []);
-
     const loadCakeForms = () => {
         apiGet('/api/cake-forms')
             .then((response) => {
@@ -180,7 +254,8 @@ const CakeDesignerForm: FC = () => {
             id_coverage: coverageId,
             id_cake_form: cakeFormId,
             tiers: tiersRequest,
-            decors: decorRequests
+            decors: decorRequests,
+            total_cost: totalPrice
         };
 
         apiPost('/api/cake-designers', cakeDesignerRequest)
@@ -194,8 +269,14 @@ const CakeDesignerForm: FC = () => {
         })
     };
 
-    const handleIncrement = () => setWeight((w) => w + 1);
-    const handleDecrement = () => setWeight((w) => Math.max(1, w - 1));
+
+    const handleIncrement = () => handleWeightChange(weight + 0.5);
+    const handleDecrement = () => handleWeightChange(weight - 0.5);
+
+    // Функция для проверки, доступно ли количество ярусов
+    const isTierCountAvailable = (count: number) => {
+        return count <= getAvailableTiersCount(weight);
+    };
 
     return (
         <div className={styles.container}>
@@ -214,8 +295,15 @@ const CakeDesignerForm: FC = () => {
                                 {[1, 2, 3, 4, 5].map((n) => (
                                     <button
                                         key={n}
-                                        className={cn(styles['tier-button'], {[styles.active]: tiersCount === n})}
-                                        onClick={() => setTiersCount(n)}
+                                        className={cn(
+                                            styles['tier-button'],
+                                            {
+                                                [styles.active]: tiersCount === n,
+                                                [styles.disabled]: !isTierCountAvailable(n)
+                                            }
+                                        )}
+                                        onClick={() => isTierCountAvailable(n) && setTiersCount(n)}
+                                        disabled={!isTierCountAvailable(n)}
                                     >
                                         {n}
                                     </button>
@@ -357,7 +445,7 @@ const CakeDesignerForm: FC = () => {
                         <div className={styles['footer-note']}>Расчет стоимости изделия предварительный!</div>
                         <div className={styles['footer-total']}>
                             <span>ИТОГО:</span>
-                            <span className={styles['total-price']}>??? руб</span>
+                            <span className={styles['total-price']}>{totalPrice} руб</span>
                             <button className={styles['order-button']} onClick={addToBasket}>
                                 Оформить заказ
                             </button>
