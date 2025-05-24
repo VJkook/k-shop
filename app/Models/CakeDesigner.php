@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
@@ -60,6 +61,11 @@ class CakeDesigner extends Model
     public function product(): HasOne
     {
         return $this->hasOne(Product::class, 'id_cake_designer', 'id');
+    }
+
+    public function tiers(): HasMany
+    {
+        return $this->hasMany(Tier::class, 'id_cake_designer', 'id');
     }
 
     public function tierFillings(): BelongsToMany

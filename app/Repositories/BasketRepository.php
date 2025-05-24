@@ -12,6 +12,8 @@ use App\Models\Responses\BasketDetailsResponse;
 use App\Models\Responses\BasketResponse;
 use App\Models\Responses\DecorResponse;
 use App\Models\Responses\FillingResponse;
+use App\Models\Responses\TierResponse;
+use App\Models\Tier;
 use Illuminate\Database\Eloquent\Builder;
 
 class BasketRepository
@@ -47,26 +49,25 @@ class BasketRepository
             $product = $productRepo->getById($basketItem['id_product']);
             $arr = $basketItem->toArray();
 
-            /** @var DecorResponse[] $decorResponses */
-            $decorResponses = [];
-
-            /** @var FillingResponse[] $fillingResponses */
-            $fillingResponses = [];
-
             /** @var BasketDetailsResponse|null $basketDetailResponse */
             $basketDetailResponse = null;
             if (!is_null($product->id_cake_designer)) {
+                /** @var DecorResponse[] $decorResponses */
+                $decorResponses = [];
+                /** @var TierResponse[] $tierResponses */
+                $tierResponses = [];
+
                 /** @var CakeDesigner $cakeDesigner */
                 $cakeDesigner = $product->cakeDesigner()->first();
 
-                /** @var Filling[] $fillings */
-                $fillings = $cakeDesigner->tierFillings()->get();
-                foreach ($fillings as $filling) {
-                    $fillingResponse = FillingResponse::fromFilling($filling);
-                    /** @var Image $image */
-                    $image = $filling->image()->first();
-                    $fillingResponse->setImage($image->toResponse());
-                    $fillingResponses[] = $fillingResponse;
+                /** @var Tier[] $tiers */
+                $tiers = $cakeDesigner->tiers()->get();
+                foreach ($tiers as $tier) {
+                    /** @var Filling $filling */
+                    $filling = $tier->filling()->first();
+                    $fillingResponse = $filling->toResponse();
+                    $tierResponse = new TierResponse($tier->id, $fillingResponse, $tier->weight);
+                    $tierResponses[] = $tierResponse;
                 }
 
                 /** @var Decor[] $decors */
@@ -79,7 +80,7 @@ class BasketRepository
                     $decorResponses[] = $decorResponse;
                 }
 
-                $basketDetailResponse = new BasketDetailsResponse($fillingResponses, $decorResponses);
+                $basketDetailResponse = new BasketDetailsResponse($tierResponses, $decorResponses);
             }
 
             $response[] = new BasketResponse(

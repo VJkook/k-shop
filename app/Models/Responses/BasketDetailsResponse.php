@@ -5,11 +5,11 @@ namespace App\Models\Responses;
 class BasketDetailsResponse
 {
     /**
-     * @param FillingResponse[] $fillings
+     * @param TierResponse[] $tiers
      * @param DecorResponse[] $decors
      */
     public function __construct(
-        public array $fillings,
+        public array $tiers,
         public array $decors,
     )
     {

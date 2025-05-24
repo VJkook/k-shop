@@ -7,6 +7,7 @@ use App\Models\CakeDesignerDecorRelation;
 use App\Models\Image;
 use App\Models\Product;
 use App\Models\Requests\DecorRequest;
+use App\Models\Requests\TierRequest;
 use App\Models\Responses\CakeDesignersResponse;
 use App\Models\Responses\ImageResponse;
 use App\Models\Tier;
@@ -19,19 +20,21 @@ class CakeDesignerRepository
         /** @var CakeDesigner|null $cakeDesigner */
         $cakeDesigner = null;
         DB::transaction(function () use (&$cakeDesigner, $attributes) {
-            /** @var int[] $fillingIds */
-            $fillingIds = $attributes['filling_ids'];
-            unset($attributes['filling_ids']);
             /** @var DecorRequest[] $decors */
             $decors = $attributes['decors'];
             unset($attributes['decors']);
 
+            /** @var TierRequest[] $tiers */
+            $tiers = $attributes['tiers'];
+            unset($attributes['tiers']);
+
             /** @var CakeDesigner $cakeDesigner */
             $cakeDesigner = CakeDesigner::query()->create($attributes);
 
-            foreach ($fillingIds as $fillingId) {
-                $arr['id_filling'] = $fillingId;
+            foreach ($tiers as $tier) {
+                $arr['id_filling'] = $tier->id_filling;
                 $arr['id_cake_designer'] = $cakeDesigner->id;
+                $arr['weight'] = $tier->weight;
                 Tier::query()->create($arr);
             }
 

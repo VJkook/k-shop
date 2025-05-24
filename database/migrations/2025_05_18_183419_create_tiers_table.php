@@ -18,6 +18,8 @@ return new class extends Migration {
 
             $table->unsignedBigInteger('id_filling');
             $table->foreign('id_filling')->references('id')->on('fillings');
+
+            $table->decimal('weight', 12, 2);
         });
     }
 

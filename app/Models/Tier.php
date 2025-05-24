@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $id
  * @property int $id_cake_designer
  * @property int $id_filling
+ * @property float $weight
  */
 class Tier extends Model
 {
@@ -19,7 +20,8 @@ class Tier extends Model
     protected $fillable = [
         'id_cake_designer',
         'id_filling',
-        'id_cake_sponge'
+        'id_cake_sponge',
+        'weight',
     ];
 
     public $timestamps = false;

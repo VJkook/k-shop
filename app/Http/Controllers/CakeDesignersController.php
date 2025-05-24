@@ -38,8 +38,9 @@ class CakeDesignersController extends Controller
             'id_coverage' => ['integer', 'numeric', 'required'],
             'id_cake_form' => ['integer', 'numeric', 'required'],
 
-            'filling_ids' => ['array', 'required'],
-            'filling_ids.*' => ['integer', 'required'],
+            'tiers' => ['array', 'required'],
+            'tiers.*.weight' => ['decimal:0,2', 'required'],
+            'tiers.*.id_filling' => ['integer', 'required'],
 
             'decors' => ['array', 'required'],
             'decors.*.id' => ['integer', 'required'],
@@ -69,6 +70,14 @@ class CakeDesignersController extends Controller
             }
         }
         $attributes['decors'] = $decorsRequest;
+
+        $tiersRequest = [];
+        if (isset($request->tiers)) {
+            foreach ($request->tiers as $tier) {
+                $tiersRequest[] = new TierRequest($tier['id_filling'], $tier['weight']);
+            }
+        }
+        $attributes['tiers'] = $tiersRequest;
 
         /** @var User $user */
         $user = Auth::user();

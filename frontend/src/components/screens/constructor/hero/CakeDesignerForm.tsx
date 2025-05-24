@@ -1,14 +1,27 @@
 import React, {FC, useEffect, useState} from 'react'
 import styles from './Hero.module.scss'
 import cn from 'classnames'
+import {propoData} from '@/screens/main/hero/propo-data'
 import {ReadyCake} from "../../../../models/responses/ReadyCake";
 import {apiGet, apiPost} from "@/utils/apiInstance";
 import {CakeForm} from "../../../../models/responses/CakeForm";
 import {Filling} from "../../../../models/responses/Filling";
+import {Property} from "csstype";
+import Fill = Property.Fill;
 import {Coverage} from "../../../../models/responses/Coverage";
 import {Decor} from "../../../../models/responses/Decor";
 import {router} from "next/client";
 import {CakeDesigner} from "../../../../models/responses/CakeDesigner";
+
+interface PropoData {
+    img: React.ReactNode | null
+    title: string
+}
+
+interface TierRequest {
+    id_filling: number;
+    weight: number;
+}
 
 interface DecorRequest {
     id: number
@@ -21,21 +34,21 @@ interface CakeDesignerRequest {
     weight: number;
     id_coverage: number;
     id_cake_form: number;
-    filling_ids: number[];
+    tiers: TierRequest[];
     decors: DecorRequest[];
 }
 
 const CakeDesignerForm: FC = () => {
     const [weight, setWeight] = useState(2);
-    const [tiers, setTiers] = useState(1);
+    const [tiersCount, setTiersCount] = useState(1);
     const [selectedTab, setSelectedTab] = useState(1);
 
     const [cakeForms, setCakeForms] = useState<CakeForm[]>([]);
     const [cakeFormId, setCakeFormId] = useState<number>(1);
 
     const [fillings, setFillings] = useState<Filling[]>([]);
-    const [fillingIds, setFillingIds] = useState<Record<number, number[]>>({}); // { tier: [fillingIds] }
-    const [selectedFillings, setSelectedFillings] = useState<Record<number, number[]>>({}); // { tier: [fillingIds] }
+    const [tiers, setTiers] = useState<Record<number, {id_filling: number | null, weight: number}>>({});
+    const [selectedFillings, setSelectedFillings] = useState<Record<number, number | null>>({});
 
     const [coverages, setCoverages] = useState<Coverage[]>([]);
     const [coverageId, setCoverageId] = useState<number>(1);
@@ -51,13 +64,17 @@ const CakeDesignerForm: FC = () => {
 
     // Инициализация состояний для ярусов
     useEffect(() => {
-        const initialFillings: Record<number, number[]> = {};
-        for (let i = 1; i <= tiers; i++) {
-            initialFillings[i] = fillingIds[i] || [];
+        const initialTiers: Record<number, {id_filling: number | null, weight: number}> = {};
+        const initialSelected: Record<number, number | null> = {};
+
+        for (let i = 1; i <= tiersCount; i++) {
+            initialTiers[i] = tiers[i] || {id_filling: null, weight: weight / tiersCount};
+            initialSelected[i] = selectedFillings[i] || null;
         }
-        setFillingIds(initialFillings);
-        setSelectedFillings(initialFillings);
-    }, [tiers]);
+
+        setTiers(initialTiers);
+        setSelectedFillings(initialSelected);
+    }, [tiersCount, weight]);
 
     const updateQuantity = (id: number, change: number) => {
         setQuantities(prev => ({
@@ -66,22 +83,19 @@ const CakeDesignerForm: FC = () => {
         }));
     };
 
-    const addFillingId = (tier: number, id: number) => {
-        setFillingIds(prev => {
-            const newFillings = {...prev};
-            newFillings[tier] = newFillings[tier]?.includes(id)
-                ? newFillings[tier].filter(fId => fId !== id)
-                : [...(newFillings[tier] || []), id];
-            return newFillings;
-        });
+    const addFilling = (tier: number, id: number) => {
+        setTiers(prev => ({
+            ...prev,
+            [tier]: {
+                id_filling: id,
+                weight: prev[tier]?.weight || weight / tiersCount
+            }
+        }));
 
-        setSelectedFillings(prev => {
-            const newSelected = {...prev};
-            newSelected[tier] = newSelected[tier]?.includes(id)
-                ? newSelected[tier].filter(fId => fId !== id)
-                : [...(newSelected[tier] || []), id];
-            return newSelected;
-        });
+        setSelectedFillings(prev => ({
+            ...prev,
+            [tier]: id
+        }));
     };
 
     const addSelectedDecor = (id: number) => {
@@ -100,59 +114,59 @@ const CakeDesignerForm: FC = () => {
     };
 
     useEffect(() => {
-        loadCakeForms();
-        loadFillings();
-        loadCoverages();
-        loadDecors();
+        loadCakeForms()
+        loadFillings()
+        loadCoverages()
+        loadDecors()
     }, []);
 
     const loadCakeForms = () => {
         apiGet('/api/cake-forms')
             .then((response) => {
                 if (response.data.length) {
-                    setCakeForms(response.data);
+                    setCakeForms(response.data)
                 }
             }).catch((error) => {
-            console.log(error);
-        });
-    };
+            console.log(error)
+        })
+    }
 
     const loadFillings = () => {
         apiGet('/api/fillings')
             .then((response) => {
                 if (response.data.length) {
-                    setFillings(response.data);
+                    setFillings(response.data)
                 }
             }).catch((error) => {
-            console.log(error);
-        });
-    };
+            console.log(error)
+        })
+    }
 
     const loadCoverages = () => {
         apiGet('/api/coverages')
             .then((response) => {
                 if (response.data.length) {
-                    setCoverages(response.data);
+                    setCoverages(response.data)
                 }
             }).catch((error) => {
-            console.log(error);
-        });
-    };
+            console.log(error)
+        })
+    }
 
     const loadDecors = () => {
         apiGet('/api/decors')
             .then((response) => {
                 if (response.data.length) {
-                    setDecors(response.data);
+                    setDecors(response.data)
                 }
             }).catch((error) => {
-            console.log(error);
-        });
-    };
+            console.log(error)
+        })
+    }
 
     useEffect(() => {
         if (cakeDesigner == undefined) {
-            return;
+            return
         }
 
         apiPost('/api/basket', {
@@ -160,38 +174,43 @@ const CakeDesignerForm: FC = () => {
         })
             .then((response) => {
                 if (response.data != undefined) {
-                    // setBasket(response.data);
+                    // setBasket(response.data)
                 }
             }).catch((error) => {
-            console.log(error);
+            console.log(error)
         }).finally(() => {
-            router.push('/basket');
-        });
+            router.push('/basket')
+        })
     }, [cakeDesigner]);
 
     const addToBasket = () => {
-        // Собираем все filling_ids из всех ярусов
-        const allFillingIds = Object.values(fillingIds).flat();
+        // Преобразуем tiers в массив объектов TierRequest
+        const tiersRequest: TierRequest[] = Object.entries(tiers)
+            .filter(([_, tier]) => tier.id_filling !== null)
+            .map(([_, tier]) => ({
+                id_filling: tier.id_filling!,
+                weight: tier.weight
+            }));
 
-        let cakeDesignerRequest: CakeDesignerRequest = {
+        const cakeDesignerRequest: CakeDesignerRequest = {
             name: 'Торт из конструктора',
             description: description,
             weight: weight,
             id_coverage: coverageId,
             id_cake_form: cakeFormId,
-            filling_ids: allFillingIds,
+            tiers: tiersRequest,
             decors: decorRequests
         };
 
         apiPost('/api/cake-designers', cakeDesignerRequest)
             .then((response) => {
                 if (response.data != undefined) {
-                    console.log(response.data);
-                    setCakeDesigner(response.data);
+                    console.log(response.data)
+                    setCakeDesigner(response.data)
                 }
             }).catch((error) => {
-            console.log(error);
-        });
+            console.log(error)
+        })
     };
 
     const handleIncrement = () => setWeight((w) => w + 1);
@@ -214,8 +233,8 @@ const CakeDesignerForm: FC = () => {
                                 {[1, 2, 3, 4, 5].map((n) => (
                                     <button
                                         key={n}
-                                        className={cn(styles['tier-button'], {[styles.active]: tiers === n})}
-                                        onClick={() => setTiers(n)}
+                                        className={cn(styles['tier-button'], {[styles.active]: tiersCount === n})}
+                                        onClick={() => setTiersCount(n)}
                                     >
                                         {n}
                                     </button>
@@ -238,7 +257,7 @@ const CakeDesignerForm: FC = () => {
 
                     <div className={styles['tier-selection']}>
                         <div className={styles['tier-tabs']}>
-                            {[...Array(tiers)].map((_, i) => {
+                            {[...Array(tiersCount)].map((_, i) => {
                                 const tierNumber = i + 1;
                                 return (
                                     <button
@@ -262,9 +281,9 @@ const CakeDesignerForm: FC = () => {
                                             key={item.id}
                                             className={cn(
                                                 styles['option-item'],
-                                                {[styles.selected]: (selectedFillings[selectedTab] || []).includes(item.id)}
+                                                {[styles.selected]: selectedFillings[selectedTab] === item.id}
                                             )}
-                                            onClick={() => addFillingId(selectedTab, item.id)}
+                                            onClick={() => addFilling(selectedTab, item.id)}
                                         >
                                             <img src={item.image.url} alt={item.name}/>
                                             <span>{item.name}</span><br/>
@@ -366,7 +385,7 @@ const CakeDesignerForm: FC = () => {
                 </div>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default CakeDesignerForm;
+export default CakeDesignerForm
