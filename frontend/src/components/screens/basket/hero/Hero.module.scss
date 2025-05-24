@@ -26,16 +26,16 @@
             font-size: 1.39vw;
             line-height: 2.29vw;
             font-weight: 400;
-            
-           
-              
+
+
+
             .product {
               display: flex;
               align-items: flex-start;
               padding: 25px 30px;
               border-bottom: 1px solid #F7EFE9;
               color: #f6a181;
-          
+
               .image {
                   flex: 0 0 160px;
                   margin-right: 8vw;
@@ -46,26 +46,26 @@
                   border-radius: 0px;
                   overflow: hidden;
                   padding: 5px;
-          
+
                   img {
                       width: 100%;
                       height: auto;
                   }
               }
-          
-              .main-details {
+
+              .main_details {
                   flex: 1;
-                  display: flex;
-                  flex-direction: column;
-          
+                  min-width: 50%; // Позволяет контенту сжиматься при необходимости
+                  padding-right: 20px;
+
                   .details {
                       flex: 1;
-          
+
                       .name {
                           margin: 0;
                           font-size: 36px;
                       }
-          
+
                       .ves {
                           margin: 5px 0;
                           font-size: 30px;
@@ -74,8 +74,8 @@
                         margin: 5px 0;
                         font-size: 36px;
                     }
-          
-                      .toggle-details {
+
+                      .toggle_details {
                           margin-top: 10px;
                           background-color: transparent;
                           border: none;
@@ -83,28 +83,55 @@
                           cursor: pointer;
                       }
                   }
-          
-                  .extra-details {
-                      display: none;
-                      margin-top: 10px;
-          
+
+                  .extra_details {
+                      margin-top: 15px;
+                      padding: 15px;
+                      background: #f9f9f9;
+                      border-radius: 8px;
+                      width: 100%; // Занимает всю доступную ширину
+                      box-sizing: border-box;
+
                       &.visible {
                           display: block;
                       }
+
+                      .tier {
+                          margin-bottom: 15px;
+                          padding: 15px;
+                          background: #fff;
+                          border-radius: 6px;
+                          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                          width: 100%;
+
+                          h3 {
+                              font-size: 18px;
+                              margin-bottom: 10px;
+                              color: #333;
+                          }
+
+                          p {
+                              font-size: 16px;
+                              color: #555;
+                              margin: 8px 0;
+                              line-height: 1.5;
+                          }
+                      }
                   }
+
               }
-          
+
               .actions {
                   display: flex;
                   align-items: center;
                   margin-left: 23vw;
                   margin-top: 1vw;
-          
+
                   select {
                       margin-right: 10px;
                       border-radius: 7px;
                   }
-          
+
                   .remove {
                       background-color: transparent;
                       border: none;
@@ -115,13 +142,10 @@
                   }
               }
           }
-          
+
           .tier {
               margin-bottom: 10px;
           }
-
-
-
 
         }
         .right {
@@ -132,32 +156,32 @@
 
 
 
-            
+
             .summary {
               text-align: right;
               background-color: #F7EFE9;
               padding: 10px;
               border-radius: 10px;
-              
+
               // margin-left: 13px;
               width: 24vw;
-          
-              .sum { 
-                display: flex; 
-                justify-content: space-between; 
+
+              .sum {
+                display: flex;
+                justify-content: space-between;
                 margin-bottom: 10px;
-            
-                .price, 
-                .it { 
-                  color: #666; 
-                  margin: 0; 
+
+                .price,
+                .it {
+                  color: #666;
+                  margin: 0;
                   font-size: 25px;
                   padding-left: 3vw;
                   padding-right: 3vw;
                   margin-top: 1vw;
-                } 
+                }
               }
-          
+
               button {
                   background-color: #F3BDA8;
                   color: white;
@@ -176,10 +200,10 @@
         }
 
 
-        
-          
-          
-          
+
+
+
+
     }
 
 
