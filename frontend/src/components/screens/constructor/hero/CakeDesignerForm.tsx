@@ -12,30 +12,11 @@ import {Coverage} from "../../../../models/responses/Coverage";
 import {Decor} from "../../../../models/responses/Decor";
 import {router} from "next/client";
 import {CakeDesigner} from "../../../../models/responses/CakeDesigner";
+import {CakeDesignerRequest, DecorRequest, TierRequest} from "../../../../models/requests/CakeDesignerRequest";
 
 interface PropoData {
     img: React.ReactNode | null
     title: string
-}
-
-interface TierRequest {
-    id_filling: number;
-    weight: number;
-}
-
-interface DecorRequest {
-    id: number
-    count: number
-}
-
-interface CakeDesignerRequest {
-    name: string;
-    description: string;
-    weight: number;
-    id_coverage: number;
-    id_cake_form: number;
-    tiers: TierRequest[];
-    decors: DecorRequest[];
 }
 
 const CakeDesignerForm: FC = () => {

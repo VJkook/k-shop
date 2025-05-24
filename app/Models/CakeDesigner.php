@@ -78,6 +78,11 @@ class CakeDesigner extends Model
         );
     }
 
+    public function cakeDesignerDecorRelations(): HasMany
+    {
+        return $this->hasMany(CakeDesignerDecorRelation::class, 'id_cake_designer', 'id');
+    }
+
     public function decors(): BelongsToMany
     {
         return $this->belongsToMany(

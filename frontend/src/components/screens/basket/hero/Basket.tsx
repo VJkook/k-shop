@@ -139,44 +139,6 @@ const Basket: FC = () => {
                                     </div>
                                 ))
                             }
-
-
-                            {/*<div className={styles.product}>*/}
-                            {/*    <div className={styles.image}>*/}
-                            {/*        <Image src={Logo1} alt='Cake' className={styles.img}/>*/}
-                            {/*    </div>*/}
-                            {/*    <div className={styles.main_details}>*/}
-                            {/*        <div className={styles.details}>*/}
-                            {/*            <h2 className={styles.name}>Клубничный мир</h2>*/}
-                            {/*            <p className={styles.ves}>2 кг</p>*/}
-                            {/*            <p className={styles.pricep}>3000 ₽</p>*/}
-                            {/*            <button className={styles.toggle_details}>Детали</button>*/}
-                            {/*        </div>*/}
-                            {/*        <div className={styles.extra_details}>*/}
-                            {/*            <div className={styles.tier}>*/}
-                            {/*                <h3>1 ярус</h3>*/}
-                            {/*                <p>2 кг</p>*/}
-                            {/*                <p>Медовик: 1500 ₽/кг</p>*/}
-                            {/*                <p>Глазурь: 0 ₽/кг</p>*/}
-                            {/*                <p>Украшения: 500 ₽</p>*/}
-                            {/*            </div>*/}
-
-                            {/*            <div className={styles.tier}>*/}
-                            {/*                <h3>2 ярус</h3>*/}
-                            {/*                <p>2 кг</p>*/}
-                            {/*                <p>Медовик: 1500 ₽/кг</p>*/}
-                            {/*                <p>Глазурь: 0 ₽/кг</p>*/}
-                            {/*                <p>Украшения: 500 ₽</p>*/}
-                            {/*            </div>*/}
-                            {/*        </div>*/}
-                            {/*    </div>*/}
-                            {/*    <div className={styles.actions}>*/}
-                            {/*        <select>*/}
-                            {/*            <option value="1">1</option>*/}
-                            {/*        </select>*/}
-                            {/*        <button className={styles.remove}>×</button>*/}
-                            {/*    </div>*/}
-                            {/*</div>*/}
                         </div>
 
 

@@ -6,7 +6,7 @@ class BasketDetailsResponse
 {
     /**
      * @param TierResponse[] $tiers
-     * @param DecorResponse[] $decors
+     * @param CakeDesignerDecorResponse[] $decors
      */
     public function __construct(
         public array $tiers,

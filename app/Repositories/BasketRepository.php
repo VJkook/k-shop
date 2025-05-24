@@ -4,14 +4,15 @@ namespace App\Repositories;
 
 use App\Models\Basket;
 use App\Models\CakeDesigner;
+use App\Models\CakeDesignerDecorRelation;
 use App\Models\Decor;
 use App\Models\Filling;
 use App\Models\Image;
 use App\Models\Product;
 use App\Models\Responses\BasketDetailsResponse;
 use App\Models\Responses\BasketResponse;
+use App\Models\Responses\CakeDesignerDecorResponse;
 use App\Models\Responses\DecorResponse;
-use App\Models\Responses\FillingResponse;
 use App\Models\Responses\TierResponse;
 use App\Models\Tier;
 use Illuminate\Database\Eloquent\Builder;
@@ -21,16 +22,16 @@ class BasketRepository
     const CAKE_DESIGNER_TYPE = 'cake-designer';
     const READY_CAKE_TYPE = 'ready-cake';
 
-    public function create(int $userId, int $productId, int $count = 1): BasketResponse
+    public function create(int $userId, int $productId, int $count = 1): array
     {
         /** @var Basket $basket */
-        $basket = Basket::query()->create([
+        Basket::query()->create([
             'id_product' => $productId,
             'id_user' => $userId,
             'count' => $count
         ]);
 
-        return $this->getItemById($basket->id, $userId);
+        return $this->getItemsByUserId($userId);
     }
 
     /**
@@ -52,7 +53,7 @@ class BasketRepository
             /** @var BasketDetailsResponse|null $basketDetailResponse */
             $basketDetailResponse = null;
             if (!is_null($product->id_cake_designer)) {
-                /** @var DecorResponse[] $decorResponses */
+                /** @var CakeDesignerDecorResponse[] $decorResponses */
                 $decorResponses = [];
                 /** @var TierResponse[] $tierResponses */
                 $tierResponses = [];
@@ -70,14 +71,16 @@ class BasketRepository
                     $tierResponses[] = $tierResponse;
                 }
 
-                /** @var Decor[] $decors */
-                $decors = $cakeDesigner->decors()->get();
-                foreach ($decors as $decor) {
-                    $decorResponse = DecorResponse::fromDecor($decor);
-                    /** @var Image $image */
-                    $image = $decor->image()->first();
-                    $decorResponse->setImage($image->toResponse());
-                    $decorResponses[] = $decorResponse;
+                /** @var CakeDesignerDecorRelation[] $decorRelations */
+                $decorRelations = $cakeDesigner->cakeDesignerDecorRelations()->get();
+                foreach ($decorRelations as $decorRelation) {
+                    /** @var Decor $decor */
+                    $decor = $decorRelation->decor()->first();
+                    $decorResponse = $decor->toResponse();
+                    $decorResponses[] = CakeDesignerDecorResponse::fromDecorResponse(
+                        $decorResponse,
+                        $decorRelation->count
+                    );
                 }
 
                 $basketDetailResponse = new BasketDetailsResponse($tierResponses, $decorResponses);
@@ -109,30 +112,6 @@ class BasketRepository
         }
 
         return '';
-    }
-
-    public function getItemById(int $id, int $userId): BasketResponse
-    {
-        $row = $this->buildBasketQuery($userId)->where('baskets.id', $id)->first();
-
-        $imageRepo = new ImageRepository();
-        $url = $imageRepo->getUrlFirstByReadyCakeId($row->id_product);
-
-        $productRepo = new ProductRepository();
-        $product = $productRepo->getById($row['id_product']);
-        $itemType = $this->getItemTypeByProduct($product);
-
-        $arr = $row->toArray();
-        return new BasketResponse(
-            $arr['id'],
-            $arr['product_name'],
-            $arr['weight'],
-            $arr['price'],
-            $arr['count'],
-            $arr['id_product'],
-            $itemType,
-            $url
-        );
     }
 
     private function buildBasketQuery(string $userId): Builder
