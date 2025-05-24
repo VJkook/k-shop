@@ -127,7 +127,8 @@ const Basket: FC = () => {
                                             )}
                                         </div>
                                         {expandedItems[item.id] && item.details && (
-                                            <div className={cn(styles.extra_details, {[styles.visible]: expandedItems[item.id]})}>
+                                            <div
+                                                className={cn(styles.extra_details, {[styles.visible]: expandedItems[item.id]})}>
                                                 {item.details.tiers?.map((tier, index) => (
                                                     <div key={index} className={styles.tier}>
                                                         <h3>{index + 1} ярус</h3>
@@ -141,9 +142,19 @@ const Basket: FC = () => {
                                                         <h3>Украшения</h3>
                                                         {item.details.decors.map((decor, idx) => (
                                                             <p key={idx}>
-                                                                {decor.name}: {decor.count} шт. × {decor.price} ₽ = {decor.price * decor.count} ₽
+                                                                {decor.name}: {decor.count} шт. × {decor.price} ₽
+                                                                = {decor.price * decor.count} ₽
                                                             </p>
                                                         ))}
+                                                    </div>
+                                                )}
+                                                {item.details?.coverage && (
+                                                    <div className={styles.tier}>
+                                                        <h3>Покрытие</h3>
+                                                        <p>
+                                                            {item.details?.coverage.name}:
+                                                            шт. {item.details?.coverage.price} ₽
+                                                        </p>
                                                     </div>
                                                 )}
                                             </div>

@@ -11,6 +11,7 @@ class BasketResponse
      * @param float|null $price
      * @param int $count
      * @param int $id_product
+     * @param CoverageResponse $coverage
      * @param string|null $image
      * @param BasketDetailsResponse|null $details
      */
@@ -21,6 +22,7 @@ class BasketResponse
         public readonly float|null        $price,
         public readonly int               $count,
         public readonly int               $id_product,
+        public readonly CoverageResponse  $coverage,
         public string|null                $image = '',
         public BasketDetailsResponse|null $details = null
     )

@@ -1,3 +1,5 @@
+import {Coverage} from "./Coverage";
+
 export interface Image {
     id: number;
     url: string;
@@ -29,6 +31,7 @@ export interface Tier {
 export interface BasketItemDetails {
     tiers: Tier[];
     decors: Decor[];
+    coverage: Coverage;
 }
 
 export interface BasketItem {

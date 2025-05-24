@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Basket;
 use App\Models\CakeDesigner;
 use App\Models\CakeDesignerDecorRelation;
+use App\Models\Coverage;
 use App\Models\Decor;
 use App\Models\Filling;
 use App\Models\Image;
@@ -12,6 +13,7 @@ use App\Models\Product;
 use App\Models\Responses\BasketDetailsResponse;
 use App\Models\Responses\BasketResponse;
 use App\Models\Responses\CakeDesignerDecorResponse;
+use App\Models\Responses\CoverageResponse;
 use App\Models\Responses\DecorResponse;
 use App\Models\Responses\TierResponse;
 use App\Models\Tier;
@@ -39,7 +41,6 @@ class BasketRepository
      */
     public function getItemsByUserId(int $userId): array
     {
-
         $basketItems = $this->buildBasketQuery($userId)->get();
 
         $imageRepo = new ImageRepository();
@@ -83,7 +84,13 @@ class BasketRepository
                     );
                 }
 
-                $basketDetailResponse = new BasketDetailsResponse($tierResponses, $decorResponses);
+                /** @var Coverage $coverage */
+                $coverage = $cakeDesigner->coverage()->first();
+                $basketDetailResponse = new BasketDetailsResponse(
+                    $tierResponses,
+                    $decorResponses,
+                    $coverage->toResponse()
+                );
             }
 
             $response[] = new BasketResponse(
@@ -93,6 +100,7 @@ class BasketRepository
                 $arr['price'],
                 $arr['count'],
                 $arr['id_product'],
+                $coverage->toResponse(),
                 $url,
                 $basketDetailResponse
             );

@@ -9,8 +9,9 @@ class BasketDetailsResponse
      * @param CakeDesignerDecorResponse[] $decors
      */
     public function __construct(
-        public array $tiers,
-        public array $decors,
+        public array            $tiers,
+        public array            $decors,
+        public CoverageResponse $coverage,
     )
     {
     }
