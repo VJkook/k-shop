@@ -34,7 +34,7 @@ export interface BasketItemDetails {
     coverage: Coverage;
 }
 
-export interface BasketItem {
+export interface OrderOrBasketItem {
     id: number;
     product_name: string;
     weight: number;
@@ -45,4 +45,4 @@ export interface BasketItem {
     details: BasketItemDetails | null;
 }
 
-type BasketResponse = BasketItem[];
+type OrderOrBasketItemsResponse = OrderOrBasketItem[];

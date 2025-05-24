@@ -45,4 +45,6 @@ class Product extends Model
     {
         return $this->belongsTo(CakeDesigner::class, 'id_cake_designer', 'id');
     }
+
+
 }

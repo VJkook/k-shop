@@ -3,7 +3,12 @@
 namespace App\Repositories;
 
 use App\Models\BasicDate;
+use App\Models\CakeDesigner;
+use App\Models\CakeDesignerDecorRelation;
+use App\Models\Coverage;
+use App\Models\Decor;
 use App\Models\DeliveryAddress;
+use App\Models\Filling;
 use App\Models\Image;
 use App\Models\Order;
 use App\Models\OrderStatus;
@@ -11,11 +16,15 @@ use App\Models\PaymentStatus;
 use App\Models\Product;
 use App\Models\ProductOrderRelation;
 use App\Models\ReadyCake;
-use App\Models\Responses\BasketResponse;
+use App\Models\Responses\DetailsResponse;
+use App\Models\Responses\OrderOrBasketResponse;
+use App\Models\Responses\CakeDesignerDecorResponse;
 use App\Models\Responses\DeliveryAddressResponse;
 use App\Models\Responses\ImageResponse;
 use App\Models\Responses\OrderResponse;
 use App\Models\Responses\ReadyCakeResponse;
+use App\Models\Responses\TierResponse;
+use App\Models\Tier;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -24,7 +33,7 @@ class OrderRepository
     /**
      * @param int $userId
      * @param int $deliveryAddressId
-     * @param BasketResponse[] $baskets
+     * @param OrderOrBasketResponse[] $baskets
      * @param Carbon|null $deliveryDate
      * @return OrderResponse
      */
@@ -91,26 +100,96 @@ class OrderRepository
 
     private function buildResponse(Order $order): OrderResponse
     {
-        $readyCakesResponses = [];
+        $response = [];
 
         /** @var Product $product */
         foreach ($order->products()->get() as $product) {
-            /** @var ReadyCake $readyCake */
-            $readyCake = $product->readyCake()->first();
-            $readyCakesResponse = ReadyCakeResponse::fromReadyCake($readyCake, $product->id);
 
-            /** @var Image[] $image */
-            $images = $readyCake->images()->get();
-            $imagesResponses = [];
-            foreach ($images as $image) {
-                $imagesResponses[] = new ImageResponse(
-                    $image->id,
-                    $image->getUrl()
+            $productName = '';
+            $price = $weight = 0;
+
+
+            $imageUrl = null;
+            /** @var DetailsResponse|null $detailResponse */
+            $detailResponse = null;
+            if (!is_null($product->id_cake_designer)) {
+                /** @var CakeDesignerDecorResponse[] $decorResponses */
+                $decorResponses = [];
+                /** @var TierResponse[] $tierResponses */
+                $tierResponses = [];
+
+                /** @var CakeDesigner $cakeDesigner */
+                $cakeDesigner = $product->cakeDesigner()->first();
+                $weight = $cakeDesigner->weight;
+                $price = $cakeDesigner->total_cost;
+                $productName = $cakeDesigner->name;
+                /** @var Image $image */
+                $image = $cakeDesigner->images()->first();
+                if (!is_null($image)) {
+                    $imageUrl = $image->getUrl();
+                }
+
+                /** @var Tier[] $tiers */
+                $tiers = $cakeDesigner->tiers()->get();
+                foreach ($tiers as $tier) {
+                    /** @var Filling $filling */
+                    $filling = $tier->filling()->first();
+                    $fillingResponse = $filling->toResponse();
+                    $tierResponse = new TierResponse($tier->id, $fillingResponse, $tier->weight);
+                    $tierResponses[] = $tierResponse;
+                }
+
+                /** @var CakeDesignerDecorRelation[] $decorRelations */
+                $decorRelations = $cakeDesigner->cakeDesignerDecorRelations()->get();
+                foreach ($decorRelations as $decorRelation) {
+                    /** @var Decor $decor */
+                    $decor = $decorRelation->decor()->first();
+                    $decorResponse = $decor->toResponse();
+                    $decorResponses[] = CakeDesignerDecorResponse::fromDecorResponse(
+                        $decorResponse,
+                        $decorRelation->count
+                    );
+                }
+
+                /** @var Coverage $coverage */
+                $coverage = $cakeDesigner->coverage()->first();
+                $detailResponse = new DetailsResponse(
+                    $tierResponses,
+                    $decorResponses,
+                    $coverage->toResponse()
                 );
+            } elseif ($product->id_ready_cake) {
+                /** @var ReadyCake $readyCake */
+                $readyCake = $product->readyCake()->first();
+                $productName = $readyCake->name;
+                $price = $readyCake->price;
+                $weight = $readyCake->weight;
+
+                /** @var Image $image */
+                $image = $readyCake->images()->first();
+                if (!is_null($image)) {
+                    $imageUrl = $image->getUrl();
+                }
             }
 
-            $readyCakesResponse->setImages($imagesResponses);
-            $readyCakesResponses[] = $readyCakesResponse;
+            /** @var ProductOrderRelation $productOrderRelation */
+            $productOrderRelation = ProductOrderRelation::query()
+                ->where('id_product', '=', $product->id)
+                ->where('id_order', '=', $order->id)
+                ->first();
+
+            $count = $productOrderRelation->count;
+            $response[] = new OrderOrBasketResponse(
+                $order->id,
+                $productName,
+                $weight,
+                $price,
+                $count,
+                $product->id,
+                $imageUrl,
+                $detailResponse
+            );
+
         }
 
         /** @var DeliveryAddress $deliveryAddress */
@@ -129,7 +208,7 @@ class OrderRepository
             $deliveryAddress->address,
             $orderStatus->name,
             $paymentStatus->name,
-            $readyCakesResponses
+            $response
         );
     }
 }

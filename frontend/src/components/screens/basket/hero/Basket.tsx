@@ -3,11 +3,11 @@ import styles from './Hero.module.scss';
 import cn from 'classnames';
 import Image from 'next/image';
 import {apiDelete, apiGet, apiPost} from "@/utils/apiInstance";
-import {BasketItem} from "../../../../models/responses/BasketResponse";
+import {OrderOrBasketItem} from "../../../../models/responses/OrderOrBasketItemsResponse";
 import {router} from "next/client";
 
 const Basket: FC = () => {
-    const [baskets, setBaskets] = useState<BasketItem[]>([]);
+    const [baskets, setBaskets] = useState<OrderOrBasketItem[]>([]);
     const [sumPrice, setSumPrice] = useState<number>(0);
     const [expandedItems, setExpandedItems] = useState<Record<number, boolean>>({});
 
@@ -31,7 +31,7 @@ const Basket: FC = () => {
 
     const updateSumPrice = () => {
         let sum = 0;
-        baskets?.forEach((item: BasketItem) => {
+        baskets?.forEach((item: OrderOrBasketItem) => {
             if (item.price) {
                 sum += item.price * item.count;
             }
@@ -92,7 +92,7 @@ const Basket: FC = () => {
                 <div className={styles.first_box}>
                     <div className={styles.banner}>
                         <div className={styles.products}>
-                            {baskets?.map((item: BasketItem) => (
+                            {baskets?.map((item: OrderOrBasketItem) => (
                                 <div key={item.id} className={styles.product}>
                                     <div className={styles.image}>
                                         {item?.image ? (

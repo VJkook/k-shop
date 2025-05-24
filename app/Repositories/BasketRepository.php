@@ -10,8 +10,8 @@ use App\Models\Decor;
 use App\Models\Filling;
 use App\Models\Image;
 use App\Models\Product;
-use App\Models\Responses\BasketDetailsResponse;
-use App\Models\Responses\BasketResponse;
+use App\Models\Responses\DetailsResponse;
+use App\Models\Responses\OrderOrBasketResponse;
 use App\Models\Responses\CakeDesignerDecorResponse;
 use App\Models\Responses\CoverageResponse;
 use App\Models\Responses\DecorResponse;
@@ -37,7 +37,7 @@ class BasketRepository
     }
 
     /**
-     * @return BasketResponse[]
+     * @return OrderOrBasketResponse[]
      */
     public function getItemsByUserId(int $userId): array
     {
@@ -51,7 +51,7 @@ class BasketRepository
             $product = $productRepo->getById($basketItem['id_product']);
             $arr = $basketItem->toArray();
 
-            /** @var BasketDetailsResponse|null $basketDetailResponse */
+            /** @var DetailsResponse|null $basketDetailResponse */
             $basketDetailResponse = null;
             if (!is_null($product->id_cake_designer)) {
                 /** @var CakeDesignerDecorResponse[] $decorResponses */
@@ -86,21 +86,20 @@ class BasketRepository
 
                 /** @var Coverage $coverage */
                 $coverage = $cakeDesigner->coverage()->first();
-                $basketDetailResponse = new BasketDetailsResponse(
+                $basketDetailResponse = new DetailsResponse(
                     $tierResponses,
                     $decorResponses,
                     $coverage->toResponse()
                 );
             }
 
-            $response[] = new BasketResponse(
+            $response[] = new OrderOrBasketResponse(
                 $arr['id'],
                 $arr['product_name'],
                 $arr['weight'],
                 $arr['price'],
                 $arr['count'],
                 $arr['id_product'],
-                $coverage->toResponse(),
                 $url,
                 $basketDetailResponse
             );
@@ -146,7 +145,7 @@ class BasketRepository
      * @param int $id
      * @param int $userId
      * @param int $count
-     * @return BasketResponse[]
+     * @return OrderOrBasketResponse[]
      */
     public function updateById(int $id, int $userId, int $count): array
     {

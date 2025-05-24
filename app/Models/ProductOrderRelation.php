@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property int $id_product
  * @property int $id_order
+ * @property int $count
  */
 class ProductOrderRelation extends Model
 {

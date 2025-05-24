@@ -16,7 +16,7 @@ class OrderResponse
      * @param string $delivery_address
      * @param string $status
      * @param string $payment_status
-     * @param ReadyCakeResponse[] $ready_cakes
+     * @param OrderOrBasketResponse[] $products
      */
     public function __construct(
         public int            $id,
@@ -27,7 +27,7 @@ class OrderResponse
         public string         $delivery_address,
         public string         $status,
         public string         $payment_status,
-        public array          $ready_cakes = [],
+        public array          $products = [],
     )
     {
     }

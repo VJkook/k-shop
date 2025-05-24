@@ -2,7 +2,7 @@
 
 namespace App\Models\Responses;
 
-class BasketDetailsResponse
+class DetailsResponse
 {
     /**
      * @param TierResponse[] $tiers

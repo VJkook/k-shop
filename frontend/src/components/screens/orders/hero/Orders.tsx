@@ -7,6 +7,7 @@ import {catData} from '@/screens/catalog/hero/cat-data'
 import {apiGet} from "@/utils/apiInstance";
 import {Order} from "../../../../models/responses/Order";
 import {ReadyCake} from "../../../../models/responses/ReadyCake";
+import {OrderOrBasketItem} from "../../../../models/responses/OrderOrBasketItemsResponse";
 
 const Orders: FC = () => {
     const [orders, setOrders] = useState<Order[]>()
@@ -32,18 +33,18 @@ const Orders: FC = () => {
                     <div className={styles.banner}>
                         <p className={styles.ves}>Статус: {order.status}</p>
                         <p className={styles.ves}>Статус оплаты: {order.payment_status}</p>
-                        {order.ready_cakes.map((readyCake: ReadyCake, index) => (
+                        {order.products.map((product: OrderOrBasketItem, index) => (
                             <div key={index} className={styles.product}>
                                 <div className={styles.image}>
                                     <img
-                                        src={readyCake.images && readyCake.images.length > 0 ? readyCake.images[0].url : 'Изображение отсутствует'}
+                                        src={product.image ? product.image : 'Изображение отсутствует'}
                                     />
                                 </div>
                                 <div className={styles.main_details}>
                                     <div className={styles.details}>
-                                        <h2 className={styles.name}>{readyCake.name}</h2>
-                                        <p className={styles.ves}>{readyCake.weight} кг</p>
-                                        <p className={styles.pricep}>{readyCake.price}</p>
+                                        <h2 className={styles.name}>{product.name}</h2>
+                                        <p className={styles.ves}>{product.weight} кг</p>
+                                        <p className={styles.pricep}>{product.price}</p>
                                         <button className={styles.toggle_details}>Детали</button>
                                     </div>
                                     {/*{readyCake.details && (*/}
@@ -60,11 +61,12 @@ const Orders: FC = () => {
                                     {/*  </div>*/}
                                     {/*)}*/}
                                 </div>
-                                <div className={styles.actions}>
-                                    <button className={styles.remove}>Повторить заказ</button>
-                                </div>
+
                             </div>
                         ))}
+                        <div className={styles.actions}>
+                            <button className={styles.remove}>Повторить заказ</button>
+                        </div>
                     </div>
                 </div>
             ))}

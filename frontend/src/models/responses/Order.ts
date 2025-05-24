@@ -1,5 +1,4 @@
-import {Image} from "./Image";
-import {ReadyCake} from "./ReadyCake";
+import {OrderOrBasketItem} from "./OrderOrBasketItemsResponse";
 
 export interface Order {
     id: number
@@ -10,7 +9,7 @@ export interface Order {
     delivery_address: string
     status: string
     payment_status: string
-    ready_cakes: ReadyCake[]
+    products: OrderOrBasketItem[]
     name: string
     price: number,
     weight: number | null
