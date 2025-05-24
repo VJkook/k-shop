@@ -1,45 +1,56 @@
 .footer {
-	width: 100vw;
-	height: 20.14vw;
-	background: #f7efe9;
-	position: relative;
-	display: flex;
-	align-items: center;
-	padding: 0 6.81vw;
-	.logo {
-		position: absolute;
-		top: 4.65vw;
-		left: 44.5vw;
-		z-index: 2;
-		.circle1 {
-			border-radius: 100%;
-			height: 10.07vw;
-			width: 10.07vw;
-			background: white;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			.circle2 {
-				border-radius: 100%;
-				height: 8.125vw;
-				width: 8.125vw;
-				background: #f7efe9;
-				.img{
-					border-radius: 33%;
-					height: 8.07vw;
-					width: 10.07vw;
-				}
-			}
-		}
-	}
-	.about {
-		display: flex;
-		flex-direction: row;
-		gap: 2.64vw;
-		align-items: flex-start;
-		p {
-			font-size: 1.38vw;
-			color: #888888;
-		}
-	}
+    // Ваши оригинальные стили
+    width: 100vw;
+    height: 20.14vw;
+    background: #f7efe9;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 0 6.81vw;
+
+    // Новые свойства для прижатия к низу
+    flex-shrink: 0;
+    margin-top: auto;
+
+    .logo {
+        position: absolute;
+        top: 4.65vw;
+        left: 44.5vw;
+        z-index: 2;
+
+        .circle1 {
+            border-radius: 100%;
+            height: 10.07vw;
+            width: 10.07vw;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .circle2 {
+                border-radius: 100%;
+                height: 8.125vw;
+                width: 8.125vw;
+                background: #f7efe9;
+
+                .img {
+                    border-radius: 33%;
+                    height: 8.07vw;
+                    width: 10.07vw;
+                }
+            }
+        }
+    }
+
+    .about {
+        display: flex;
+        flex-direction: row;
+        gap: 2.64vw;
+        align-items: flex-start;
+
+        p {
+            font-size: 1.38vw;
+            color: #888888;
+        }
+    }
 }

@@ -1,4 +1,13 @@
-.container {
-	background-color: #ffffff;
-	-webkit-tap-highlight-color: transparent;
+.layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; // Минимальная высота - весь экран
+    background-color: #ffffff;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.content {
+    flex: 1 0 auto; // Основное изменение: растягивается по содержимому
+    width: 100%;
+    padding: 20px 0; // Отступы по желанию
 }

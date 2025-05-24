@@ -162,21 +162,15 @@ const Basket: FC = () => {
                                     </div>
                                     <div className={styles.actions}>
                                         <select
+                                            style={{ width: '100px', padding: '10px' }}
                                             onChange={(e) => updateBasket(item.id, Number(e.target.value))}
                                             value={item.count}
                                         >
-                                            {Array.from({length: 10}, (_, index) => (
-                                                <option key={index} value={index + 1}>
-                                                    {index + 1}
-                                                </option>
+                                            {Array.from({ length: 10 }, (_, index) => (
+                                                <option key={index} value={index + 1}>{index + 1}</option>
                                             ))}
                                         </select>
-                                        <button
-                                            onClick={() => deleteFromBasket(item.id)}
-                                            className={styles.remove}
-                                        >
-                                            ×
-                                        </button>
+                                        <button onClick={() => deleteFromBasket(item.id)}>×</button>
                                     </div>
                                 </div>
                             ))}

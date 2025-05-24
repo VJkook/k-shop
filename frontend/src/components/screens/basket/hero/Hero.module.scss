@@ -21,12 +21,12 @@
         gap: 2.57vw;
         .banner {
             width: 65.26vw;
-            height: 65.625vw;
+            //height: 65.625vw;
             border: 0.21vw dashed #F3BDA8;
             font-size: 1.39vw;
             line-height: 2.29vw;
             font-weight: 400;
-
+            display: flex;
 
 
             .product {
@@ -55,7 +55,7 @@
 
               .main_details {
                   flex: 1;
-                  min-width: 50%; // Позволяет контенту сжиматься при необходимости
+                  min-width: 15;
                   padding-right: 20px;
 
                   .details {
@@ -89,7 +89,7 @@
                       padding: 15px;
                       background: #f9f9f9;
                       border-radius: 8px;
-                      width: 100%; // Занимает всю доступную ширину
+                      width: 200%; // Занимает всю доступную ширину
                       box-sizing: border-box;
 
                       &.visible {
@@ -130,6 +130,7 @@
                   select {
                       margin-right: 10px;
                       border-radius: 7px;
+                      position: inherit;
                   }
 
                   .remove {

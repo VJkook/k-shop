@@ -62,7 +62,7 @@ class BasketController extends Controller
         /** @var User $user */
         $user = Auth::user();
         if (!is_null($request->count) && $request->count < 1) {
-            return response()->json($this->basketRepo->getItemById($id, $user->id));
+            return response()->json($this->basketRepo->getItemsByUserId($user->id));
         }
 
         return response()->json($this->basketRepo->updateById($id, $user->id, $request->count));

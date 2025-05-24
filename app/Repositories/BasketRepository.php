@@ -142,14 +142,20 @@ class BasketRepository
             ->orderBy(Basket::TABLE_NAME . '.created_at');
     }
 
-    public function updateById(int $id, int $userId, int $count): BasketResponse
+    /**
+     * @param int $id
+     * @param int $userId
+     * @param int $count
+     * @return BasketResponse[]
+     */
+    public function updateById(int $id, int $userId, int $count): array
     {
         /** @var Basket $basket */
         $basket = Basket::query()->where('id_user', '=', $userId)->find($id);
         $basket->count = $count;
         $basket->save();
 
-        return $this->getItemById($id, $userId);
+        return $this->getItemsByUserId($userId);
     }
 
     public function deleteById(int $id, int $userId): bool
