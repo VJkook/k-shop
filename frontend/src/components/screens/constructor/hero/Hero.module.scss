@@ -319,6 +319,7 @@ $placeholder-color: #d9cfc6;
         border-radius: 4px;
         background-color: $bg-light;
 
+        transition: all 0.2s ease;
         .option-image {
             margin: 0 auto 10px;
         }
@@ -327,6 +328,12 @@ $placeholder-color: #d9cfc6;
             display: block;
             font-size: 13px;
             color: $text-color;
+        }
+
+        &.selected {
+            border: 2px solid #ff6b6b;
+            box-shadow: 0 0 10px rgba(255, 107, 107, 0.3);
+            transform: scale(1.02);
         }
     }
 }
@@ -354,6 +361,14 @@ $placeholder-color: #d9cfc6;
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+
+    transition: all 0.2s ease;
+
+    &.selected {
+        border: 2px solid #4dabf7;
+        box-shadow: 0 0 10px rgba(77, 171, 247, 0.3);
+        transform: scale(1.02);
     }
 }
 
