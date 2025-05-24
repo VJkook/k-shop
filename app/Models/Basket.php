@@ -17,7 +17,8 @@ class Basket extends Model
 {
     use HasFactory;
 
-    protected $table = 'baskets';
+    public const TABLE_NAME = 'baskets';
+    protected $table = self::TABLE_NAME;
 
     protected $fillable = [
         'id_product',

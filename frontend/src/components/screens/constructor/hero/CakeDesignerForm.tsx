@@ -243,7 +243,7 @@ const CakeDesignerForm: FC = () => {
                                 <div className={styles['grid-item']} onClick={() => setCoverageId(item.id)}>
                                     <img src={item.image.url}/>
                                     <span>{item.name}</span><br/>
-                                    <span>{item.price}р цена за кг</span>
+                                    <span>{item.price}р цена</span>
                                 </div>
                             ))}
                         </div>

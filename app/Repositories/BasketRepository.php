@@ -3,14 +3,22 @@
 namespace App\Repositories;
 
 use App\Models\Basket;
+use App\Models\CakeDesigner;
+use App\Models\Decor;
+use App\Models\Filling;
+use App\Models\Image;
 use App\Models\Product;
+use App\Models\Responses\BasketDetailsResponse;
 use App\Models\Responses\BasketResponse;
+use App\Models\Responses\DecorResponse;
+use App\Models\Responses\FillingResponse;
 use Illuminate\Database\Eloquent\Builder;
 
 class BasketRepository
 {
     const CAKE_DESIGNER_TYPE = 'cake-designer';
     const READY_CAKE_TYPE = 'ready-cake';
+
     public function create(int $userId, int $productId, int $count = 1): BasketResponse
     {
         /** @var Basket $basket */
@@ -28,16 +36,52 @@ class BasketRepository
      */
     public function getItemsByUserId(int $userId): array
     {
-        $rows = $this->buildBasketQuery($userId)->get();
+
+        $basketItems = $this->buildBasketQuery($userId)->get();
 
         $imageRepo = new ImageRepository();
         $productRepo = new ProductRepository();
         $response = [];
-        foreach ($rows as $row) {
-            $url = $imageRepo->getUrlFirstByReadyCakeId($row['id_product']);
-            $product = $productRepo->getById($row['id_product']);
-            $itemType = $this->getItemTypeByProduct($product);
-            $arr = $row->toArray();
+        foreach ($basketItems as $basketItem) {
+            $url = $imageRepo->getUrlFirstByReadyCakeId($basketItem['id_product']);
+            $product = $productRepo->getById($basketItem['id_product']);
+            $arr = $basketItem->toArray();
+
+            /** @var DecorResponse[] $decorResponses */
+            $decorResponses = [];
+
+            /** @var FillingResponse[] $fillingResponses */
+            $fillingResponses = [];
+
+            /** @var BasketDetailsResponse|null $basketDetailResponse */
+            $basketDetailResponse = null;
+            if (!is_null($product->id_cake_designer)) {
+                /** @var CakeDesigner $cakeDesigner */
+                $cakeDesigner = $product->cakeDesigner()->first();
+
+                /** @var Filling[] $fillings */
+                $fillings = $cakeDesigner->tierFillings()->get();
+                foreach ($fillings as $filling) {
+                    $fillingResponse = FillingResponse::fromFilling($filling);
+                    /** @var Image $image */
+                    $image = $filling->image()->first();
+                    $fillingResponse->setImage($image->toResponse());
+                    $fillingResponses[] = $fillingResponse;
+                }
+
+                /** @var Decor[] $decors */
+                $decors = $cakeDesigner->decors()->get();
+                foreach ($decors as $decor) {
+                    $decorResponse = DecorResponse::fromDecor($decor);
+                    /** @var Image $image */
+                    $image = $decor->image()->first();
+                    $decorResponse->setImage($image->toResponse());
+                    $decorResponses[] = $decorResponse;
+                }
+
+                $basketDetailResponse = new BasketDetailsResponse($fillingResponses, $decorResponses);
+            }
+
             $response[] = new BasketResponse(
                 $arr['id'],
                 $arr['product_name'],
@@ -45,8 +89,8 @@ class BasketRepository
                 $arr['price'],
                 $arr['count'],
                 $arr['id_product'],
-                $itemType,
-                $url
+                $url,
+                $basketDetailResponse
             );
         }
 
@@ -94,19 +138,20 @@ class BasketRepository
     {
         return Basket::query()
             ->select(
-                'baskets.id',
-                'baskets.id_product',
-                'baskets.id_user',
+                Basket::TABLE_NAME . '.id',
+                Basket::TABLE_NAME . '.id_product',
+                Basket::TABLE_NAME . '.id_user',
                 'count',
                 'rp.price',
             )
             ->selectRaw('COALESCE(rp.name, cd.name) AS product_name')
             ->selectRaw('COALESCE(rp.weight, cd.weight) AS weight')
             ->selectRaw('COALESCE(rp.price, cd.total_cost) AS price')
-            ->join('products AS p', 'baskets.id_product', '=', 'p.id')
+            ->join('products AS p', Basket::TABLE_NAME . '.id_product', '=', 'p.id')
             ->leftJoin('ready_cakes AS rp', 'p.id_ready_cake', '=', 'rp.id')
             ->leftJoin('cake_designers AS cd', 'p.id_cake_designer', '=', 'cd.id')
-            ->where('baskets.id_user', $userId);
+            ->where(Basket::TABLE_NAME . '.id_user', $userId)
+            ->orderBy(Basket::TABLE_NAME . '.created_at');
     }
 
     public function updateById(int $id, int $userId, int $count): BasketResponse

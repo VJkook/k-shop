@@ -1,3 +1,6 @@
+import {Filling} from "./Filling";
+import {Decor} from "./Decor";
+
 export interface BasketResponse {
     id: number
     product_name: string
@@ -5,5 +8,11 @@ export interface BasketResponse {
     price: number,
     count: number,
     id_product: number
-    image: string
+    image: string,
+    details: ProductDetails | null;
+}
+
+export interface ProductDetails {
+    fillings: Filling[];
+    decors: Decor[];
 }

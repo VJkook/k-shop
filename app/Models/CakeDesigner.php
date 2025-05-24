@@ -61,4 +61,24 @@ class CakeDesigner extends Model
     {
         return $this->hasOne(Product::class, 'id_cake_designer', 'id');
     }
+
+    public function tierFillings(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Filling::class,
+            Tier::class,
+            'id_cake_designer',
+            'id_filling'
+        );
+    }
+
+    public function decors(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Decor::class,
+            CakeDesignerDecorRelation::class,
+            'id_cake_designer',
+            'id_decor'
+        );
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Clients\S3Client;
+use App\Models\Responses\ImageResponse;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -61,5 +62,10 @@ class Image extends Model
             'id_image',
             'id_product'
         );
+    }
+
+    public function toResponse(): ImageResponse
+    {
+        return new ImageResponse($this->id, $this->getUrl());
     }
 }
