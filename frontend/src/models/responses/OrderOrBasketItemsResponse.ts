@@ -36,7 +36,7 @@ export interface BasketItemDetails {
 
 export interface OrderOrBasketItem {
     id: number;
-    product_name: string;
+    name: string;
     weight: number;
     price: number | null;
     count: number;

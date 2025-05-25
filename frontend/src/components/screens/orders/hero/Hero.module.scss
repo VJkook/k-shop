@@ -9,246 +9,146 @@
     position: relative;
 }
 
-// .main_container {
-//     display: flex;
-//     flex-direction: column;
-//     width: 100vw;
-//     background: #ffffff;
-//     padding: 0 2.22vw 0 2.98vw;
-//     .first_box {
-//         display: flex;
-//         flex-direction: row;
-//         gap: 2.57vw;
-//         padding-left: 13vw;
-
-
-
-        .ordersContainer {
-            width: 100%;
-          }
-          
-          .order {
-            margin-bottom: 20px;
-            margin-left: 10vw;
-          }
-          
-          .orderNumber {
-            font-size: 1.5em;
-            margin-bottom: 10px;
-          }
-          
-          .banner {
+.main_container {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    background: #ffffff;
+    padding: 0 2.22vw 0 2.98vw;
+    .first_box {
+        display: flex;
+        flex-direction: column;
+        gap: 2.57vw;
+        .banner {
             width: 65.26vw;
+            //height: 65.625vw;
             border: 0.21vw dashed #F3BDA8;
             font-size: 1.39vw;
             line-height: 2.29vw;
             font-weight: 400;
-          }
-          
-          .product {
             display: flex;
-            align-items: flex-start;
-            padding: 25px 30px;
-            border-bottom: 1px solid #F7EFE9;
-            color: #f6a181;
-          }
-          
-          .image {
-            flex: 0 0 160px;
-            margin-right: 8vw;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: 10px solid #F7EFE9;
-            border-radius: 0px;
-            overflow: hidden;
-            padding: 5px;
-          }
-          
-          .image img {
-            width: 100%;
-            height: auto;
-          }
-          
-          .main_details {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-          }
-          
-          .details {
-            flex: 1;
-          }
-          
-          .details .name {
-            margin: 0;
-            font-size: 30px;
-          }
-          
-          .details .ves {
-            margin: 5px 0;
-            font-size: 25px;
-          }
-          
-          .details .pricep {
-            margin: 5px 0;
-            font-size: 30px;
-          }
-          
-          .details .toggle_details {
-            margin-top: 10px;
-            background-color: transparent;
-            border: none;
-            color: #f08080;
-            cursor: pointer;
-          }
-          
-          .extra_details {
-            display: none;
-            margin-top: 10px;
-          }
-          
-          .extra_details.visible {
-            display: block;
-          }
-          
-          .actions {
-            display: flex;
-            align-items: center;
-            margin-left: 15vw;
-            margin-top: 1vw;
-          }
-          
-          .actions select {
-            margin-right: 10px;
-            border-radius: 7px;
-          }
-          
-          .actions .remove {
-            background-color: transparent;
-            background-color: #f4dfcf;
-            color: #5e5e5e;
-            font-size: 22px;
-            cursor: pointer;
-            margin: 1vw;
-          }
-          
-          .tier {
-            margin-bottom: 10px;
-          }
-          
 
 
+            .product {
+                display: flex;
+                align-items: flex-start;
+                padding: 25px 30px;
+                border-bottom: 1px solid #F7EFE9;
+                color: #f6a181;
 
+                .image {
+                    flex: 0 0 160px;
+                    margin-right: 8vw;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border: 10px solid #F7EFE9;
+                    border-radius: 0px;
+                    overflow: hidden;
+                    padding: 5px;
 
-        // .banner {
-        //     width: 65.26vw;
-        //     height: 65.625vw;
-        //     border: 0.21vw dashed #F3BDA8;
-        //     font-size: 1.39vw;
-        //     line-height: 2.29vw;
-        //     font-weight: 400;
-            
-           
-        //       .order{
-        //         padding-top: -10vw;
-        //       }
-        //     .product {
-        //       display: flex;
-        //       align-items: flex-start;
-        //       padding: 25px 30px;
-        //       border-bottom: 1px solid #F7EFE9;
-        //       color: #f6a181;
-          
-        //       .image {
-        //           flex: 0 0 160px;
-        //           margin-right: 8vw;
-        //           display: flex;
-        //           justify-content: center;
-        //           align-items: center;
-        //           border: 10px solid #F7EFE9;
-        //           border-radius: 0px;
-        //           overflow: hidden;
-        //           padding: 5px;
-          
-        //           img {
-        //               width: 100%;
-        //               height: auto;
-        //           }
-        //       }
-          
-        //       .main-details {
-        //           flex: 1;
-        //           display: flex;
-        //           flex-direction: column;
-          
-        //           .details {
-        //               flex: 1;
-          
-        //               .name {
-        //                   margin: 0;
-        //                   font-size: 36px;
-        //               }
-          
-        //               .ves {
-        //                   margin: 5px 0;
-        //                   font-size: 30px;
-        //               }
-        //               .pricep {
-        //                 margin: 5px 0;
-        //                 font-size: 36px;
-        //             }
-          
-        //               .toggle-details {
-        //                   margin-top: 10px;
-        //                   background-color: transparent;
-        //                   border: none;
-        //                   color: #f08080;
-        //                   cursor: pointer;
-        //               }
-        //           }
-          
-        //           .extra-details {
-        //               display: none;
-        //               margin-top: 10px;
-          
-        //               &.visible {
-        //                   display: block;
-        //               }
-        //           }
-        //       }
-          
-        //       .actions {
-        //           display: flex;
-        //           align-items: center;
-        //           margin-left: 23vw;
-        //           margin-top: 1vw;
-          
-        //           select {
-        //               margin-right: 10px;
-        //               border-radius: 7px;
-        //           }
-          
-        //           .remove {
-        //               background-color: transparent;
-        //               background-color: #f4dfcf;
-                      
-        //               color: #5e5e5e;
-        //               font-size: 20px;
-        //               cursor: pointer;
-        //               margin: 1vw;
-        //           }
-        //       }
-        //   }
-          
-        //   .tier {
-        //       margin-bottom: 10px;
-        //   }
+                    img {
+                        width: 100%;
+                        height: auto;
+                    }
+                }
 
+                .main_details {
+                    flex: 1;
+                    min-width: 15;
+                    padding-right: 20px;
 
+                    .details {
+                        flex: 1;
 
+                        .name {
+                            margin: 0;
+                            font-size: 36px;
+                        }
 
-        // }
+                        .ves {
+                            margin: 5px 0;
+                            font-size: 30px;
+                        }
+                        .pricep {
+                            margin: 5px 0;
+                            font-size: 36px;
+                        }
+
+                        .toggle_details {
+                            margin-top: 10px;
+                            background-color: transparent;
+                            border: none;
+                            color: #f08080;
+                            cursor: pointer;
+                        }
+                    }
+
+                    .extra_details {
+                        margin-top: 15px;
+                        padding: 15px;
+                        background: #f9f9f9;
+                        border-radius: 8px;
+                        width: 200%; // Занимает всю доступную ширину
+                        box-sizing: border-box;
+
+                        &.visible {
+                            display: block;
+                        }
+
+                        .tier {
+                            margin-bottom: 15px;
+                            padding: 15px;
+                            background: #fff;
+                            border-radius: 6px;
+                            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                            width: 100%;
+
+                            h3 {
+                                font-size: 18px;
+                                margin-bottom: 10px;
+                                color: #333;
+                            }
+
+                            p {
+                                font-size: 16px;
+                                color: #555;
+                                margin: 8px 0;
+                                line-height: 1.5;
+                            }
+                        }
+                    }
+
+                }
+
+                .actions {
+                    display: flex;
+                    align-items: center;
+                    margin-left: 23vw;
+                    margin-top: 1vw;
+
+                    select {
+                        margin-right: 10px;
+                        border-radius: 7px;
+                        position: inherit;
+                    }
+
+                    .remove {
+                        background-color: transparent;
+                        border: none;
+                        color: #5e5e5e;
+                        font-size: 40px;
+                        cursor: pointer;
+                        margin: 1vw;
+                    }
+                }
+            }
+
+            .tier {
+                margin-bottom: 10px;
+            }
+
+        }
         .right {
             display: flex;
             flex-direction: column;
@@ -257,57 +157,57 @@
 
 
 
-            
+
             .summary {
-              text-align: right;
-              background-color: #F7EFE9;
-              padding: 10px;
-              border-radius: 10px;
-              
-              // margin-left: 13px;
-              width: 24vw;
-          
-              .sum { 
-                display: flex; 
-                justify-content: space-between; 
-                margin-bottom: 10px;
-            
-                .price, 
-                .it { 
-                  color: #666; 
-                  margin: 0; 
-                  font-size: 25px;
-                  padding-left: 3vw;
-                  padding-right: 3vw;
-                  margin-top: 1vw;
-                } 
-              }
-          
-              button {
-                  background-color: #F3BDA8;
-                  color: white;
-                  border: none;
-                  padding: 10px 20px;
-                  border-radius: 5px;
-                  cursor: pointer;
-                  margin-right: 3vw;
-                  margin-top: 1vw;
-                  margin-bottom: 1vw;
-                  width: 16.5vw;
-                  height: 3vw;
-              }
-          }
+                text-align: right;
+                background-color: #F7EFE9;
+                padding: 10px;
+                border-radius: 10px;
+
+                // margin-left: 13px;
+                width: 24vw;
+
+                .sum {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 10px;
+
+                    .price,
+                    .it {
+                        color: #666;
+                        margin: 0;
+                        font-size: 25px;
+                        padding-left: 3vw;
+                        padding-right: 3vw;
+                        margin-top: 1vw;
+                    }
+                }
+
+                button {
+                    background-color: #F3BDA8;
+                    color: white;
+                    border: none;
+                    padding: 10px 20px;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    margin-right: 3vw;
+                    margin-top: 1vw;
+                    margin-bottom: 1vw;
+                    width: 16.5vw;
+                    height: 3vw;
+                }
+            }
 
         }
 
 
-        
-          
-          
-          
-//     }
 
 
 
 
-// }
+    }
+
+
+
+
+}

@@ -114,7 +114,7 @@ const Basket: FC = () => {
                                     </div>
                                     <div className={styles.main_details}>
                                         <div className={styles.details}>
-                                            <h2>{item.product_name}</h2>
+                                            <h2>{item.name}</h2>
                                             <p>{item.weight} кг</p>
                                             <p>{item.price} ₽</p>
                                             {item.details && (
