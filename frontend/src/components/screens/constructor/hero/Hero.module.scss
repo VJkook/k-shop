@@ -31,18 +31,19 @@ $placeholder-color: #d9cfc6;
     margin: 0 auto;
     padding: 0 16px 24px;
     user-select: none;
+    position: relative;
 }
 
 // === Страница ===
-.page {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+// === Хлебные крошки (оставляем без изменений) ===
+.bread_crumbs {
+    padding: 2.5vw;
+    font-size: 1.67vw; // Оригинальный размер
 }
 
-// === Заголовок страницы ===
+// === Заголовки (оставляем без изменений) ===
 .page__title {
-    font-size: 18px;
+    font-size: 18px; // Оригинальный размер
     font-weight: bold;
     margin-bottom: 12px;
 }
@@ -177,14 +178,6 @@ $placeholder-color: #d9cfc6;
     &::-webkit-scrollbar {
         display: none;
     }
-}
-
-// Layout
-.container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 0 16px 24px;
-    user-select: none;
 }
 
 // Options
@@ -437,6 +430,7 @@ $placeholder-color: #d9cfc6;
 
 .section-title {
     text-align: center;
+    font-size: inherit;
     margin-bottom: 17px;
 }
 
@@ -517,5 +511,58 @@ $placeholder-color: #d9cfc6;
         padding: 4px 16px;
         border-radius: 2px;
         cursor: pointer;
+    }
+}
+
+
+// === Основные текстовые элементы (увеличиваем в 3 раза) ===
+.question__desc,
+.question__input,
+.option__text,
+.form-select,
+.tier-button,
+.quantity-value,
+.quantity-button,
+.comments-section label,
+.comments-section textarea,
+.footer {
+    font-size: calc(13px * 1.5); // Увеличиваем в 3 раза
+}
+
+// Элементы выбора
+.option-item span {
+    font-size: calc(13px * 1.5) !important;
+}
+
+// Кнопки
+.button {
+    font-size: calc(13px * 1.5);
+}
+
+// Цены
+.grid-item span {
+    font-size: calc(13px * 1.5);
+}
+
+// Итоговая цена
+.total-price {
+    font-size: calc(100% * 1.5); // Оставляем оригинальный размер для акцента
+}
+
+// === Адаптивные стили ===
+@media (max-width: 768px) {
+
+    // Уменьшаем увеличенные шрифты на мобильных
+    .question__desc,
+    .question__input,
+    .option__text,
+    .form-select,
+    .tier-button,
+    .quantity-value,
+    .quantity-button,
+    .comments-section label,
+    .comments-section textarea,
+    .footer {
+        font-size: calc(13px * 1.5);
     }
 }

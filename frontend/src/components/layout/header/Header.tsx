@@ -39,7 +39,7 @@ const Header: FC = () => {
                     </div>
                     <div className={styles.tabs} style={{width: '25vw'}}>
                         {user?.role === UserRole.Admin ?
-                            <Link style={{marginRight: '5px'}} href={'/orders'}>
+                            <Link style={{marginRight: '5px'}} href={'/products/create'}>
                             <button className={styles.tab}>Создать товар</button>
                             </Link>
                             : <div></div>
