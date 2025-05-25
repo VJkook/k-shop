@@ -73,7 +73,7 @@ const ModalSupport: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 						/>
                         <InputMask
                             maskChar=" "
-                            type="text"
+                            type="password"
                             name="password"
                             placeholder="пароль"
                             className={styles.custom_input}
@@ -86,9 +86,7 @@ const ModalSupport: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 								className={styles.checkbox}
 							/>
 							<p>
-								<Link href={'/'}>
-									Вы соглашаетесь на обработку персональных данных
-								</Link>
+                                Вы соглашаетесь на обработку персональных данных
 							</p>
 						</label>
                         <button onClick={() => login(email, password)}>Войти</button>
