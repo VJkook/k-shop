@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\ReadyCake;
+use App\Models\User;
 use App\Repositories\ReadyCakeRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class ReadyCakesController extends Controller
@@ -28,6 +30,12 @@ class ReadyCakesController extends Controller
      */
     public function create(Request $request): JsonResponse
     {
+        /** @var User $user */
+        $user = Auth::user();
+        if (!$user->isAdmin()) {
+            return response()->json(status: 403);
+        }
+
         $validator = Validator::make($request->all(), [
             'name' => ['string', 'required'],
             'price' => ['decimal:0,2', 'required'],

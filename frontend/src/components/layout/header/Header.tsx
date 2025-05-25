@@ -1,17 +1,32 @@
-import React, {FC, useState} from 'react'
+import React, {FC, useEffect, useState} from 'react'
 import styles from './Header.module.scss'
-import {
-    EIcons,
-    Icon as IconInstance,
-} from '../../../assets/icons/icon'
+import {EIcons, Icon as IconInstance,} from '../../../assets/icons/icon'
 import Image from 'next/image'
 import Logo1 from '../../../assets/img/logo1.jpg'
 import cn from 'classnames'
 import Link from 'next/link'
 import ModalLogin from '@/ui/modal/ModalSupport/ModalSupport'
+import {User, UserRole} from "../../../models/responses/User";
+import {apiGet} from "@/utils/apiInstance";
 
 const Header: FC = () => {
     const [isModalOpen, setModalOpen] = useState(false)
+    const [user, setUser] = useState<User>();
+
+    const loadUser = () => {
+        apiGet('/api/user')
+            .then((response) => {
+                if (response.data != undefined) {
+                    setUser(response.data);
+                }
+            }).catch((error) => {
+            console.log(error);
+        });
+    };
+
+    useEffect(() => {
+        loadUser()
+    }, []);
 
     return (
         <noindex>
@@ -22,7 +37,14 @@ const Header: FC = () => {
                         <button className={styles.tab}>Контакты</button>
                         <button className={styles.tab}>Режим работы</button>
                     </div>
-                    <div className={styles.tabs} style={{width: '15vw'}}>
+                    <div className={styles.tabs} style={{width: '25vw'}}>
+                        {user?.role === UserRole.Admin ?
+                            <Link style={{marginRight: '5px'}} href={'/orders'}>
+                            <button className={styles.tab}>Создать товар</button>
+                            </Link>
+                            : <div></div>
+                        }
+
                         <Link style={{marginRight: '5px'}} href={'/orders'}>
                             <button className={styles.tab}>Заказы</button>
                         </Link>
