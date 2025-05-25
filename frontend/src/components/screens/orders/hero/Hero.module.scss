@@ -15,11 +15,14 @@
     width: 100vw;
     background: #ffffff;
     padding: 0 2.22vw 0 2.98vw;
+
     .first_box {
         display: flex;
         flex-direction: column;
         gap: 2.57vw;
+
         .banner {
+
             width: 65.26vw;
             //height: 65.625vw;
             border: 0.21vw dashed #F3BDA8;
@@ -27,6 +30,7 @@
             line-height: 2.29vw;
             font-weight: 400;
             display: flex;
+            flex-direction: column;
 
 
             .product {
@@ -70,6 +74,7 @@
                             margin: 5px 0;
                             font-size: 30px;
                         }
+
                         .pricep {
                             margin: 5px 0;
                             font-size: 36px;
@@ -89,7 +94,7 @@
                         padding: 15px;
                         background: #f9f9f9;
                         border-radius: 8px;
-                        width: 200%; // Занимает всю доступную ширину
+                        width: 100%; // Занимает всю доступную ширину
                         box-sizing: border-box;
 
                         &.visible {
@@ -101,7 +106,7 @@
                             padding: 15px;
                             background: #fff;
                             border-radius: 6px;
-                            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
                             width: 100%;
 
                             h3 {
@@ -148,14 +153,27 @@
                 margin-bottom: 10px;
             }
 
+            .order_header {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5vw;
+                margin-bottom: 1.5vw;
+                padding: 1vw 2vw;
+                background: #f7efe9;
+                border-radius: 0.5vw;
+
+                p {
+                    margin: 0;
+                    font-size: 1.2vw;
+                    color: #666;
+                }
+            }
         }
+
         .right {
             display: flex;
             flex-direction: column;
             gap: 4.58vw;
-
-
-
 
 
             .summary {
@@ -201,13 +219,7 @@
         }
 
 
-
-
-
-
     }
-
-
 
 
 }

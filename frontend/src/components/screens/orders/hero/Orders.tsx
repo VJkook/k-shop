@@ -12,7 +12,6 @@ import {router} from "next/client";
 
 const Orders: FC = () => {
     const [orders, setOrders] = useState<Order[]>([]);
-    const [sumPrice, setSumPrice] = useState<number>(0);
     const [expandedItems, setExpandedItems] = useState<Record<number, boolean>>({});
 
     const loadOrders = () => {
@@ -33,16 +32,6 @@ const Orders: FC = () => {
         }));
     };
 
-    const updateSumPrice = () => {
-        let sum = 0;
-        orders?.forEach((item: OrderOrBasketItem) => {
-            if (item.price) {
-                sum += item.price * item.count;
-            }
-        });
-        setSumPrice(parseFloat(sum.toFixed(2)));
-    };
-
     useEffect(() => {
         loadOrders();
     }, []);
@@ -52,12 +41,15 @@ const Orders: FC = () => {
             <div className={styles.main_container}>
                 <div className={styles.first_box}>
                     {orders?.map((order: Order) => (
-                        <div className={styles.banner}>
+                        <div key={order.id} className={styles.banner}>
+                            <div className={styles.order_header}>
+                                <p>№ заказа: {order.id}</p>
+                                <p>Статус: {order.status}</p>
+                                <p>Общая сумма заказа: {order.total_cost} ₽</p>
+                            </div>
                             <div className={styles.products}>
                                 {order?.products?.map((item: OrderOrBasketItem) => (
                                     <div>
-                                        <p>№ заказа: {order.id}</p>
-                                        <p>Статус: {order.status}</p>
                                         <div key={item.id} className={styles.product}>
                                             <div className={styles.image}>
                                                 {item?.image ? (
@@ -148,6 +140,7 @@ const Orders: FC = () => {
                             </div>
                         </div>
                     ))}
+
                 </div>
             </div>
         </div>
