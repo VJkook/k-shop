@@ -25,7 +25,18 @@ class OrdersController extends Controller
     {
         /** @var User $user */
         $user = Auth::user();
-        return response()->json($this->orderRepo->getAll($user->id));
+        return response()->json($this->orderRepo->getByUserId($user->id));
+    }
+
+    public function all(): JsonResponse
+    {
+        /** @var User $user */
+        $user = Auth::user();
+        if (!$user->isAdmin()) {
+            return response()->json(status: 403);
+        }
+
+        return response()->json($this->orderRepo->all());
     }
 
     /**
@@ -64,6 +75,25 @@ class OrdersController extends Controller
 
         $basketRepo->clearBasket($user->id);
         return response()->json($response);
+    }
+
+    public function update(Request $request, int $id): JsonResponse
+    {
+        /** @var User $user */
+        $user = Auth::user();
+        if (!$user->isAdmin()) {
+            return response()->json(status: 403);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'id_confectioner' => ['integer', 'numeric'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->getMessages(), 400);
+        }
+
+        return response()->json($this->orderRepo->update($id, $request->toArray()));
     }
 
     /**

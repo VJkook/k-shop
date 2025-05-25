@@ -17,10 +17,12 @@ class Role extends Model
 
     public const ADMIN_ROLE = 'admin';
     public const CLIENT_ROLE = 'client';
+    public const CONFECTIONER_ROLE = 'confectioner';
 
     public const ROLE_BY_NAME = [
         self::ADMIN_ROLE => 1,
         self::CLIENT_ROLE => 2,
+        self::CONFECTIONER_ROLE => 3,
     ];
 
     public const TABLE_NAME = 'roles';
@@ -41,5 +43,16 @@ class Role extends Model
     public static function clientRoleId(): int
     {
         return self::ROLE_BY_NAME[self::CLIENT_ROLE];
+    }
+
+    public static function confectionerRoleId(): int
+    {
+        return self::ROLE_BY_NAME[self::CONFECTIONER_ROLE];
+    }
+
+    public static function isAdmin(int $roleId): bool
+    {
+        $roleName = array_flip(self::ROLE_BY_NAME)[$roleId] ?? null;
+        return $roleName === self::ADMIN_ROLE;
     }
 }

@@ -47,7 +47,7 @@ class OrderRepository
         $attributes = [
             'id_user' => $userId,
             'id_delivery_address' => $deliveryAddressId,
-            'id_payment_status' => PaymentStatus::PAY_WAITING,
+            'id_payment_status' => PaymentStatus::CONFIRM_WAITING,
             'id_order_status' => OrderStatus::CONFIRM_WAITING,
         ];
         if (!is_null($deliveryDate)) {
@@ -83,11 +83,28 @@ class OrderRepository
      * @param int $userId
      * @return OrderResponse[]
      */
-    public function getAll(int $userId): array
+    public function getByUserId(int $userId): array
     {
         /** @var Order[] $orders */
         $orders = Order::query()
             ->where('id_user', '=', $userId)
+            ->orderBy('registration_date', 'desc')
+            ->get();
+        $response = [];
+        foreach ($orders as $order) {
+            $response[] = $this->buildResponse($order);
+        }
+
+        return $response;
+    }
+
+    /**
+     * @return OrderResponse[]
+     */
+    public function all(): array
+    {
+        /** @var Order[] $orders */
+        $orders = Order::query()
             ->orderBy('registration_date', 'desc')
             ->get();
         $response = [];
@@ -189,7 +206,6 @@ class OrderRepository
                 $imageUrl,
                 $detailResponse
             );
-
         }
 
         /** @var DeliveryAddress $deliveryAddress */
@@ -208,7 +224,17 @@ class OrderRepository
             $deliveryAddress->address,
             $orderStatus->name,
             $paymentStatus->name,
+            $order->id_confectioner,
             $response
         );
+    }
+
+    public function update(int $id, array $attributes): OrderResponse
+    {
+        /** @var Order $order */
+        $order = Order::query()->where('id', '=', $id)->first();
+        $attributes['id_order_status'] = OrderStatus::COOKING;
+        $order->update($attributes);
+        return $this->buildResponse($order);
     }
 }

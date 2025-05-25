@@ -23,7 +23,7 @@
 
         .banner {
 
-            width: 65.26vw;
+            width: 90.26vw;
             //height: 65.625vw;
             border: 0.21vw dashed #F3BDA8;
             font-size: 1.39vw;
@@ -131,6 +131,7 @@
                     align-items: center;
                     margin-left: 23vw;
                     margin-top: 1vw;
+                    flex-direction: column;
 
                     select {
                         margin-right: 10px;

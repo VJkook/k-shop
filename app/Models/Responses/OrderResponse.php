@@ -16,6 +16,7 @@ class OrderResponse
      * @param string $delivery_address
      * @param string $status
      * @param string $payment_status
+     * @param int|null $id_confectioner
      * @param OrderOrBasketResponse[] $products
      */
     public function __construct(
@@ -27,13 +28,9 @@ class OrderResponse
         public string         $delivery_address,
         public string         $status,
         public string         $payment_status,
+        public int|null       $id_confectioner,
         public array          $products = [],
     )
     {
-    }
-
-    public function setReadyCakes(array $ready_cakes): void
-    {
-        $this->ready_cakes = $ready_cakes;
     }
 }

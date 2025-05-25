@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Models\Responses\UserResponse;
 use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -63,5 +64,17 @@ class User extends Authenticatable
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class, 'id_role', 'id');
+    }
+
+    public function toResponse(): UserResponse
+    {
+        /** @var Role $role */
+        $role = $this->role()->first();
+        return new UserResponse($this->id, $this->name, $this->email, $role->name);
+    }
+
+    public function isAdmin(): bool
+    {
+        return Role::isAdmin($this->id_role);
     }
 }

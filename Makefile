@@ -38,7 +38,7 @@ refill-db:
 
 fill-db:
 	@make insert-roles
-	@make insert-user
+	@make insert-users
 	@make insert-address
 	@make insert-payment-statuses
 	@make insert-order-statutes
@@ -55,11 +55,14 @@ select-users:
 
 insert-roles:
 	@echo "Заполнение таблицы roles:"
-	@$(PSQL_CMD) -c "INSERT INTO public.roles (name) VALUES ('admin'), ('client')"
+	@$(PSQL_CMD) -c "INSERT INTO public.roles (name) VALUES ('admin'), ('client'), ('confectioner')"
 
-insert-user:
+insert-users:
 	@echo "Заполнение таблицы users:"
 	@$(PSQL_CMD) -c "INSERT INTO public.users (name, email, email_verified_at, password, remember_token, created_at, updated_at, id_role) VALUES ('marina', 'test@test.ru', null, '123', null, null, null, 1)"
+	@$(PSQL_CMD) -c "INSERT INTO public.users (name, email, email_verified_at, password, remember_token, created_at, updated_at, id_role) VALUES ('Вася', 'test2@test.ru', null, '123', null, null, null, 3)"
+	@$(PSQL_CMD) -c "INSERT INTO public.users (name, email, email_verified_at, password, remember_token, created_at, updated_at, id_role) VALUES ('Петя', 'test3@test.ru', null, '123', null, null, null, 3)"
+	@$(PSQL_CMD) -c "INSERT INTO public.users (name, email, email_verified_at, password, remember_token, created_at, updated_at, id_role) VALUES ('Коля', 'test4@test.ru', null, '123', null, null, null, 3)"
 
 insert-address:
 	@echo "Заполнение таблицы delivery_addresses:"
@@ -67,11 +70,11 @@ insert-address:
 
 insert-payment-statuses:
 	@echo "Заполнение таблицы payment_statuses:"
-	@$(PSQL_CMD) -c "INSERT INTO public.payment_statuses (id, name) VALUES (1, 'Ожидание оплаты')"
+	@$(PSQL_CMD) -c "INSERT INTO public.payment_statuses (name) VALUES ('Ожидание оплаты')"
 
 insert-order-statutes:
 	@echo "Заполнение таблицы order_statuses:"
-	@$(PSQL_CMD) -c "INSERT INTO public.order_statuses (id, name) VALUES (1, 'Ожидание подтверждения')"
+	@$(PSQL_CMD) -c "INSERT INTO public.order_statuses (name) VALUES ('Ожидание подтверждения'), ('Готовится')"
 
 # Описание таблицы users
 describe-users:

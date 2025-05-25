@@ -19,7 +19,7 @@ class UserRepository
 
         /** @var User $user */
         $user = User::query()->create($attributes);
-        return $this->buildResponse($user);
+        return $user->toResponse();
     }
 
     public function getUserByEmail(string $email): ?UserResponse
@@ -30,19 +30,36 @@ class UserRepository
             return null;
         }
 
-        return $this->buildResponse($user);
+        return $user->toResponse();
     }
 
-    private function buildResponse(User $user): UserResponse
+    /**
+     * @return User[]
+     */
+    public function all(): array
     {
-        /** @var Role $role */
-        $role = $user->role()->first();
-        $response = new UserResponse(
-            $user->id,
-            $user->name,
-            $role->name
-        );
+        /** @var User[] $users */
+        $users = User::query()->get();
+        $responses = [];
+        foreach ($users as $user) {
+            $responses[] = $user->toResponse();
+        }
 
-        return $response;
+        return $responses;
+    }
+
+    /**
+     * @return User[]
+     */
+    public function getConfectioners(): array
+    {
+        /** @var User[] $users */
+        $users = User::query()->where('id_role', Role::confectionerRoleId())->get();
+        $responses = [];
+        foreach ($users as $user) {
+            $responses[] = $user->toResponse();
+        }
+
+        return $responses;
     }
 }

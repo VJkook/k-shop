@@ -93,10 +93,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
             /** @var User $user */
             $user = $request->user();
-            /** @var Role $role */
-            $role = $user->role()->first();
-            $response = UserResponse::fromUser($request->user(), $role->name);
-            return \response()->json($response);
+            return \response()->json($user->toResponse());
         }
 
         return \response()->json(['msg' => ['incorrect email or password']], 401);
@@ -173,6 +170,8 @@ class AuthController extends Controller
 
     public function getUser(): JsonResponse
     {
-        return \response()->json(Auth::user());
+        /** @var User $user */
+        $user = Auth::user();
+        return \response()->json($user->toResponse());
     }
 }

@@ -29,6 +29,9 @@ return new class extends Migration {
 
             $table->unsignedBigInteger('id_order_status');
             $table->foreign('id_order_status')->references('id')->on('order_statuses');
+
+            $table->unsignedBigInteger('id_confectioner')->nullable();
+            $table->foreign('id_confectioner')->references('id')->on('users');
         });
     }
 

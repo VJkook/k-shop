@@ -17,5 +17,5 @@ class PaymentStatus extends Model
     protected $table = 'payment_statuses';
     public $timestamps = false;
 
-    public const PAY_WAITING = 1;
+    public const CONFIRM_WAITING = 1;
 }

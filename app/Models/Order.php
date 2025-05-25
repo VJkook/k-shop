@@ -18,6 +18,7 @@ use Illuminate\Support\Carbon;
  * @property int $id_delivery_address
  * @property int $id_payment_status
  * @property int $id_order_status
+ * @property int $id_confectioner
  */
 class Order extends Model
 {
@@ -34,6 +35,7 @@ class Order extends Model
         'id_payment_status',
         'id_order_status',
         'registration_date',
+        'id_confectioner',
     ];
 
     protected $casts = [

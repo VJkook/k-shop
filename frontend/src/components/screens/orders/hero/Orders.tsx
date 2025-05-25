@@ -1,21 +1,25 @@
-import React, {FC, useState, useEffect} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import styles from './Hero.module.scss';
 import cn from 'classnames';
 import Image from 'next/image';
-import Logo1 from '../../../../assets/img/construct3.jpg';
-import {catData} from '@/screens/catalog/hero/cat-data'
-import {apiDelete, apiGet, apiPost} from "@/utils/apiInstance";
+import {apiGet, apiPost} from "@/utils/apiInstance";
 import {Order} from "../../../../models/responses/Order";
-import {ReadyCake} from "../../../../models/responses/ReadyCake";
 import {OrderOrBasketItem} from "../../../../models/responses/OrderOrBasketItemsResponse";
-import {router} from "next/client";
+import {User, UserRole} from "../../../../models/responses/User";
 
 const Orders: FC = () => {
     const [orders, setOrders] = useState<Order[]>([]);
     const [expandedItems, setExpandedItems] = useState<Record<number, boolean>>({});
+    const [user, setUser] = useState<User>();
+    const [confectioners, setConfectioners] = useState<User[]>([]);
 
     const loadOrders = () => {
-        apiGet('/api/orders')
+        let url = '/api/orders';
+        if (user?.role === UserRole.Admin) {
+            url = '/api/orders/all'
+        }
+
+        apiGet(url)
             .then((response) => {
                 if (response.data != undefined) {
                     setOrders(response.data);
@@ -23,6 +27,36 @@ const Orders: FC = () => {
             }).catch((error) => {
             console.log(error);
         });
+    };
+
+    const loadUser = () => {
+        apiGet('/api/user')
+            .then((response) => {
+                if (response.data != undefined) {
+                    setUser(response.data);
+                }
+            }).catch((error) => {
+            console.log(error);
+        });
+    };
+
+    const loadConfectioners = () => {
+        apiGet('/api/users/confectioners')
+            .then((response) => {
+                if (response.data != undefined) {
+                    setConfectioners(response.data);
+                }
+            }).catch((error) => {
+            console.log(error);
+        });
+    };
+
+    const selectConfectioner = (confectionerId: number, orderId: number) => {
+        apiPost('/api/orders/' + orderId, {
+            id_confectioner: confectionerId
+        }).finally(() =>
+            loadOrders()
+        )
     };
 
     const toggleDetails = (id: number) => {
@@ -33,8 +67,15 @@ const Orders: FC = () => {
     };
 
     useEffect(() => {
+        loadUser();
         loadOrders();
+        loadConfectioners()
     }, []);
+
+    useEffect(() => {
+        loadOrders();
+    }, [user]);
+
 
     return (
         <div className={cn(styles.base, 'wrapper')}>
@@ -46,6 +87,21 @@ const Orders: FC = () => {
                                 <p>№ заказа: {order.id}</p>
                                 <p>Статус: {order.status}</p>
                                 <p>Общая сумма заказа: {order.total_cost} ₽</p>
+                                {user?.role === UserRole.Admin && (
+                                    <div>
+                                        <h3>Выбрать кондитера: </h3>
+                                        <br/>
+                                        <select
+                                            value={order.id_confectioner || ''}
+                                            onChange={(e) => selectConfectioner(Number(e.target.value), order.id)}
+                                        >
+                                            <option value="" disabled>Выберите кондитера</option>
+                                            {confectioners.map((c: User) => (
+                                                <option key={c.id} value={c.id}>{c.name}</option>
+                                            ))}
+                                        </select>
+                                    </div>)
+                                }
                             </div>
                             <div className={styles.products}>
                                 {order?.products?.map((item: OrderOrBasketItem) => (
@@ -119,23 +175,8 @@ const Orders: FC = () => {
                                                     </div>
                                                 )}
                                             </div>
-                                            {/*<div className={styles.actions}>*/}
-                                            {/*    <h3>Покрытие</h3>*/}
-                                            {/*    <select*/}
-                                            {/*        style={{width: '100px', padding: '10px'}}*/}
-                                            {/*        // onChange={(e) => updateBasket(item.id, Number(e.target.value))}*/}
-                                            {/*        // value={item.count}*/}
-                                            {/*    >*/}
-                                            {/*        {['Вася', 'Коля', 'Петя'].map((value, index) => (*/}
-                                            {/*            <option key={value} value={value}>{value}</option>*/}
-                                            {/*        ))}*/}
-                                            {/*    </select>*/}
-                                            {/*</div>*/}
-
                                         </div>
                                     </div>
-
-
                                 ))}
                             </div>
                         </div>

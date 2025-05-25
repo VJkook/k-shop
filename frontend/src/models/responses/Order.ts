@@ -13,4 +13,5 @@ export interface Order {
     name: string
     price: number,
     weight: number | null
+    id_confectioner: number | null
 }

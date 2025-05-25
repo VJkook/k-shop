@@ -16,6 +16,7 @@ use App\Http\Controllers\ReadyCakeImageRelationsController;
 use App\Http\Controllers\ReadyCakesController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\TiersController;
+use App\Http\Controllers\UsersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -30,15 +31,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+//Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//    return $request->user();
+//});
 
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 //Route::get('/token', [AuthController::class, 'getToken'])->name('getToken');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-Route::middleware('auth:sanctum')->post('/user', [AuthController::class, 'getUser'])->name('user');
+Route::middleware('auth:sanctum')->get('/user', [AuthController::class, 'getUser'])->name('user');
+
+
+Route::prefix('/users')->group(function () {
+    Route::get('/', [UsersController::class, 'index'])->name('users');
+    Route::get('/confectioners', [UsersController::class, 'confectioners'])->name('confectioners');
+});
 
 Route::get('/test', [TestController::class, 'index']);
 
@@ -90,6 +97,8 @@ Route::middleware('auth:sanctum')->prefix('basket')->group(function () {
 Route::middleware('auth:sanctum')->prefix('orders')->group(function () {
     Route::post('/', [OrdersController::class, 'create']);
     Route::get('/', [OrdersController::class, 'index']);
+    Route::get('/all', [OrdersController::class, 'all']);
+    Route::post('/{id}', [OrdersController::class, 'update']);
 });
 
 Route::prefix('fillings')->group(function () {
