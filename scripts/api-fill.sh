@@ -4,147 +4,130 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 echo $SCRIPT_DIR
 
-curl --location 'http://localhost:8000/api/register' \
+# Файл для хранения cookies
+COOKIE_FILE="cookies.txt"
+
+# Регистрация пользователя и сохранение cookie
+echo "Регистрируем пользователя..."
+REGISTER_RESPONSE=$(curl --silent --location 'http://localhost:8000/api/login' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "name": "admin",
     "email": "admin@gmail.com",
     "password": "123456789"
-}'
+}' \
+--cookie-jar $COOKIE_FILE)
 
-curl --location 'http://localhost:8000/api/register' \
---header 'Content-Type: application/json' \
---data-raw '{
-    "name": "client",
-    "email": "client@gmail.com",
-    "password": "123456789"
-}'
+echo "Регистрация завершена. Cookie сохранены в $COOKIE_FILE"
 
-curl --location 'http://localhost:8000/api/login' \
---header 'Content-Type: application/json' \
---data-raw '{
-    "email": "admin@gmail.com",
-    "password": "123456789"
-}'
+# Функция для выполнения запросов с cookie
+make_request() {
+    local url=$1
+    local method=$2
+    local data=$3
+
+    curl --location "$url" \
+    --header 'Content-Type: application/json' \
+    --cookie $COOKIE_FILE \
+    --data-raw "$data"
+}
+
+# Загрузка изображений (не требует cookie)
+echo "Загружаем изображения..."
+curl --location 'http://localhost:8000/api/images' \
+--form 'image=@"'$SCRIPT_DIR'/images/cake1.jpg"' \
+--cookie $COOKIE_FILE
 
 curl --location 'http://localhost:8000/api/images' \
---form 'image=@"'$SCRIPT_DIR'/images/cake1.jpg"'
+--form 'image=@"'$SCRIPT_DIR'/images/strawbery-scaled.jpg"' \
+--cookie $COOKIE_FILE
 
 curl --location 'http://localhost:8000/api/images' \
---form 'image=@"'$SCRIPT_DIR'/images/strawbery-scaled.jpg"'
+--form 'image=@"'$SCRIPT_DIR'/images/бабочки.jpg"' \
+--cookie $COOKIE_FILE
 
-curl --location 'http://localhost:8000/api/images' \
---form 'image=@"'$SCRIPT_DIR'/images/бабочки.jpg"'
-
-# начинки
-curl --location 'http://localhost:8000/api/fillings' \
---header 'Content-Type: application/json' \
---data '{
+# Начинки
+echo "Добавляем начинки..."
+make_request 'http://localhost:8000/api/fillings' 'POST' '{
     "name": "Клубничная",
     "price_by_kg": 15.20,
     "id_image": 2
 }'
 
-curl --location 'http://localhost:8000/api/fillings' \
---header 'Content-Type: application/json' \
---data '{
+make_request 'http://localhost:8000/api/fillings' 'POST' '{
     "name": "Малиновая",
     "price_by_kg": 15.20,
     "id_image": 2
 }'
 
-# покрытия
-curl --location 'http://localhost:8000/api/coverages' \
---header 'Content-Type: application/json' \
---data '{
+# Покрытия
+echo "Добавляем покрытия..."
+make_request 'http://localhost:8000/api/coverages' 'POST' '{
     "name": "Клубничная",
     "price": 10.50,
     "id_image": 2
 }'
 
-# украшения
-curl --location 'http://localhost:8000/api/decors' \
---header 'Content-Type: application/json' \
---data '{
+# Украшения
+echo "Добавляем украшения..."
+make_request 'http://localhost:8000/api/decors' 'POST' '{
     "name": "Клубничный декор",
     "price": 10.50,
     "id_image": 2
 }'
 
-curl --location 'http://localhost:8000/api/decors' \
---header 'Content-Type: application/json' \
---data '{
+make_request 'http://localhost:8000/api/decors' 'POST' '{
     "name": "Бабочки",
     "price": 10.50,
     "id_image": 3
 }'
 
-curl --location 'http://localhost:8000/api/decors' \
---header 'Content-Type: application/json' \
---data '{
+make_request 'http://localhost:8000/api/decors' 'POST' '{
     "name": "Бабочки",
     "price": 10.50,
     "id_image": 3
 }'
 
-curl --location 'http://localhost:8000/api/decors' \
---header 'Content-Type: application/json' \
---data '{
+make_request 'http://localhost:8000/api/decors' 'POST' '{
     "name": "Бабочки",
     "price": 10.50,
     "id_image": 3
 }'
 
-# формы
-curl --location 'http://localhost:8000/api/cake-forms' \
---header 'Content-Type: application/json' \
---data '{
+# Формы
+echo "Добавляем формы..."
+make_request 'http://localhost:8000/api/cake-forms' 'POST' '{
     "name": "Квадратная"
 }'
 
-curl --location 'http://localhost:8000/api/cake-forms' \
---header 'Content-Type: application/json'  \
---data '{
+make_request 'http://localhost:8000/api/cake-forms' 'POST' '{
     "name": "Круглая"
 }'
 
-# ready-cakes
-
-curl --location 'http://localhost:8000/api/ready-cakes' \
---header 'Content-Type: application/json' \
---data '{
+# Готовые торты
+echo "Добавляем готовые торты..."
+make_request 'http://localhost:8000/api/ready-cakes' 'POST' '{
     "name": "Клубничный",
     "price": 15.20,
     "weight": 2.20
 }'
 
-curl --location 'http://localhost:8000/api/ready-cakes' \
---header 'Content-Type: application/json' \
---data '{
+make_request 'http://localhost:8000/api/ready-cakes' 'POST' '{
     "name": "Клубничный 2",
     "price": 30.20,
     "weight": 2.20
 }'
 
-curl --location 'http://localhost:8000/api/ready-cake-image-relations/' \
---header 'Content-Type: application/json' \
---data '{
+# Связи изображений с тортами
+echo "Связываем изображения с тортами..."
+make_request 'http://localhost:8000/api/ready-cake-image-relations/' 'POST' '{
     "id_image": 1,
     "id_ready_cake": 1
 }'
 
-curl --location 'http://localhost:8000/api/ready-cake-image-relations/' \
---header 'Content-Type: application/json' \
---data '{
+make_request 'http://localhost:8000/api/ready-cake-image-relations/' 'POST' '{
     "id_image": 1,
     "id_ready_cake": 2
 }'
 
-# создать пользователя
-curl --location 'http://localhost:8000/api/register' \
---header 'Content-Type: application/json' \
---data-raw '{
-    "name": "nikita",
-    "email": "nikita2015borisov@gmail.com",
-    "password": "123456789"
-}'
+echo "Все данные успешно добавлены!"

@@ -32,7 +32,7 @@ class ReadyCakesController extends Controller
     {
         /** @var User $user */
         $user = Auth::user();
-        if ($user && !$user->isAdmin()) {
+        if (!$user->isAdmin()) {
             return response()->json(status: 403);
         }
 
