@@ -1,13 +1,17 @@
 .layout {
-    display: flex;
+    display: grid;
     flex-direction: column;
     min-height: 100vh; // Минимальная высота - весь экран
     background-color: #ffffff;
     -webkit-tap-highlight-color: transparent;
+
+    grid-template-rows: auto 1fr auto; // header, content, footer
 }
 
 .content {
     flex: 1 0 auto; // Основное изменение: растягивается по содержимому
     width: 100%;
     padding: 20px 0; // Отступы по желанию
+    overflow-y: auto;
+    display: flex;
 }

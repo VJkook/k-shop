@@ -4,7 +4,7 @@ const baseURL = 'http://localhost:8000'
 
 axios.defaults.withCredentials = false;
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-axios.defaults.headers.common['Content-Type'] = 'application/json';
+axios.defaults.headers.common['Content-Type'] = 'application/json; multipart/form-data';
 axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 
 
@@ -14,7 +14,7 @@ const instance = axios.create({
     withXSRFToken: true,
     headers: {
         'X-Requested-With': 'XMLHttpRequest',
-        'Content-Type': 'application/json',
+        'Content-Type': 'multipart/form-data',
         'Access-Control-Allow-Origin': '*'
 
     },
