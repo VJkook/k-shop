@@ -10,6 +10,42 @@ PSQL_CMD = docker compose exec -e PGPASSWORD=$(PGPASSWORD) $(DOCKER_CONTAINER) p
 
 default: help
 
+include .env
+export $(shell sed 's/=.*//' .env)
+
+front-url:
+	@echo $(FRONT_URL)
+
+echo:
+	@echo $(PWD)
+
+install-vendor:
+	@docker run --rm \
+		-u "$(id -u):$(id -g)" \
+		-v "$(PWD):/var/www/html" \
+		-w /var/www/html \
+		laravelsail/php83-composer:latest \
+    	composer install --ignore-platform-reqs
+
+up:
+	@make install-vendor
+	@docker compose up -d
+	@sleep 2
+	@docker compose exec app php artisan migrate
+	@docker compose exec app php artisan optimize
+	@docker compose exec app php artisan cache:clear
+	@docker compose exec app php artisan config:clear
+	@docker compose exec app php artisan config:cache
+	@docker compose exec app php artisan view:clear
+	@docker compose exec app bash -c "cd frontend && npm i --legacy-peer-deps"
+	@docker compose exec -d app bash -c "cd frontend && npm run dev"
+	@echo FRONT_URL: $(FRONT_URL)
+
+restart:
+	@docker compose down
+	@make up
+
+
 help:
 	@echo "Доступные команды:"
 	@echo "  connect      - Интерактивное подключение к PostgreSQL"
