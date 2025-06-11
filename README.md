@@ -51,7 +51,11 @@ docker compose exec app bash -c "cd frontend && npm run dev"
 Права
 ```bash
 # дать права на папку и на все её вложенные файлы
+# Linux:
 sudo chmod 777 -R ./
+
+# Mac:
+sudo chmod -R 777 ./
 ```
 
 Миграции

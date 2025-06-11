@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('cake_designers', function (Blueprint $table) {
             $table->id();
             $table->string('name', 150);
-            $table->decimal('weight', 12, 2)->nullable();
+            $table->decimal('weight')->nullable();
             $table->text('description')->nullable();
             $table->decimal('total_cost', 12, 2)->nullable();
 

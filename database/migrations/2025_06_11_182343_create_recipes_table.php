@@ -23,6 +23,9 @@ return new class extends Migration
 
             $table->unsignedBigInteger('id_decor');
             $table->foreign('id_decor')->references('id')->on('decors');
+
+            $table->unsignedBigInteger('id_technological_map');
+            $table->foreign('id_technological_map')->references('id')->on('technological_maps');
         });
     }
 

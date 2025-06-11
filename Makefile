@@ -67,7 +67,7 @@ connect:
 
 refill-db:
 	@make optimize
-	@docker compose exec app php artisan migrate:reset
+	@docker compose exec app php artisan db:wipe
 	@docker compose exec app php artisan migrate
 	@make fill-db
 	@echo "Пересборка завершена"
