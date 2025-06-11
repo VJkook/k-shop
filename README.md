@@ -1,3 +1,18 @@
+Поднять проект:
+```bash
+make up
+```
+
+Пересобрать проект:
+```bash
+make restart
+```
+
+<details> 
+<summary>
+Старые способы поднять проект
+</summary>
+
 Для первого старта
 ```bash
 docker run --rm \
@@ -31,6 +46,7 @@ docker compose up -d
 # запустить фронт
 docker compose exec app bash -c "cd frontend && npm run dev"
 ```
+</details>
 
 Права
 ```bash
