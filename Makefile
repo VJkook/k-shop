@@ -45,6 +45,8 @@ restart:
 	@docker compose down
 	@make up
 
+stop:
+	@docker compose stop
 
 help:
 	@echo "Доступные команды:"
