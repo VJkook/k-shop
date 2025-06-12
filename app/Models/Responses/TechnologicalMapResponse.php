@@ -2,32 +2,31 @@
 
 namespace App\Models\Responses;
 
-use App\Models\Filling;
+use App\Models\TechnologicalMap;
 
 class TechnologicalMapResponse
 {
     public function __construct(
-        public int                $id,
-        public string             $name,
-        public string|null        $description,
-        public float              $price_by_kg,
-        public ImageResponse|null $image = null,
+        public int         $id,
+        public string      $name,
+        public string|null $description = null,
+        public string|null $cooking_time = null,
+        public array       $cooking_steps = [],
     )
     {
     }
 
-    public function setImage(ImageResponse $image): void
+    public function setCookingSteps(array $cooking_steps): void
     {
-        $this->image = $image;
+        $this->cooking_steps = $cooking_steps;
     }
 
-    public static function fromFilling(Filling $filling): self
+    public static function fromModel(TechnologicalMap $technologicalMap): self
     {
         return new TechnologicalMapResponse(
-            $filling->id,
-            $filling->name,
-            $filling->description,
-            $filling->price_by_kg
+            $technologicalMap->id,
+            $technologicalMap->name,
+            $technologicalMap->description,
         );
     }
 }

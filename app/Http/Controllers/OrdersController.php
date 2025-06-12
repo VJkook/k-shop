@@ -55,7 +55,7 @@ class OrdersController extends Controller
 
         $deliveryDate = null;
         if (isset($request->delivery_date)) {
-            $deliveryDate = BasicDate::fromString($request->delivery_date);
+            $deliveryDate = BasicDate::fromDateString($request->delivery_date);
         }
 
         /** @var User $user */

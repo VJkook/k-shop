@@ -2,48 +2,50 @@
 
 namespace App\Repositories;
 
+use App\Models\BasicIntervalTime;
 use App\Models\Filling;
-use App\Models\Image;
-use App\Models\Responses\FillingResponse;
-use App\Models\Responses\ImageResponse;
+use App\Models\Responses\TechnologicalMapResponse;
+use App\Models\TechnologicalMap;
+use Carbon\Carbon;
 
 class TechnologicalMapsRepository
 {
-    public function create(array $attributes): ?FillingResponse
+    public function create(array $attributes): ?TechnologicalMapResponse
     {
-        /** @var Filling $filling */
-        $filling = Filling::query()->create($attributes);
-        return $this->buildFillingsResponse($filling);
+        /** @var TechnologicalMap $technologicalMap */
+        $technologicalMap = TechnologicalMap::query()->create($attributes);
+        return $technologicalMap->toResponse();
     }
 
     /**
-     * @return FillingResponse[]
+     * @return TechnologicalMapResponse[]
      */
     public function all(): array
     {
         $result = [];
-        $fillings = Filling::query()->get();
-        /** @var Filling $filling */
-        foreach ($fillings as $filling) {
-            $fillingResponse = $this->buildFillingsResponse($filling);
-            $result[] = $fillingResponse;
+        $technologicalMaps = TechnologicalMap::query()->get();
+        /** @var TechnologicalMap $technologicalMap */
+        foreach ($technologicalMaps as $technologicalMap) {
+            $response = $technologicalMap->toResponse();
+            $result[] = $response;
         }
 
         return $result;
     }
 
-    public function getById(int $id): FillingResponse
+    public function getById(int $id): TechnologicalMapResponse
     {
-        /** @var Filling $filling */
-        $filling = Filling::query()->find($id);
-        return $this->buildFillingsResponse($filling);
+        /** @var TechnologicalMap $technologicalMap */
+        $technologicalMap = TechnologicalMap::query()->find($id);
+        $this->updateCookingTime($id);
+        return $technologicalMap->toResponse();
     }
 
-    public function updateById(int $id, array $attributes): FillingResponse
+    public function updateById(int $id, array $attributes): TechnologicalMapResponse
     {
-        /** @var Filling $filling */
-        $filling = Filling::query()->find($id);
-        $filling->update($attributes);
+        /** @var TechnologicalMap $technologicalMap */
+        $technologicalMap = TechnologicalMap::query()->find($id);
+        $technologicalMap->update($attributes);
         return $this->getById($id);
     }
 
@@ -52,21 +54,18 @@ class TechnologicalMapsRepository
         return Filling::query()->find($id)->delete();
     }
 
-    private function buildFillingsResponse(Filling $filling): FillingResponse
+    public function updateCookingTime(int $id): bool
     {
-        $fillingResponse = new FillingResponse(
-            $filling->id,
-            $filling->name,
-            $filling->description,
-            $filling->price_by_kg,
-        );
+        /** @var TechnologicalMap $technologicalMap */
+        $technologicalMap = TechnologicalMap::query()->find($id);
+        $stepsQuery = $technologicalMap->steps();
 
-        /** @var Image $image */
-        $image = $filling->image()->first();
-        if (!is_null($image)) {
-            $fillingResponse->setImage(new ImageResponse($image->id, $image->getUrl()));
+        $cookingTime = null;
+        if ($stepsQuery->count() > 0) {
+            $cookingTime = BasicIntervalTime::fromIntervalString($technologicalMap->steps()->sum('step_time'));
         }
 
-        return $fillingResponse;
+        $technologicalMap->cooking_time = $cookingTime;
+        return $technologicalMap->save();
     }
 }

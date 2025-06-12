@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
@@ -14,8 +15,9 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->time('cooking_time');
         });
+
+        DB::statement('ALTER TABLE technological_maps ADD COLUMN cooking_time INTERVAL');
     }
 
     /**

@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $name
  * @property string $description
  * @property float $price
+ * @property int $id_image
  */
 class Decor extends Model
 {

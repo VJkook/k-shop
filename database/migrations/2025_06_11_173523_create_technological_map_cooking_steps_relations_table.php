@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('list_of_cooking_steps', function (Blueprint $table) {
+        Schema::create('technological_map_cooking_steps_relations', function (Blueprint $table) {
             $table->id();
 
             $table->unsignedBigInteger('id_cooking_step');
-            $table->foreign('id_cooking_step')->references('id')->on('cooking_steps');
+            $table->foreign('id_cooking_step')->references('id')->on('cooking_steps')->onDelete('cascade');
 
             $table->unsignedBigInteger('id_technological_map');
             $table->foreign('id_technological_map')->references('id')->on('technological_maps');
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('list_of_cooking_steps');
+        Schema::dropIfExists('technological_map_cooking_steps_relations');
     }
 };

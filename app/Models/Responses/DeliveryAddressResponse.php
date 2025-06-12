@@ -2,7 +2,7 @@
 
 namespace App\Models\Responses;
 
-class aDeliveryAddressResponse
+class DeliveryAddressResponse
 {
     public function __construct(
         public readonly int    $id,

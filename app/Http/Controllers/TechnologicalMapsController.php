@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 
 class TechnologicalMapsController extends Controller
 {
-    public function __construct(protected TechnologicalMapsRepository $fillingRepo)
+    public function __construct(protected TechnologicalMapsRepository $technologicalMapsRepo)
     {
     }
 
@@ -18,8 +18,8 @@ class TechnologicalMapsController extends Controller
      */
     public function index(): JsonResponse
     {
-        $fillings = $this->fillingRepo->all();
-        return response()->json($fillings);
+        $technologicalMapResponses = $this->technologicalMapsRepo->all();
+        return response()->json($technologicalMapResponses);
     }
 
     /**
@@ -30,7 +30,6 @@ class TechnologicalMapsController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => ['string', 'required'],
             'description' => ['string', 'nullable'],
-            'id_image' => ['integer', 'numeric'],
         ]);
 
         if ($validator->fails()) {
@@ -39,13 +38,11 @@ class TechnologicalMapsController extends Controller
 
         $attributes = [
             'name' => $request->name,
-            'price_by_kg' => $request->price_by_kg,
             'description' => $request->description ?? null,
-            'id_image' => $request->id_image ?? null,
         ];
 
-        $fillingResponse = $this->fillingRepo->create($attributes);
-        return \response()->json($fillingResponse);
+        $technologicalMapResponse = $this->technologicalMapsRepo->create($attributes);
+        return \response()->json($technologicalMapResponse);
     }
 
     /**
@@ -53,7 +50,7 @@ class TechnologicalMapsController extends Controller
      */
     public function show(int $id): JsonResponse
     {
-        $response = $this->fillingRepo->getById($id);
+        $response = $this->technologicalMapsRepo->getById($id);
         return response()->json($response);
     }
 
@@ -64,9 +61,7 @@ class TechnologicalMapsController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => ['string'],
-            'price_by_kg' => ['decimal:0,2'],
             'description' => ['string', 'nullable'],
-            'id_image' => ['integer', 'numeric',],
         ]);
 
         if ($validator->fails()) {
@@ -77,23 +72,18 @@ class TechnologicalMapsController extends Controller
         if (!is_null($request->name)) {
             $attributes['name'] = $request->name;
         }
-        if (!is_null($request->price_by_kg)) {
-            $attributes['price_by_kg'] = $request->price_by_kg;
-        }
         if (!is_null($request->description)) {
             $attributes['description'] = $request->description;
         }
-        if (!is_null($request->id_image)) {
-            $attributes['id_image'] = $request->id_image;
-        }
+
 
         if (empty($attributes)) {
-            $fillingResponse = $this->fillingRepo->getById($id);
-            return response()->json($fillingResponse);
+            $technologicalMapResponse = $this->technologicalMapsRepo->getById($id);
+            return response()->json($technologicalMapResponse);
         }
 
-        $fillingResponse = $this->fillingRepo->updateById($id, $attributes);
-        return response()->json($fillingResponse);
+        $technologicalMapResponse = $this->technologicalMapsRepo->updateById($id, $attributes);
+        return response()->json($technologicalMapResponse);
     }
 
     /**
@@ -101,8 +91,7 @@ class TechnologicalMapsController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-
-        $isSuccess = $this->fillingRepo->deleteById($id);
+        $isSuccess = $this->technologicalMapsRepo->deleteById($id);
         if (!$isSuccess) {
             return response()->json(['result' => 'error'], 500);
         }

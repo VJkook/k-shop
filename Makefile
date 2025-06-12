@@ -78,6 +78,7 @@ fill-db:
 	@make insert-address
 	@make insert-payment-statuses
 	@make insert-order-statutes
+	@make insert-max-time
 	@make register-users
 	@make update-users
 	@make fill-by-api
@@ -120,6 +121,10 @@ insert-payment-statuses:
 insert-order-statutes:
 	@echo "Заполнение таблицы order_statuses:"
 	@$(PSQL_CMD) -c "INSERT INTO public.order_statuses (name) VALUES ('Ожидание подтверждения'), ('Готовится')"
+
+insert-max-time:
+	@echo "Заполнение таблицы order_statuses:"
+	@$(PSQL_CMD) -c "INSERT INTO public.max_time_for_cooking (time) VALUES ('18:00:00')"
 
 # Описание таблицы users
 describe-users:

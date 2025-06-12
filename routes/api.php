@@ -5,6 +5,7 @@ use App\Http\Controllers\BasketController;
 use App\Http\Controllers\CakeDesignersController;
 use App\Http\Controllers\CakeFormsController;
 use App\Http\Controllers\CakeSpongesController;
+use App\Http\Controllers\CookingStepsController;
 use App\Http\Controllers\CoveragesController;
 use App\Http\Controllers\DecorsController;
 use App\Http\Controllers\FillingsController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\ProductImageRelationsController;
 use App\Http\Controllers\ReadyCakeImageRelationsController;
 use App\Http\Controllers\ReadyCakesController;
+use App\Http\Controllers\TechnologicalMapsController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\TiersController;
 use App\Http\Controllers\UsersController;
@@ -141,6 +143,7 @@ Route::prefix('decors')->group(function () {
     Route::delete('/{id}', [DecorsController::class, 'destroy']);
 });
 
+// TODO: remove deprecated
 Route::prefix('tiers')->group(function () {
     Route::post('/', [TiersController::class, 'create']);
     Route::get('/', [TiersController::class, 'index']);
@@ -154,4 +157,19 @@ Route::middleware('auth:sanctum')->prefix('cake-designers')->group(function () {
     Route::get('/{id}', [CakeDesignersController::class, 'show']);
 //    Route::post('/{id}', [CakeDesignersController::class, 'update']);
     Route::delete('/{id}', [CakeDesignersController::class, 'destroy']);
+});
+
+Route::middleware('auth:sanctum')->prefix('technological-maps')->group(function () {
+    Route::post('/', [TechnologicalMapsController::class, 'create']);
+    Route::get('/', [TechnologicalMapsController::class, 'index']);
+
+    Route::get('/{mapId}', [TechnologicalMapsController::class, 'show']);
+    Route::delete('/{id}', [TechnologicalMapsController::class, 'destroy']);
+
+    Route::prefix('/{technologicalMapId}/cooking-steps')->group(function () {
+        Route::post('/', [CookingStepsController::class, 'create']);
+        Route::get('/', [CookingStepsController::class, 'index']);
+        Route::get('/{id}', [CookingStepsController::class, 'show']);
+        Route::delete('/{id}', [CookingStepsController::class, 'destroy']);
+    });
 });
