@@ -8,6 +8,7 @@ use App\Models\Responses\Recipes\RecipeReadyCakeResponse;
 use App\Models\Responses\Recipes\RecipeTechnologicalMapResponse;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $id
@@ -34,6 +35,11 @@ class Recipe extends Model
     protected $table = 'recipes';
 
     public $timestamps = false;
+
+    public function technologicalMap(): BelongsTo
+    {
+        return $this->belongsTo(TechnologicalMap::class, 'id_technological_map', 'id');
+    }
 
     public function toRecipeReadyCakeResponse(): RecipeReadyCakeResponse
     {

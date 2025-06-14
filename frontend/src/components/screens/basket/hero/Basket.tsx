@@ -58,7 +58,8 @@ const Basket: FC = () => {
 
     const createOrder = () => {
         apiPost('/api/orders', {
-            id_delivery_address: 1
+            id_delivery_address: 1,
+            delivery_date: '2025-08-01 17:00:00'
         })
             .then((response) => {
                 if (response.data != undefined) {
@@ -162,11 +163,11 @@ const Basket: FC = () => {
                                     </div>
                                     <div className={styles.actions}>
                                         <select
-                                            style={{ width: '100px', padding: '10px' }}
+                                            style={{width: '100px', padding: '10px'}}
                                             onChange={(e) => updateBasket(item.id, Number(e.target.value))}
                                             value={item.count}
                                         >
-                                            {Array.from({ length: 10 }, (_, index) => (
+                                            {Array.from({length: 10}, (_, index) => (
                                                 <option key={index} value={index + 1}>{index + 1}</option>
                                             ))}
                                         </select>

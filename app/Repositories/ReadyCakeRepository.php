@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\BasicIntervalTime;
 use App\Models\Image;
 use App\Models\Product;
 use App\Models\ReadyCake;
@@ -87,5 +88,14 @@ class ReadyCakeRepository
 
         $readyCakeResponse->setImages($imagesResponses);
         return $readyCakeResponse;
+    }
+
+    public function getCookingTimeById(int $id): ?BasicIntervalTime
+    {
+        /** @var ReadyCake $readyCake */
+        $readyCake = ReadyCake::query()->find($id);
+        $recipeRepo = new RecipesRepository();
+
+        return $recipeRepo->getCookingTimeReadyCakeId($readyCake->id);
     }
 }

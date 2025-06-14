@@ -6,6 +6,7 @@ use App\Models\BasicDate;
 use App\Models\Order;
 use App\Models\User;
 use App\Repositories\BasketRepository;
+use App\Repositories\ConfectionerRepository;
 use App\Repositories\OrderRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -68,7 +69,7 @@ class OrdersController extends Controller
 
         $response = $this->orderRepo->create(
             $user->id,
-            $request->id_delivery_address,
+            $request->get('id_delivery_address'),
             $baskets,
             $deliveryDate
         );
@@ -87,13 +88,25 @@ class OrdersController extends Controller
 
         $validator = Validator::make($request->all(), [
             'id_confectioner' => ['integer', 'numeric'],
+            'delivery_date' => ['date_format:' . BasicDate::DATE_FORMAT],
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->getMessages(), 400);
         }
 
-        return response()->json($this->orderRepo->update($id, $request->toArray()));
+        $confectionerId = $request->get('id_confectioner');
+        if (!is_null($confectionerId)) {
+            $confectionerRepo = new ConfectionerRepository();
+            $confectionerRepo->getBusyTime($confectionerId);
+        }
+
+        $time = $this->orderRepo->getOrderCookingTime($id);
+
+
+        $response = $this->orderRepo->setConfectionerToOrder($id, $confectionerId);
+
+        return response()->json($response);
     }
 
     /**

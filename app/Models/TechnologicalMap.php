@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property int $id
  * @property string $name
  * @property string $description
- * @property CarbonInterval|null $cooking_time
+ * @property CarbonInterval|string|null $cooking_time
  */
 class TechnologicalMap extends Model
 {

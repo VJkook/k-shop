@@ -23,39 +23,6 @@ class UsersController extends Controller
         return response()->json($users);
     }
 
-    public function confectioners(): JsonResponse
-    {
-        $users = $this->userRepo->getConfectioners();
-        return response()->json($users);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(Request $request): JsonResponse
-    {
-//        $validator = Validator::make($request->all(), [
-//            'name' => ['string', 'required'],
-//            'price_by_kg' => ['decimal:0,2', 'required'],
-//            'description' => ['string', 'nullable'],
-//            'id_image' => ['integer', 'numeric',],
-//        ]);
-//
-//        if ($validator->fails()) {
-//            return \response()->json($validator->errors()->getMessages(), 400);
-//        }
-//
-//        $attributes = [
-//            'name' => $request->name,
-//            'price_by_kg' => $request->price_by_kg,
-//            'description' => $request->description ?? null,
-//            'id_image' => $request->id_image ?? null,
-//        ];
-//
-//        $fillingResponse = $this->fillingRepo->create($attributes);
-//        return \response()->json($fillingResponse);
-    }
-
     /**
      * Display the specified resource.
      */

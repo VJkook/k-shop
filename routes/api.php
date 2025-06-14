@@ -5,6 +5,7 @@ use App\Http\Controllers\BasketController;
 use App\Http\Controllers\CakeDesignersController;
 use App\Http\Controllers\CakeFormsController;
 use App\Http\Controllers\CakeSpongesController;
+use App\Http\Controllers\ConfectionersController;
 use App\Http\Controllers\CookingStepsController;
 use App\Http\Controllers\CoveragesController;
 use App\Http\Controllers\DecorsController;
@@ -47,7 +48,7 @@ Route::middleware('auth:sanctum')->get('/user', [AuthController::class, 'getUser
 
 Route::prefix('/users')->group(function () {
     Route::get('/', [UsersController::class, 'index'])->name('users');
-    Route::get('/confectioners', [UsersController::class, 'confectioners'])->name('confectioners');
+    Route::get('/confectioners', [ConfectionersController::class, 'index'])->name('confectioners');
 });
 
 Route::get('/test', [TestController::class, 'index']);
@@ -175,6 +176,7 @@ Route::middleware('auth:sanctum')->prefix('technological-maps')->group(function 
 });
 
 Route::middleware('auth:sanctum')->prefix('recipes')->group(function () {
+    Route::get('/', [RecipesController::class, 'index']);
     Route::post('/for-ready-cakes', [RecipesController::class, 'createForReadyCake']);
     Route::get('/{id}', [RecipesController::class, 'show']);
     Route::post('/{id}/add-technological-map', [RecipesController::class, 'addTechnologicalMap']);

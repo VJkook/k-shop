@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\BasicDate;
+use App\Models\BasicIntervalTime;
 use App\Models\CakeDesigner;
 use App\Models\CakeDesignerDecorRelation;
 use App\Models\Coverage;
@@ -85,6 +86,25 @@ class OrderRepository
         /** @var Order[] $orders */
         $orders = Order::query()
             ->where('id_user', '=', $userId)
+            ->orderBy('registration_date', 'desc')
+            ->get();
+        $response = [];
+        foreach ($orders as $order) {
+            $response[] = $this->buildResponse($order);
+        }
+
+        return $response;
+    }
+
+    /**
+     * @param int $id
+     * @return OrderResponse[]
+     */
+    public function getById(int $id): array
+    {
+        /** @var Order[] $orders */
+        $orders = Order::query()
+            ->where('id', '=', $id)
             ->orderBy('registration_date', 'desc')
             ->get();
         $response = [];
@@ -226,11 +246,40 @@ class OrderRepository
         );
     }
 
-    public function update(int $id, array $attributes): OrderResponse
+    public function getOrderCookingTime(int $orderId): BasicIntervalTime
     {
         /** @var Order $order */
-        $order = Order::query()->where('id', '=', $id)->first();
-        $attributes['id_order_status'] = OrderStatus::COOKING;
+        $order = Order::query()->where('id', '=', $orderId)->first();
+
+        /** @var Product[] $products */
+        $products = $order->products()->get();
+
+        $resultTime = new BasicIntervalTime();
+        foreach ($products as $product) {
+            if (!is_null($product->id_ready_cake)) {
+                $readyCakeRepo = new ReadyCakeRepository();
+                $interval = $readyCakeRepo->getCookingTimeById($product->id_ready_cake);
+                if (!is_null($interval)) {
+                    $resultTime->add($interval);
+                }
+            }
+        }
+
+        return $resultTime;
+    }
+
+    public function setConfectionerToOrder(int $orderId, int $idConfectioner): OrderResponse
+    {
+        /** @var Order $order */
+        $order = Order::query()->where('id', '=', $orderId)->first();
+
+        $attributes = [
+            'id_order_status' => OrderStatus::COOKING,
+            'id_confectioner' => $idConfectioner,
+        ];
+
+        $orderCookingTime = $this->getOrderCookingTime($orderId);
+
         $order->update($attributes);
         return $this->buildResponse($order);
     }

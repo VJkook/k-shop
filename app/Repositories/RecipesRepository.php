@@ -2,10 +2,14 @@
 
 namespace App\Repositories;
 
+use App\Models\BasicIntervalTime;
 use App\Models\Recipe;
+use App\Models\Responses\ReadyCakeResponse;
 use App\Models\Responses\Recipes\RecipeDecorResponse;
 use App\Models\Responses\Recipes\RecipeFillingResponse;
 use App\Models\Responses\Recipes\RecipeReadyCakeResponse;
+use App\Models\TechnologicalMap;
+use Exception;
 
 class RecipesRepository
 {
@@ -127,5 +131,22 @@ class RecipesRepository
         }
 
         return null;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getCookingTimeReadyCakeId(int $id): ?BasicIntervalTime
+    {
+        /** @var Recipe $recipe */
+        $recipe = Recipe::query()->where('id_ready_cake', '=', $id)->first();
+
+        /** @var TechnologicalMap $technologicalMap */
+        $technologicalMap = $recipe->technologicalMap()->get();
+        if (is_null($technologicalMap)) {
+            return null;
+        }
+
+        return BasicIntervalTime::fromIntervalString($technologicalMap->cooking_time);
     }
 }

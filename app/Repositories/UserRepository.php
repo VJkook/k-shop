@@ -62,4 +62,19 @@ class UserRepository
 
         return $responses;
     }
+
+    public function getAvailableConfectioners(): array
+    {
+        /** @var User[] $users */
+        $users = User::query()
+            ->leftJoin()
+            ->where('id_role', Role::confectionerRoleId())
+            ->get();
+        $responses = [];
+        foreach ($users as $user) {
+            $responses[] = $user->toResponse();
+        }
+
+        return $responses;
+    }
 }

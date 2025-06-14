@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->timestamp('registration_date');
             $table->timestamp('delivery_date')->nullable();
             $table->timestamp('complete_date')->nullable();
+            $table->timestamp('work_date')->nullable();
 
             $table->unsignedBigInteger('id_user');
             $table->foreign('id_user')->references('id')->on('users');
