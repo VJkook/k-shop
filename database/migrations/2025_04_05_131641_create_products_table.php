@@ -28,7 +28,7 @@ return new class extends Migration {
             ADD CONSTRAINT check_relations
             CHECK(
                 (id_ready_cake IS NOT NULL AND id_cake_designer IS NULL) OR
-                (id_ready_cake IS NULL AND id_cake_designer IS NOT NULL)
+                (id_cake_designer IS NOT NULL AND id_ready_cake IS NULL)
             )
             '
         );

@@ -15,6 +15,7 @@ use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\ProductImageRelationsController;
 use App\Http\Controllers\ReadyCakeImageRelationsController;
 use App\Http\Controllers\ReadyCakesController;
+use App\Http\Controllers\RecipesController;
 use App\Http\Controllers\TechnologicalMapsController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\TiersController;
@@ -172,4 +173,11 @@ Route::middleware('auth:sanctum')->prefix('technological-maps')->group(function 
         Route::get('/{id}', [CookingStepsController::class, 'show']);
         Route::delete('/{id}', [CookingStepsController::class, 'destroy']);
     });
+});
+
+Route::middleware('auth:sanctum')->prefix('recipes')->group(function () {
+    Route::post('/for-ready-cakes', [RecipesController::class, 'createForReadyCake']);
+    Route::get('/{id}', [RecipesController::class, 'show']);
+    Route::post('/{id}/add-technological-map', [RecipesController::class, 'addTechnologicalMap']);
+    Route::delete('/{id}', [RecipesController::class, 'destroy']);
 });
