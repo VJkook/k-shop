@@ -156,7 +156,6 @@ Route::middleware('auth:sanctum')->prefix('cake-designers')->group(function () {
     Route::post('/', [CakeDesignersController::class, 'create']);
     Route::get('/', [CakeDesignersController::class, 'index']);
     Route::get('/{id}', [CakeDesignersController::class, 'show']);
-//    Route::post('/{id}', [CakeDesignersController::class, 'update']);
     Route::delete('/{id}', [CakeDesignersController::class, 'destroy']);
 });
 

@@ -1,0 +1,261 @@
+// Основные стили контейнера
+// Добавляем в начало файла
+
+
+
+.container {
+    width: 115%;
+    max-width: 115%;
+    margin: 0 auto;
+    background: white;
+    border-radius: 0.5rem;
+    border: 1px solid #e5e7eb;
+    padding: 1.5rem;
+}
+
+// Заголовок и счетчик
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+
+    .title {
+        font-size: 1.25rem;
+        font-weight: 800;
+    }
+
+    .counter {
+        font-size: 0.875rem;
+        font-weight: 600;
+        background-color: #f3f4f6;
+        border: 1px solid #d1d5db;
+        border-radius: 9999px;
+        padding: 0.25rem 0.75rem;
+    }
+}
+
+// Панель поиска и фильтров
+.filters {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.5rem;
+
+    @media (min-width: 640px) {
+        flex-direction: row;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .searchContainer {
+        flex: 1;
+        margin-bottom: 1rem;
+
+        @media (min-width: 640px) {
+            margin-bottom: 0;
+        }
+    }
+
+    .searchInput {
+        position: relative;
+        color: #9ca3af;
+
+        &:focus-within {
+            color: #4b5563;
+        }
+
+        .searchIcon {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            align-items: center;
+            padding-left: 0.75rem;
+        }
+
+        input {
+            display: block;
+            width: 100%;
+            border-radius: 0.375rem;
+            border: 1px solid #d1d5db;
+            background-color: white;
+            padding: 0.5rem 2.5rem 0.5rem 2.5rem;
+            font-size: 0.875rem;
+            color: #111827;
+
+            &::placeholder {
+                color: #9ca3af;
+            }
+
+            &:focus {
+                border-color: #3b82f6;
+                outline: none;
+                box-shadow: 0 0 0 1px #3b82f6;
+            }
+        }
+    }
+
+    .filterGroup {
+        display: flex;
+        gap: 0.75rem;
+    }
+
+    .selectWrapper {
+        position: relative;
+
+        select {
+            appearance: none;
+            display: flex;
+            align-items: center;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            padding: 0.5rem 2rem 0.5rem 0.75rem;
+            font-size: 0.875rem;
+            color: #111827;
+            background-color: white;
+            cursor: pointer;
+
+            &:hover {
+                background-color: #f9fafb;
+            }
+
+            &:focus {
+                outline: none;
+                box-shadow: 0 0 0 2px #3b82f6;
+            }
+        }
+
+        .selectArrow {
+            pointer-events: none;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            padding-right: 0.5rem;
+            color: #374151;
+        }
+    }
+}
+
+.tableResponsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    min-width: 100%; // Теперь таблица растягивается на всю ширину
+    border-spacing: 0 1rem;
+    border-collapse: separate;
+
+    thead tr th {
+        text-align: left;
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+        white-space: nowrap;
+
+        // Автоматическое распределение ширины колонок
+        &:nth-child(1) { width: auto; min-width: 40px; }   // Order ID
+        &:nth-child(2) { width: auto; min-width: 100px; }  // Date
+        &:nth-child(3) { width: auto; min-width: 120px; }  // Client
+        &:nth-child(4) { width: auto; min-width: 120px; }  // Phone
+        &:nth-child(5) { width: 25%; min-width: 150px; }   // Address
+        &:nth-child(6) { width: auto; min-width: 120px; }  // Status
+        &:nth-child(7) { width: auto; min-width: 120px; }  // Confectioner
+        &:nth-child(8) { width: auto; min-width: 80px; }   // Price
+        &:nth-child(9) { width: auto; min-width: 100px; }  // Details
+    }
+
+    tbody tr td {
+        padding: 1rem;
+        vertical-align: middle;
+        text-align: left;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        &:nth-child(8) { text-align: right; } // Price
+    }
+}
+
+.detailsButton {
+    padding: 0.5rem 0.75rem;
+    background-color: #3b82f6;
+    color: white;
+    border-radius: 0.25rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    white-space: nowrap;
+
+    &:hover {
+        background-color: #2563eb;
+    }
+}
+// Статусы заказов
+.status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: white;
+
+    &.yellow {
+        background-color: #f59e0b;
+    }
+
+    &.blue {
+        background-color: #3b82f6;
+    }
+
+    &.green {
+        background-color: #10b981;
+    }
+
+    &.red {
+        background-color: #ef4444;
+    }
+}
+
+// Ссылка "View Details"
+.detailsLink {
+    color: #2563eb;
+    font-size: 0.875rem;
+    font-weight: 500;
+
+    &:hover {
+        color: #1e40af;
+    }
+}
+
+// Усечение длинного текста
+.truncate {
+    max-width: 12rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+// В OrdersTable.module.scss
+.select {
+    width: 100%;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    background-color: white;
+
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 0 1px #3b82f6;
+    }
+}
