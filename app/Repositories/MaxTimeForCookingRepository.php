@@ -8,11 +8,10 @@ use Carbon\CarbonInterval;
 
 class MaxTimeForCookingRepository
 {
-
     public function getMax(): BasicIntervalTime
     {
         /** @var CarbonInterval $time */
         $time =  MaxTimeForCooking::query()->max('time');
-        return BasicIntervalTime::fromCarbonInterval($time);
+        return BasicIntervalTime::fromIntervalString($time);
     }
 }

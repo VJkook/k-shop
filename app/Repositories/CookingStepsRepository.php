@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\BasicIntervalTime;
 use App\Models\CookingStep;
 use App\Models\Responses\CookingStepResponse;
 use App\Models\TechnologicalMap;
@@ -10,11 +11,12 @@ use Illuminate\Support\Facades\DB;
 
 class CookingStepsRepository
 {
-    public function create(array $attributes, int $technologicalMapId): ?CookingStepResponse
+    public function create(array $attributes, int $technologicalMapId, BasicIntervalTime $stepTime): ?CookingStepResponse
     {
         /** @var CookingStep|null $cookingStep */
         $cookingStep = null;
-        DB::transaction(function () use (&$cookingStep, $attributes, $technologicalMapId) {
+        DB::transaction(function () use ($stepTime, &$cookingStep, $attributes, $technologicalMapId) {
+            $attributes['step_time'] = $stepTime;
             /** @var CookingStep $cookingStep */
             $cookingStep = CookingStep::query()->create($attributes);
 
@@ -33,7 +35,7 @@ class CookingStepsRepository
             return null;
         }
 
-        return $cookingStep->toResponse();
+        return $this->getById($cookingStep->id);
     }
 
     /**

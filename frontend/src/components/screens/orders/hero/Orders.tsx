@@ -106,7 +106,7 @@ const Orders: FC = () => {
                             <div className={styles.products}>
                                 {order?.products?.map((item: OrderOrBasketItem) => (
                                     <div>
-                                        <div key={item.id} className={styles.product}>
+                                        <div key={item.id_product} className={styles.product}>
                                             <div className={styles.image}>
                                                 {item?.image ? (
                                                     <img

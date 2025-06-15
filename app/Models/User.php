@@ -29,6 +29,8 @@ class User extends Authenticatable
 
     public const SYSTEM_USER_ID = 1;
 
+    protected $table = 'users';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -66,7 +68,14 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class, 'id_role', 'id');
     }
 
-    public function toResponse(): UserResponse
+    public function toUserResponse(): UserResponse
+    {
+        /** @var Role $role */
+        $role = $this->role()->first();
+        return new UserResponse($this->id, $this->name, $this->email, $role->name);
+    }
+
+    public function toConfectionerResponse(): UserResponse
     {
         /** @var Role $role */
         $role = $this->role()->first();

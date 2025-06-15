@@ -2,7 +2,7 @@
 
 namespace App\Models\Responses;
 
-class OrderOrBasketResponse
+class OrderOrBasketItemResponse
 {
     /**
      * @param int $id

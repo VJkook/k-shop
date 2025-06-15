@@ -2,15 +2,8 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-
-use App\Models\Responses\UserResponse;
 use DateTime;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
@@ -25,8 +18,8 @@ use Laravel\Sanctum\HasApiTokens;
  */
 class Confectioner extends User
 {
-   public function busyTimes()
+   public function busyTime(): HasMany
    {
-
+       return $this->hasMany(ConfectionersBusyTime::class, 'id_confectioner', 'id');
    }
 }

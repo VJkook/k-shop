@@ -45,10 +45,9 @@ class CookingStepsController extends Controller
             'step_number' => $request->step_number,
         ];
 
-        $stepTime = BasicIntervalTime::fromIntervalString($request->step_time);
-        $attributes['step_time'] = $stepTime;
+        $stepTime = BasicIntervalTime::fromIntervalString($request->get('step_time'));
 
-        $stepResponse = $this->cookingStepsRepo->create($attributes, $technologicalMapId);
+        $stepResponse = $this->cookingStepsRepo->create($attributes, $technologicalMapId, $stepTime);
         return \response()->json($stepResponse);
     }
 

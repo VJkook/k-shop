@@ -19,7 +19,7 @@ class UserRepository
 
         /** @var User $user */
         $user = User::query()->create($attributes);
-        return $user->toResponse();
+        return $user->toUserResponse();
     }
 
     public function getUserByEmail(string $email): ?UserResponse
@@ -30,7 +30,7 @@ class UserRepository
             return null;
         }
 
-        return $user->toResponse();
+        return $user->toUserResponse();
     }
 
     /**
@@ -42,7 +42,7 @@ class UserRepository
         $users = User::query()->get();
         $responses = [];
         foreach ($users as $user) {
-            $responses[] = $user->toResponse();
+            $responses[] = $user->toUserResponse();
         }
 
         return $responses;
@@ -57,7 +57,7 @@ class UserRepository
         $users = User::query()->where('id_role', Role::confectionerRoleId())->get();
         $responses = [];
         foreach ($users as $user) {
-            $responses[] = $user->toResponse();
+            $responses[] = $user->toUserResponse();
         }
 
         return $responses;
@@ -72,7 +72,7 @@ class UserRepository
             ->get();
         $responses = [];
         foreach ($users as $user) {
-            $responses[] = $user->toResponse();
+            $responses[] = $user->toUserResponse();
         }
 
         return $responses;

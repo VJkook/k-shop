@@ -13,6 +13,7 @@ use Illuminate\Support\Carbon;
  * @property float $total_cost
  * @property Carbon $registration_date
  * @property Carbon|null $delivery_date
+ * @property Carbon|null $work_date
  * @property Carbon|null $complete_date
  * @property int $id_user
  * @property int $id_delivery_address
@@ -36,10 +37,15 @@ class Order extends Model
         'id_order_status',
         'registration_date',
         'id_confectioner',
+        'delivery_date',
+        'work_date',
     ];
 
     protected $casts = [
         'registration_date' => 'datetime:' . BasicDate::DATE_FORMAT,
+        'delivery_date' => 'datetime:' . BasicDate::DATE_FORMAT,
+        'complete_date' => 'datetime:' . BasicDate::DATE_FORMAT,
+        'work_date' => 'datetime:' . BasicDate::YEAR_MONTH_DAY_FORMAT,
     ];
 
     public function user(): BelongsTo

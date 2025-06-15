@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Responses\UserResponse;
-use App\Models\Role;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use Illuminate\Contracts\Routing\ResponseFactory;
@@ -93,7 +91,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
             /** @var User $user */
             $user = $request->user();
-            return \response()->json($user->toResponse());
+            return \response()->json($user->toUserResponse());
         }
 
         return \response()->json(['msg' => ['incorrect email or password']], 401);
@@ -172,6 +170,6 @@ class AuthController extends Controller
     {
         /** @var User $user */
         $user = Auth::user();
-        return \response()->json($user->toResponse());
+        return \response()->json($user->toUserResponse());
     }
 }

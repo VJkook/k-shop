@@ -18,7 +18,7 @@ use App\Models\Product;
 use App\Models\ProductOrderRelation;
 use App\Models\ReadyCake;
 use App\Models\Responses\DetailsResponse;
-use App\Models\Responses\OrderOrBasketResponse;
+use App\Models\Responses\OrderOrBasketItemResponse;
 use App\Models\Responses\CakeDesignerDecorResponse;
 use App\Models\Responses\OrderResponse;
 use App\Models\Responses\TierResponse;
@@ -31,7 +31,7 @@ class OrderRepository
     /**
      * @param int $userId
      * @param int $deliveryAddressId
-     * @param OrderOrBasketResponse[] $baskets
+     * @param OrderOrBasketItemResponse[] $baskets
      * @param Carbon|null $deliveryDate
      * @return OrderResponse
      */
@@ -48,12 +48,15 @@ class OrderRepository
             'id_payment_status' => PaymentStatus::CONFIRM_WAITING,
             'id_order_status' => OrderStatus::CONFIRM_WAITING,
         ];
+
         if (!is_null($deliveryDate)) {
             $attributes['delivery_date'] = $deliveryDate;
+            $deliveryDate = clone $deliveryDate;
+            $attributes['work_date'] = $deliveryDate->subDay();
         }
 
-        $orderResponse = null;
-        DB::transaction(function () use ($baskets, $attributes, &$orderResponse) {
+        $order = null;
+        DB::transaction(function () use ($baskets, $attributes, &$order) {
             $totalCost = 0;
             /** @var Order $order */
             foreach ($baskets as $basket) {
@@ -70,11 +73,9 @@ class OrderRepository
                     'count' => $basket->count,
                 ]);
             }
-
-            $orderResponse = $this->buildResponse($order);
         });
 
-        return $orderResponse;
+        return $this->getById($order->id);
     }
 
     /**
@@ -96,23 +97,15 @@ class OrderRepository
         return $response;
     }
 
-    /**
-     * @param int $id
-     * @return OrderResponse[]
-     */
-    public function getById(int $id): array
+    public function getById(int $id): OrderResponse
     {
-        /** @var Order[] $orders */
-        $orders = Order::query()
+        /** @var Order $order */
+        $order = Order::query()
             ->where('id', '=', $id)
             ->orderBy('registration_date', 'desc')
-            ->get();
-        $response = [];
-        foreach ($orders as $order) {
-            $response[] = $this->buildResponse($order);
-        }
+            ->first();
 
-        return $response;
+        return $this->buildResponse($order);
     }
 
     /**
@@ -134,7 +127,7 @@ class OrderRepository
 
     private function buildResponse(Order $order): OrderResponse
     {
-        $response = [];
+        $orderItems = [];
 
         /** @var Product $product */
         foreach ($order->products()->get() as $product) {
@@ -213,7 +206,7 @@ class OrderRepository
                 ->first();
 
             $count = $productOrderRelation->count;
-            $response[] = new OrderOrBasketResponse(
+            $orderItems[] = new OrderOrBasketItemResponse(
                 $order->id,
                 $productName,
                 $weight,
@@ -231,18 +224,26 @@ class OrderRepository
         $paymentStatus = $order->paymentStatus()->first();
 
         /** @var OrderStatus $orderStatus */
-        $orderStatus = $order->orderStatus()->first();;
+        $orderStatus = $order->orderStatus()->first();
+
+        $deliveryDate = !is_null($order->delivery_date) ? BasicDate::fromCarbon($order->delivery_date) : null;
+        $workDate = !is_null($order->work_date) ? BasicDate::fromCarbon($order->work_date) : null;
+        $completeDate = !is_null($order->complete_date) ? BasicDate::fromCarbon($order->complete_date) : null;
+        $workTime = $this->getOrderCookingTime($order->id);
+
         return new OrderResponse(
             $order->id,
             $order->total_cost,
             BasicDate::fromCarbon($order->registration_date),
-            $order->delivery_date,
-            $order->complete_date,
+            $deliveryDate,
+            $workDate->toStringYearDayMonth(),
+            $completeDate,
             $deliveryAddress->address,
             $orderStatus->name,
             $paymentStatus->name,
             $order->id_confectioner,
-            $response
+            $workTime->toStringInterval(),
+            $orderItems
         );
     }
 
@@ -254,7 +255,7 @@ class OrderRepository
         /** @var Product[] $products */
         $products = $order->products()->get();
 
-        $resultTime = new BasicIntervalTime();
+        $resultTime = new BasicIntervalTime(0);
         foreach ($products as $product) {
             if (!is_null($product->id_ready_cake)) {
                 $readyCakeRepo = new ReadyCakeRepository();
@@ -268,19 +269,24 @@ class OrderRepository
         return $resultTime;
     }
 
-    public function setConfectionerToOrder(int $orderId, int $idConfectioner): OrderResponse
+    public function setConfectionerToOrder(int $orderId, int $confectionerId): OrderResponse
     {
         /** @var Order $order */
         $order = Order::query()->where('id', '=', $orderId)->first();
 
-        $attributes = [
-            'id_order_status' => OrderStatus::COOKING,
-            'id_confectioner' => $idConfectioner,
-        ];
+        DB::transaction(function () use ($confectionerId, $orderId, &$order) {
+            $confectionerRepo = new ConfectionerRepository();
 
-        $orderCookingTime = $this->getOrderCookingTime($orderId);
+            $workDate = BasicDate::fromCarbon($order->work_date);
+            $orderCookingTime = $this->getOrderCookingTime($orderId);
 
-        $order->update($attributes);
+            $confectionerRepo->addBusyTime($confectionerId, $workDate, $orderCookingTime);
+
+            $order->id_order_status = OrderStatus::COOKING;
+            $order->id_confectioner = $confectionerId;
+            $order->save();
+        });
+
         return $this->buildResponse($order);
     }
 }

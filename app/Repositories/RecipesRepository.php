@@ -141,8 +141,12 @@ class RecipesRepository
         /** @var Recipe $recipe */
         $recipe = Recipe::query()->where('id_ready_cake', '=', $id)->first();
 
+        if (is_null($recipe)) {
+            return null;
+        }
+
         /** @var TechnologicalMap $technologicalMap */
-        $technologicalMap = $recipe->technologicalMap()->get();
+        $technologicalMap = $recipe->technologicalMap()->first();
         if (is_null($technologicalMap)) {
             return null;
         }

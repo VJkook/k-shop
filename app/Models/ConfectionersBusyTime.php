@@ -10,7 +10,7 @@ use Illuminate\Support\Carbon;
 /**
  * @property int $id
  * @property int $id_confectioner
- * @property CarbonInterval|string|null $busy_date
+ * @property CarbonInterval|string|null $busy_time
  * @property Carbon|string|null $work_date
  */
 class ConfectionersBusyTime extends Model

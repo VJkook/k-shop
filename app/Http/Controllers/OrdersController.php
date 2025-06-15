@@ -3,13 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\BasicDate;
+use App\Models\BasicIntervalTime;
 use App\Models\Order;
+use App\Models\Responses\ErrorResponse;
 use App\Models\User;
 use App\Repositories\BasketRepository;
 use App\Repositories\ConfectionerRepository;
+use App\Repositories\MaxTimeForCookingRepository;
 use App\Repositories\OrderRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -55,8 +59,8 @@ class OrdersController extends Controller
         }
 
         $deliveryDate = null;
-        if (isset($request->delivery_date)) {
-            $deliveryDate = BasicDate::fromDateString($request->delivery_date);
+        if (!is_null($request->get('delivery_date'))) {
+            $deliveryDate = BasicDate::fromDateString($request->get('delivery_date'));
         }
 
         /** @var User $user */
@@ -89,6 +93,7 @@ class OrdersController extends Controller
         $validator = Validator::make($request->all(), [
             'id_confectioner' => ['integer', 'numeric'],
             'delivery_date' => ['date_format:' . BasicDate::DATE_FORMAT],
+            'work_date' => ['date_format:' . BasicDate::YEAR_MONTH_DAY_FORMAT],
         ]);
 
         if ($validator->fails()) {
@@ -97,16 +102,40 @@ class OrdersController extends Controller
 
         $confectionerId = $request->get('id_confectioner');
         if (!is_null($confectionerId)) {
-            $confectionerRepo = new ConfectionerRepository();
-            $confectionerRepo->getBusyTime($confectionerId);
+            $confectionerBusyTimeErr = $this->checkConfectionerBusyTimeValid($confectionerId, $id);
+            if (!is_null($confectionerBusyTimeErr)) {
+                return response()->json($confectionerBusyTimeErr, 400);
+            }
+
+            $this->orderRepo->setConfectionerToOrder($id, $confectionerId);
         }
 
-        $time = $this->orderRepo->getOrderCookingTime($id);
-
-
-        $response = $this->orderRepo->setConfectionerToOrder($id, $confectionerId);
-
+        $response = $this->orderRepo->getById($id);
         return response()->json($response);
+    }
+
+    private function checkConfectionerBusyTimeValid(int $confectionerId, $orderId): ?ErrorResponse
+    {
+        $order = $this->orderRepo->getById($orderId);
+        $confectionerRepo = new ConfectionerRepository();
+
+        $busyTime = $confectionerRepo->getBusyTime(
+            $confectionerId,
+            BasicDate::fromYearMonthDayString($order->work_date)
+        );
+        $orderCookingTime = $this->orderRepo->getOrderCookingTime($orderId);
+
+        $busyTime->add($orderCookingTime);
+
+        $maxTimeRepo = new MaxTimeForCookingRepository();
+        $maxTime = $maxTimeRepo->getMax();
+        if ($busyTime->gt($maxTime)) {
+            return new ErrorResponse(
+                sprintf('Busy time greater than: %s', $maxTime->toStringInterval())
+            );
+        }
+
+        return null;
     }
 
     /**

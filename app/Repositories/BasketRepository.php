@@ -11,7 +11,7 @@ use App\Models\Filling;
 use App\Models\Image;
 use App\Models\Product;
 use App\Models\Responses\DetailsResponse;
-use App\Models\Responses\OrderOrBasketResponse;
+use App\Models\Responses\OrderOrBasketItemResponse;
 use App\Models\Responses\CakeDesignerDecorResponse;
 use App\Models\Responses\CoverageResponse;
 use App\Models\Responses\DecorResponse;
@@ -37,7 +37,7 @@ class BasketRepository
     }
 
     /**
-     * @return OrderOrBasketResponse[]
+     * @return OrderOrBasketItemResponse[]
      */
     public function getItemsByUserId(int $userId): array
     {
@@ -93,7 +93,7 @@ class BasketRepository
                 );
             }
 
-            $response[] = new OrderOrBasketResponse(
+            $response[] = new OrderOrBasketItemResponse(
                 $arr['id'],
                 $arr['product_name'],
                 $arr['weight'],
@@ -145,7 +145,7 @@ class BasketRepository
      * @param int $id
      * @param int $userId
      * @param int $count
-     * @return OrderOrBasketResponse[]
+     * @return OrderOrBasketItemResponse[]
      */
     public function updateById(int $id, int $userId, int $count): array
     {

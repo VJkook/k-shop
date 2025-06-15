@@ -12,7 +12,8 @@ class BasicIntervalTime extends CarbonInterval
 
     public function toStringInterval(): string
     {
-        return $this->format(self::TIME_FORMAT);
+        $format = preg_replace('/(\w)/', '%$1', self::TIME_FORMAT);
+        return $this->format($format);
     }
 
     /**

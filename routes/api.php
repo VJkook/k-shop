@@ -48,7 +48,10 @@ Route::middleware('auth:sanctum')->get('/user', [AuthController::class, 'getUser
 
 Route::prefix('/users')->group(function () {
     Route::get('/', [UsersController::class, 'index'])->name('users');
-    Route::get('/confectioners', [ConfectionersController::class, 'index'])->name('confectioners');
+    Route::prefix('/confectioners')->group(function () {
+        Route::get('/', [ConfectionersController::class, 'index'])->name('confectioners');
+        Route::get('/available', [ConfectionersController::class, 'getAvailableByDate'])->name('confectioners-available');
+    });
 });
 
 Route::get('/test', [TestController::class, 'index']);
