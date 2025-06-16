@@ -256,10 +256,17 @@ class OrderRepository
         $products = $order->products()->get();
 
         $resultTime = new BasicIntervalTime(0);
+        $readyCakeRepo = new ReadyCakeRepository();
+        $cakeDesignerRepo = new CakeDesignerRepository();
+
         foreach ($products as $product) {
             if (!is_null($product->id_ready_cake)) {
-                $readyCakeRepo = new ReadyCakeRepository();
                 $interval = $readyCakeRepo->getCookingTimeById($product->id_ready_cake);
+                if (!is_null($interval)) {
+                    $resultTime->add($interval);
+                }
+            } elseif (!is_null($product->id_cake_designer)) {
+                $interval = $cakeDesignerRepo->getCookingTimeById($product->id_cake_designer);
                 if (!is_null($interval)) {
                     $resultTime->add($interval);
                 }
@@ -274,11 +281,20 @@ class OrderRepository
         /** @var Order $order */
         $order = Order::query()->where('id', '=', $orderId)->first();
 
+        if ($confectionerId === $order->id_confectioner) {
+            return $this->buildResponse($order);
+        }
+
         DB::transaction(function () use ($confectionerId, $orderId, &$order) {
+
             $confectionerRepo = new ConfectionerRepository();
 
             $workDate = BasicDate::fromCarbon($order->work_date);
             $orderCookingTime = $this->getOrderCookingTime($orderId);
+
+            if (!is_null($order->id_confectioner)) {
+                $confectionerRepo->subBusyTime($order->id_confectioner, $workDate, $orderCookingTime);
+            }
 
             $confectionerRepo->addBusyTime($confectionerId, $workDate, $orderCookingTime);
 

@@ -59,7 +59,7 @@ const Basket: FC = () => {
     const createOrder = () => {
         apiPost('/api/orders', {
             id_delivery_address: 1,
-            delivery_date: '2025-08-01 17:00:00'
+            delivery_date: '2025-08-10 17:00:00'
         })
             .then((response) => {
                 if (response.data != undefined) {

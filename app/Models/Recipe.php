@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Models\Responses\Recipes\RecipeDecorResponse;
 use App\Models\Responses\Recipes\RecipeFillingResponse;
 use App\Models\Responses\Recipes\RecipeReadyCakeResponse;
-use App\Models\Responses\Recipes\RecipeTechnologicalMapResponse;
+use App\Models\Responses\TechnologicalMapResponse;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -48,7 +48,7 @@ class Recipe extends Model
             $this->name,
             $this->description,
             $this->id_ready_cake,
-            $this->id_technological_map
+            $this->getTechnologicalMapResponse()
         );
     }
 
@@ -59,7 +59,7 @@ class Recipe extends Model
             $this->name,
             $this->description,
             $this->id_decor,
-            $this->id_technological_map
+            $this->getTechnologicalMapResponse(),
         );
     }
 
@@ -70,7 +70,31 @@ class Recipe extends Model
             $this->name,
             $this->description,
             $this->id_filling,
-            $this->id_technological_map
+            $this->getTechnologicalMapResponse()
         );
+    }
+
+    private function getTechnologicalMapResponse(): ?TechnologicalMapResponse
+    {
+        /** @var TechnologicalMap $technologicalMap */
+        $technologicalMap = $this->technologicalMap()->first();
+        $technologicalMapResponse = null;
+        if (!is_null($technologicalMap)) {
+            $technologicalMapResponse = $technologicalMap->toResponse();
+        }
+        return $technologicalMapResponse;
+    }
+
+    public function toResponse(): RecipeFillingResponse|RecipeDecorResponse|RecipeReadyCakeResponse
+    {
+        if (!is_null($this->id_ready_cake)) {
+            return $this->toRecipeReadyCakeResponse();
+        }
+
+        if (!is_null($this->id_decor)) {
+            return $this->toRecipeDecorResponse();
+        }
+
+        return $this->toRecipeFillingResponse();
     }
 }

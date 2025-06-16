@@ -6,6 +6,7 @@ use App\Repositories\RecipesRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use function response;
 
 class RecipesController extends Controller
 {
@@ -30,11 +31,11 @@ class RecipesController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => ['string', 'required'],
             'description' => ['string', 'nullable'],
-            'id_ready_cake' => ['integer', 'numeric'],
+            'id_ready_cake' => ['integer', 'numeric', 'required'],
         ]);
 
         if ($validator->fails()) {
-            return \response()->json($validator->errors()->getMessages(), 400);
+            return response()->json($validator->errors()->getMessages(), 400);
         }
 
         $response = $this->recipesRepo->createForReadyCake(
@@ -42,7 +43,47 @@ class RecipesController extends Controller
             $request->description ?? null,
             $request->id_ready_cake
         );
-        return \response()->json($response);
+        return response()->json($response);
+    }
+
+    public function createForFilling(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => ['string', 'required'],
+            'description' => ['string', 'nullable'],
+            'id_filling' => ['integer', 'numeric', 'required'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->getMessages(), 400);
+        }
+
+        $response = $this->recipesRepo->createForFilling(
+            $request->get('name'),
+            $request->get('description'),
+            $request->get('id_filling')
+        );
+        return response()->json($response);
+    }
+
+    public function createForDecor(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => ['string', 'required'],
+            'description' => ['string', 'nullable'],
+            'id_decor' => ['integer', 'numeric', 'required'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->getMessages(), 400);
+        }
+
+        $response = $this->recipesRepo->createForDecor(
+            $request->get('name'),
+            $request->get('description'),
+            $request->get('id_decor')
+        );
+        return response()->json($response);
     }
 
     public function addTechnologicalMap(Request $request, int $id_recipe): JsonResponse
@@ -52,7 +93,7 @@ class RecipesController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return \response()->json($validator->errors()->getMessages(), 400);
+            return response()->json($validator->errors()->getMessages(), 400);
         }
 
         $response = $this->recipesRepo->addTechnologicalMap(
@@ -60,7 +101,7 @@ class RecipesController extends Controller
             $request->get('id_technological_map')
         );
 
-        return \response()->json($response);
+        return response()->json($response);
     }
 
     /**
@@ -85,7 +126,7 @@ class RecipesController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return \response()->json($validator->errors()->getMessages(), 400);
+            return response()->json($validator->errors()->getMessages(), 400);
         }
 
         $attributes = [];

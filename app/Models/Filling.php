@@ -35,6 +35,11 @@ class Filling extends Model
         return $this->belongsTo(Image::class, 'id_image', 'id');
     }
 
+    public function recipe(): HasOne
+    {
+        return $this->hasOne(Recipe::class, 'id_filling', 'id');
+    }
+
     public function toResponse(): FillingResponse
     {
         /** @var Image $image */

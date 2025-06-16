@@ -3,15 +3,16 @@
 namespace App\Models\Responses\Recipes;
 
 use App\Models\Recipe;
+use App\Models\Responses\TechnologicalMapResponse;
 
 class RecipeDecorResponse
 {
     public function __construct(
-        public int         $id,
-        public string      $name,
-        public string|null $description,
-        public int         $id_decor,
-        public int|null    $id_technological_map,
+        public int                           $id,
+        public string                        $name,
+        public string|null                   $description,
+        public int                           $id_decor,
+        public TechnologicalMapResponse|null $technological_map,
     )
     {
     }

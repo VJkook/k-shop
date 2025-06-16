@@ -180,7 +180,9 @@ Route::middleware('auth:sanctum')->prefix('technological-maps')->group(function 
 
 Route::middleware('auth:sanctum')->prefix('recipes')->group(function () {
     Route::get('/', [RecipesController::class, 'index']);
-    Route::post('/for-ready-cakes', [RecipesController::class, 'createForReadyCake']);
+    Route::post('/ready-cakes', [RecipesController::class, 'createForReadyCake']);
+    Route::post('/fillings', [RecipesController::class, 'createForFilling']);
+    Route::post('/decors', [RecipesController::class, 'createForDecor']);
     Route::get('/{id}', [RecipesController::class, 'show']);
     Route::post('/{id}/add-technological-map', [RecipesController::class, 'addTechnologicalMap']);
     Route::delete('/{id}', [RecipesController::class, 'destroy']);

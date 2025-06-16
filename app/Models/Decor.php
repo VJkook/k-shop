@@ -6,6 +6,7 @@ use App\Models\Responses\DecorResponse;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property int $id
@@ -32,6 +33,11 @@ class Decor extends Model
     public function image(): BelongsTo
     {
         return $this->belongsTo(Image::class, 'id_image', 'id');
+    }
+
+    public function recipe(): HasOne
+    {
+        return $this->hasOne(Recipe::class, 'id_decor', 'id');
     }
 
     public function toResponse(): DecorResponse

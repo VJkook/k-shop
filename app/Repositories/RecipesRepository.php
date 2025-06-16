@@ -4,7 +4,6 @@ namespace App\Repositories;
 
 use App\Models\BasicIntervalTime;
 use App\Models\Recipe;
-use App\Models\Responses\ReadyCakeResponse;
 use App\Models\Responses\Recipes\RecipeDecorResponse;
 use App\Models\Responses\Recipes\RecipeFillingResponse;
 use App\Models\Responses\Recipes\RecipeReadyCakeResponse;
@@ -58,26 +57,14 @@ class RecipesRepository
     public function addTechnologicalMap(
         int $id_recipe,
         int $id_technological_map
-    ): null|RecipeFillingResponse|RecipeDecorResponse|RecipeReadyCakeResponse
+    ): RecipeFillingResponse|RecipeDecorResponse|RecipeReadyCakeResponse
     {
         /** @var Recipe $recipe */
         $recipe = Recipe::query()->find($id_recipe);
         $recipe->id_technological_map = $id_technological_map;
         $recipe->save();
 
-        if (!is_null($recipe->id_ready_cake)) {
-            return $recipe->toRecipeReadyCakeResponse();
-        }
-
-        if (!is_null($recipe->id_decor)) {
-            return $recipe->toRecipeDecorResponse();
-        }
-
-        if (!is_null($recipe->id_filling)) {
-            return $recipe->toRecipeFillingResponse();
-        }
-
-        return null;
+        return $recipe->toResponse();
     }
 
     /**
@@ -89,8 +76,7 @@ class RecipesRepository
         $recipes = Recipe::query()->get();
         /** @var Recipe $recipe */
         foreach ($recipes as $recipe) {
-            $recipeResponse = $this->buildResponse($recipe);
-            $result[] = $recipeResponse;
+            $result[] = $recipe->toResponse();
         }
 
         return $result;
@@ -100,7 +86,11 @@ class RecipesRepository
     {
         /** @var Recipe $recipe */
         $recipe = Recipe::query()->find($id);
-        return $this->buildResponse($recipe);
+        if (is_null($recipe)) {
+            return null;
+        }
+
+        return $recipe->toResponse();
     }
 
     public function updateById(int $id, array $attributes): null|RecipeFillingResponse|RecipeDecorResponse|RecipeReadyCakeResponse
@@ -116,23 +106,6 @@ class RecipesRepository
         return Recipe::query()->find($id)->delete();
     }
 
-    private function buildResponse(Recipe $recipe): null|RecipeFillingResponse|RecipeDecorResponse|RecipeReadyCakeResponse
-    {
-        if (!is_null($recipe->id_ready_cake)) {
-            return $recipe->toRecipeReadyCakeResponse();
-        }
-
-        if (!is_null($recipe->id_decor)) {
-            return $recipe->toRecipeDecorResponse();
-        }
-
-        if (!is_null($recipe->id_filling)) {
-            return $recipe->toRecipeFillingResponse();
-        }
-
-        return null;
-    }
-
     /**
      * @throws Exception
      */
@@ -140,6 +113,24 @@ class RecipesRepository
     {
         /** @var Recipe $recipe */
         $recipe = Recipe::query()->where('id_ready_cake', '=', $id)->first();
+
+        if (is_null($recipe)) {
+            return null;
+        }
+
+        /** @var TechnologicalMap $technologicalMap */
+        $technologicalMap = $recipe->technologicalMap()->first();
+        if (is_null($technologicalMap)) {
+            return null;
+        }
+
+        return BasicIntervalTime::fromIntervalString($technologicalMap->cooking_time);
+    }
+
+    public function getCookingTimeById(int $id): ?BasicIntervalTime
+    {
+        /** @var Recipe $recipe */
+        $recipe = Recipe::query()->find($id);
 
         if (is_null($recipe)) {
             return null;

@@ -50,7 +50,7 @@ class OrdersController extends Controller
     public function create(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'delivery_date' => ['date_format:' . BasicDate::DATE_FORMAT],
+            'delivery_date' => ['date_format:' . BasicDate::DATE_FORMAT, 'required'],
             'id_delivery_address' => ['integer', 'numeric', 'required'],
         ]);
 
@@ -102,10 +102,16 @@ class OrdersController extends Controller
 
         $confectionerId = $request->get('id_confectioner');
         if (!is_null($confectionerId)) {
-            $confectionerBusyTimeErr = $this->checkConfectionerBusyTimeValid($confectionerId, $id);
-            if (!is_null($confectionerBusyTimeErr)) {
-                return response()->json($confectionerBusyTimeErr, 400);
+            $confectionerRepo = new ConfectionerRepository();
+            $confectioner = $confectionerRepo->getResponseById($confectionerId);
+            if (is_null($confectioner)) {
+                return response()->json((new ErrorResponse('confectioner not exits')), 400);
             }
+            //TODO: возможно лишнее
+//            $confectionerBusyTimeErr = $this->checkConfectionerBusyTimeValid($confectionerId, $id);
+//            if (!is_null($confectionerBusyTimeErr)) {
+//                return response()->json($confectionerBusyTimeErr, 400);
+//            }
 
             $this->orderRepo->setConfectionerToOrder($id, $confectionerId);
         }

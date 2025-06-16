@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Models\Responses\ConfectionerResponse;
 use App\Models\Responses\UserResponse;
 use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -75,11 +76,11 @@ class User extends Authenticatable
         return new UserResponse($this->id, $this->name, $this->email, $role->name);
     }
 
-    public function toConfectionerResponse(): UserResponse
+    public function toConfectionerResponse(): ConfectionerResponse
     {
         /** @var Role $role */
         $role = $this->role()->first();
-        return new UserResponse($this->id, $this->name, $this->email, $role->name);
+        return new ConfectionerResponse($this->id, $this->name, $this->email, $role->name);
     }
 
     public function isAdmin(): bool

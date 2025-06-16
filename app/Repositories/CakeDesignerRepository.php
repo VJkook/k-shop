@@ -2,14 +2,20 @@
 
 namespace App\Repositories;
 
+use App\Models\BasicIntervalTime;
 use App\Models\CakeDesigner;
 use App\Models\CakeDesignerDecorRelation;
+use App\Models\Decor;
+use App\Models\Filling;
 use App\Models\Image;
 use App\Models\Product;
+use App\Models\ReadyCake;
+use App\Models\Recipe;
 use App\Models\Requests\DecorRequest;
 use App\Models\Requests\TierRequest;
 use App\Models\Responses\CakeDesignersResponse;
 use App\Models\Responses\ImageResponse;
+use App\Models\TechnologicalMap;
 use App\Models\Tier;
 use Illuminate\Support\Facades\DB;
 
@@ -88,6 +94,58 @@ class CakeDesignerRepository
     public function deleteById(int $id): bool
     {
         return CakeDesigner::query()->find($id)->delete();
+    }
+
+    public function getCookingTimeById(int $id): ?BasicIntervalTime
+    {
+        /** @var CakeDesigner $cakeDesigner */
+        $cakeDesigner = CakeDesigner::query()->find($id);
+
+        $time = new BasicIntervalTime(0);
+
+        /** @var Tier[] $tiers */
+        $tiers = $cakeDesigner->tiers()->get();
+        foreach ($tiers as $tier) {
+            /** @var Filling $filling */
+            $filling = $tier->filling()->first();
+
+            /** @var Recipe $recipe */
+            $recipe = $filling->recipe()->first();
+
+            if (is_null($recipe)) {
+                continue;
+            }
+
+            $cookingTime = $this->getCookingTimeOfRecipe($recipe->id);
+            if (is_null($cookingTime)) {
+                continue;
+            }
+
+            $time->add($cookingTime);
+        }
+
+        /** @var Decor[] $decors */
+        $decors = $cakeDesigner->decors()->get();
+        foreach ($decors as $decor) {
+            $recipe = $decor->recipe()->first();
+            if (is_null($recipe)) {
+                continue;
+            }
+            $cookingTime = $this->getCookingTimeOfRecipe($recipe->id);
+            if (is_null($cookingTime)) {
+                continue;
+            }
+
+            $time->add($cookingTime);
+        }
+
+        return $time;
+    }
+
+    private function getCookingTimeOfRecipe(int $recipeId): ?BasicIntervalTime
+    {
+        $recipesRepo = new RecipesRepository();
+        return $recipesRepo->getCookingTimeById($recipeId);
     }
 
     private function buildResponse(CakeDesigner $cakeDesigner): CakeDesignersResponse

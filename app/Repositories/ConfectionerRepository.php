@@ -6,9 +6,11 @@ use App\Models\BasicDate;
 use App\Models\BasicIntervalTime;
 use App\Models\Confectioner;
 use App\Models\ConfectionersBusyTime;
+use App\Models\Responses\ConfectionerResponse;
 use App\Models\Role;
 use App\Models\User;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
 
 class ConfectionerRepository
 {
@@ -17,8 +19,7 @@ class ConfectionerRepository
      */
     public function all(): array
     {
-        /** @var Confectioner[] $users */
-        $users = Confectioner::query()->where('id_role', Role::confectionerRoleId())->get();
+        $users = $this->getConfectioners();
         $responses = [];
         foreach ($users as $user) {
             $responses[] = $user->toUserResponse();
@@ -29,8 +30,7 @@ class ConfectionerRepository
 
     public function getAvailableByDate(BasicDate $date): array
     {
-        /** @var Confectioner[] $users */
-        $users = Confectioner::query()->where('id_role', Role::confectionerRoleId())->get();
+        $users = $this->getConfectioners();
         $responses = [];
         foreach ($users as $user) {
             /** @var ConfectionersBusyTime $confectionerBusyTime */
@@ -63,8 +63,7 @@ class ConfectionerRepository
     public function getBusyTime(int $confectionerId, BasicDate $workDate): BasicIntervalTime
     {
         /** @var Confectioner $confectioner */
-        $confectioner = Confectioner::query()->find($confectionerId);
-
+        $confectioner = $this->getConfectionerById($confectionerId);
         if (is_null($confectioner)) {
             return new BasicIntervalTime(0);
         }
@@ -84,8 +83,7 @@ class ConfectionerRepository
      */
     public function addBusyTime(int $confectionerId, BasicDate $workDate, BasicIntervalTime $busyTime): ?ConfectionersBusyTime
     {
-        /** @var Confectioner $confectioner */
-        $confectioner = Confectioner::query()->find($confectionerId);
+        $confectioner = $this->getConfectionerById($confectionerId);
         if (is_null($confectioner)) {
             return null;
         }
@@ -110,5 +108,64 @@ class ConfectionerRepository
         $confectionersBusyTime->save();
 
         return $confectionersBusyTime;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function subBusyTime(int $confectionerId, BasicDate $workDate, BasicIntervalTime $busyTime): ?ConfectionersBusyTime
+    {
+        $confectioner = $this->getConfectionerById($confectionerId);
+        if (is_null($confectioner)) {
+            return null;
+        }
+
+        /** @var ConfectionersBusyTime $confectionersBusyTime */
+        $confectionersBusyTime = $confectioner->busyTime()->where('work_date', $workDate->toStringYearDayMonth())->first();
+
+        if (is_null($confectionersBusyTime)) {
+            /** @var ConfectionersBusyTime $confectionersBusyTime */
+            $confectionersBusyTime = ConfectionersBusyTime::query()->create([
+                'id_confectioner' => $confectionerId,
+                'work_date' => $workDate->toStringYearDayMonth(),
+                'busy_time' => $busyTime
+            ]);
+
+            return $confectionersBusyTime;
+        }
+
+        $currentBusy = BasicIntervalTime::fromIntervalString($confectionersBusyTime->busy_time);
+        $currentBusy->sub($busyTime);
+        $confectionersBusyTime->busy_time = $currentBusy;
+        $confectionersBusyTime->save();
+
+        return $confectionersBusyTime;
+    }
+
+    public function getResponseById(int $id): ?ConfectionerResponse
+    {
+        $confectioner = $this->getConfectionerById($id);
+        if (is_null($confectioner)) {
+            return null;
+        }
+
+        return $confectioner->toConfectionerResponse();
+    }
+
+    private function getConfectionerById(int $id): ?Confectioner
+    {
+        /** @var Confectioner|null $confectioner */
+        $confectioner = Confectioner::query()->where('id_role', Role::confectionerRoleId())->find($id);
+        return $confectioner;
+    }
+
+    /**
+     * @return Collection|Confectioner[]
+     */
+    private function getConfectioners(): Collection|array
+    {
+        /** @var Confectioner[] $confectioners */
+        $confectioners = Confectioner::query()->where('id_role', Role::confectionerRoleId())->get();
+        return $confectioners;
     }
 }
