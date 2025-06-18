@@ -6,11 +6,15 @@ use App\Models\BasicDate;
 use App\Models\BasicIntervalTime;
 use App\Models\Confectioner;
 use App\Models\ConfectionersBusyTime;
-use App\Models\Responses\ConfectionerResponse;
+use App\Models\Responses\Users\ConfectionerResponse;
+use App\Models\Responses\Users\ConfectionersCalendarResponse;
 use App\Models\Role;
 use App\Models\User;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\DB;
 
 class ConfectionerRepository
 {
@@ -49,6 +53,31 @@ class ConfectionerRepository
         }
 
         return $responses;
+    }
+
+    public function getConfectionersCalendar(BasicDate $from, BasicDate $to): ConfectionersCalendarResponse
+    {
+        $confectioners = Confectioner::query()
+            ->with('busyTime', function (HasMany $query) use ($from, $to) {
+                $query->whereBetween('work_date', [$from, $to]);
+            })
+            ->get();
+
+        $confectionerCalendar = new ConfectionersCalendarResponse();
+        /** @var Confectioner $confectioner */
+        foreach ($confectioners as $confectioner) {
+            $busyTimes = $confectioner->busyTime;
+
+            /** @var ConfectionersBusyTime $busyTime */
+            foreach ($busyTimes as $busyTime) {
+                $basicTime = BasicIntervalTime::fromIntervalString($busyTime->busy_time);
+                $basicDate = BasicDate::fromYearMonthDayString($busyTime->work_date);
+                $confectionerBusyTimeResponse = $confectioner->toConfectionerBusyResponse($basicTime);
+                $confectionerCalendar->addConfectionerToDate($basicDate, $confectionerBusyTimeResponse);
+            }
+        }
+
+        return $confectionerCalendar;
     }
 
     private function getMaxTime(): BasicIntervalTime

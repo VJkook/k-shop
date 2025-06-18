@@ -149,5 +149,24 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
 
-### TODO:
-Сделать категории для ready-cakes
+### Работа с моделями
+## Дебаг связей моделей
+
+```php
+DB::enableQueryLog();
+
+        $confectioners = ConfectionersBusyTime::with('confectioner')
+            ->whereBetween('work_date', ['2025-08-09', '2025-08-10'])
+            ->get();
+        $log = DB::getQueryLog();
+```
+
+Связь в самой модели:
+
+```php
+public function confectioner(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'id_confectioner', 'id');
+    }
+```
+

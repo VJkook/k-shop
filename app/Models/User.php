@@ -4,8 +4,8 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-use App\Models\Responses\ConfectionerResponse;
 use App\Models\Responses\UserResponse;
+use App\Models\Responses\Users\ConfectionerResponse;
 use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -30,7 +30,9 @@ class User extends Authenticatable
 
     public const SYSTEM_USER_ID = 1;
 
-    protected $table = 'users';
+    public const TABLE_NAME = 'users';
+
+    protected $table = self::TABLE_NAME;
 
     /**
      * The attributes that are mass assignable.

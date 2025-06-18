@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('id_confectioner');
             $table->foreign('id_confectioner')->references('id')->on('users');
 
-            $table->timestamp('work_date');
+            $table->date('work_date');
         });
 
         DB::statement('ALTER TABLE confectioners_busy_time ADD COLUMN busy_time INTERVAL NOT NULL');

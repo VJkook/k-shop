@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Responses\Users\ConfectionerBusyResponse;
 use DateTime;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -18,8 +19,18 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Confectioner extends User
 {
-   public function busyTime(): HasMany
-   {
-       return $this->hasMany(ConfectionersBusyTime::class, 'id_confectioner', 'id');
-   }
+    public function busyTime(): HasMany
+    {
+        return $this->hasMany(ConfectionersBusyTime::class, 'id_confectioner', 'id');
+    }
+
+    public function toConfectionerBusyResponse(?BasicIntervalTime $busyTime): ConfectionerBusyResponse
+    {
+        $busyTimeStr = null;
+        if (!is_null($busyTime)) {
+            $busyTimeStr = $busyTime->toStringInterval();
+        }
+
+        return new ConfectionerBusyResponse($this->id, $this->name, $this->email, $busyTimeStr);
+    }
 }

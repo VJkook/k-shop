@@ -51,6 +51,7 @@ Route::prefix('/users')->group(function () {
     Route::prefix('/confectioners')->group(function () {
         Route::get('/', [ConfectionersController::class, 'index'])->name('confectioners');
         Route::get('/available', [ConfectionersController::class, 'getAvailableByDate'])->name('confectioners-available');
+        Route::get('/calendar', [ConfectionersController::class, 'getConfectionersCalendar'])->name('confectioners-calendar');
     });
 });
 

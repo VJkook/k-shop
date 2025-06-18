@@ -1,8 +1,6 @@
 <?php
 
-namespace App\Models\Responses;
-
-use App\Models\User;
+namespace App\Models\Responses\Users;
 
 class ConfectionerResponse
 {
