@@ -122,7 +122,12 @@ insert-payment-statuses:
 
 insert-order-statutes:
 	@echo "Заполнение таблицы order_statuses:"
-	@$(PSQL_CMD) -c "INSERT INTO public.order_statuses (name) VALUES ('Ожидание подтверждения'), ('Готовится')"
+	@$(PSQL_CMD) -c "INSERT INTO public.order_statuses (name, color) VALUES ('Ожидание подтверждения', 'blue')"
+	@$(PSQL_CMD) -c "INSERT INTO public.order_statuses (name, color) VALUES ('Готовится', 'yellow')"
+	@$(PSQL_CMD) -c "INSERT INTO public.order_statuses (name, color) VALUES ('Подтверждён', 'orange')"
+	@$(PSQL_CMD) -c "INSERT INTO public.order_statuses (name, color) VALUES ('В доставке', 'black')"
+	@$(PSQL_CMD) -c "INSERT INTO public.order_statuses (name, color) VALUES ('Доставлен', 'green')"
+	@$(PSQL_CMD) -c "INSERT INTO public.order_statuses (name, color) VALUES ('Отменён', 'red')"
 
 insert-max-time:
 	@echo "Заполнение таблицы order_statuses:"

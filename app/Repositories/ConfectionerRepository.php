@@ -14,6 +14,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\DB;
 
 class ConfectionerRepository
@@ -42,6 +43,7 @@ class ConfectionerRepository
                 ->where('work_date', $date->toStringYearDayMonth())
                 ->first();
 
+            $basicDate = new BasicIntervalTime(0);
             if (!is_null($confectionerBusyTime)) {
                 $basicDate = BasicIntervalTime::fromIntervalString($confectionerBusyTime->busy_time);
                 if ($basicDate->gte($this->getMaxTime())) {
@@ -49,7 +51,7 @@ class ConfectionerRepository
                 }
             }
 
-            $responses[] = $user->toUserResponse();
+            $responses[] = $user->toConfectionerBusyResponse($basicDate);
         }
 
         return $responses;
@@ -125,7 +127,7 @@ class ConfectionerRepository
             $confectionersBusyTime = ConfectionersBusyTime::query()->create([
                 'id_confectioner' => $confectionerId,
                 'work_date' => $workDate->toStringYearDayMonth(),
-                'busy_time' => $busyTime
+                'busy_time' => $busyTime->toStringInterval()
             ]);
 
             return $confectionersBusyTime;
@@ -157,7 +159,7 @@ class ConfectionerRepository
             $confectionersBusyTime = ConfectionersBusyTime::query()->create([
                 'id_confectioner' => $confectionerId,
                 'work_date' => $workDate->toStringYearDayMonth(),
-                'busy_time' => $busyTime
+                'busy_time' => $busyTime->toStringInterval()
             ]);
 
             return $confectionersBusyTime;
@@ -171,7 +173,7 @@ class ConfectionerRepository
         return $confectionersBusyTime;
     }
 
-    public function getResponseById(int $id): ?ConfectionerResponse
+    public function getById(int $id): ?ConfectionerResponse
     {
         $confectioner = $this->getConfectionerById($id);
         if (is_null($confectioner)) {

@@ -94,6 +94,7 @@ class OrdersController extends Controller
             'id_confectioner' => ['integer', 'numeric'],
             'delivery_date' => ['date_format:' . BasicDate::DATE_FORMAT],
             'work_date' => ['date_format:' . BasicDate::YEAR_MONTH_DAY_FORMAT],
+            'id_order_status' => ['integer', 'numeric'],
         ]);
 
         if ($validator->fails()) {
@@ -103,7 +104,7 @@ class OrdersController extends Controller
         $confectionerId = $request->get('id_confectioner');
         if (!is_null($confectionerId)) {
             $confectionerRepo = new ConfectionerRepository();
-            $confectioner = $confectionerRepo->getResponseById($confectionerId);
+            $confectioner = $confectionerRepo->getById($confectionerId);
             if (is_null($confectioner)) {
                 return response()->json((new ErrorResponse('confectioner not exits')), 400);
             }
@@ -114,6 +115,15 @@ class OrdersController extends Controller
 //            }
 
             $this->orderRepo->setConfectionerToOrder($id, $confectionerId);
+        }
+
+        if (!is_null($request->get('delivery_date'))) {
+            $deliveryDate = BasicDate::fromDateString($request->get('delivery_date'));
+            $this->orderRepo->updateDeliveryDate($id, $deliveryDate);
+        }
+
+        if (!is_null($request->get('id_order_status'))) {
+            $this->orderRepo->updateStatus($id, $request->get('id_order_status'));
         }
 
         $response = $this->orderRepo->getById($id);
@@ -147,9 +157,22 @@ class OrdersController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(int $id)
+    public function show(Request $request, int $id): JsonResponse
     {
+        /** @var User $user */
+        $user = Auth::user();
+        if (!$user->isAdmin()) {
+            return response()->json(status: 403);
+        }
 
+        $response = $this->orderRepo->getById($id);
+        return response()->json($response);
+    }
+
+    public function statuses(): JsonResponse
+    {
+        $response = $this->orderRepo->getStatuses();
+        return response()->json($response);
     }
 
     /**

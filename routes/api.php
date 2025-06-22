@@ -106,7 +106,10 @@ Route::middleware('auth:sanctum')->prefix('orders')->group(function () {
     Route::post('/', [OrdersController::class, 'create']);
     Route::get('/', [OrdersController::class, 'index']);
     Route::get('/all', [OrdersController::class, 'all']);
+    Route::get('/statuses', [OrdersController::class, 'statuses']);
+    
     Route::post('/{id}', [OrdersController::class, 'update']);
+    Route::get('/{id}', [OrdersController::class, 'update']);
 });
 
 Route::prefix('fillings')->group(function () {

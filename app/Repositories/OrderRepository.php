@@ -108,6 +108,18 @@ class OrderRepository
         return $this->buildResponse($order);
     }
 
+    public function getStatuses(): array
+    {
+        /** @var OrderStatus[] $statuses */
+        $statuses = OrderStatus::query()->get();
+        $response = [];
+        foreach ($statuses as $status) {
+            $response[] = $status->toResponse();
+        }
+        
+        return $response;
+    }
+
     /**
      * @return OrderResponse[]
      */
@@ -131,10 +143,8 @@ class OrderRepository
 
         /** @var Product $product */
         foreach ($order->products()->get() as $product) {
-
             $productName = '';
             $price = $weight = 0;
-
 
             $imageUrl = null;
             /** @var DetailsResponse|null $detailResponse */
@@ -226,23 +236,33 @@ class OrderRepository
         /** @var OrderStatus $orderStatus */
         $orderStatus = $order->orderStatus()->first();
 
-        $deliveryDate = !is_null($order->delivery_date) ? BasicDate::fromCarbon($order->delivery_date) : null;
+        $deliveryDate = !is_null($order->delivery_date) ? BasicDate::fromCarbon($order->delivery_date)->toStringDate() : null;
         $workDate = !is_null($order->work_date) ? BasicDate::fromCarbon($order->work_date) : null;
-        $completeDate = !is_null($order->complete_date) ? BasicDate::fromCarbon($order->complete_date) : null;
+        $completeDate = !is_null($order->complete_date) ? BasicDate::fromCarbon($order->complete_date)->toStringDate() : null;
         $workTime = $this->getOrderCookingTime($order->id);
 
+        $userRepo = new UserRepository();
+        $userResponse = $userRepo->getById($order->id_user);
+
+        $confectionerResponse = null;
+        if (!is_null($order->id_confectioner)) {
+            $confectionerRepo = new ConfectionerRepository();
+            $confectionerResponse = $confectionerRepo->getById($order->id_confectioner);
+        }
+        
         return new OrderResponse(
             $order->id,
             $order->total_cost,
-            BasicDate::fromCarbon($order->registration_date),
+            BasicDate::fromCarbon($order->registration_date)->toStringDate(),
             $deliveryDate,
             $workDate->toStringYearDayMonth(),
             $completeDate,
             $deliveryAddress->address,
-            $orderStatus->name,
+            $orderStatus->toResponse(),
             $paymentStatus->name,
-            $order->id_confectioner,
+            $confectionerResponse,
             $workTime->toStringInterval(),
+            $userResponse,
             $orderItems
         );
     }
@@ -302,6 +322,36 @@ class OrderRepository
             $order->id_confectioner = $confectionerId;
             $order->save();
         });
+
+        return $this->buildResponse($order);
+    }
+
+    public function updateDeliveryDate(int $orderId, BasicDate $deliveryDate): OrderResponse
+    {
+        /** @var Order $order */
+        $order = Order::query()->where('id', '=', $orderId)->first();
+
+        $workDate = clone $deliveryDate;
+        $workDate->subDay();
+        $order->delivery_date = $deliveryDate;
+        $order->work_date = $workDate;
+        $order->save();
+
+        return $this->buildResponse($order);
+    }
+
+    public function updateStatus(int $orderId, int $orderStatusId): OrderResponse
+    {
+        /** @var Order $order */
+        $order = Order::query()->where('id', '=', $orderId)->first();
+        
+        $status = OrderStatus::query()->where('id', '=', $orderStatusId)->first();
+        if (is_null($status)) {
+            return $this->buildResponse($order);
+        }
+        
+        $order->id_order_status = $orderStatusId;
+        $order->save();
 
         return $this->buildResponse($order);
     }

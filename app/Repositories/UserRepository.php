@@ -48,33 +48,14 @@ class UserRepository
         return $responses;
     }
 
-    /**
-     * @return User[]
-     */
-    public function getConfectioners(): array
+    public function getById(int $id): ?UserResponse
     {
-        /** @var User[] $users */
-        $users = User::query()->where('id_role', Role::confectionerRoleId())->get();
-        $responses = [];
-        foreach ($users as $user) {
-            $responses[] = $user->toUserResponse();
+        /** @var User $user */
+        $user = User::query()->where('id', $id)->first();
+        if (is_null($user)) {
+            return null;
         }
 
-        return $responses;
-    }
-
-    public function getAvailableConfectioners(): array
-    {
-        /** @var User[] $users */
-        $users = User::query()
-            ->leftJoin()
-            ->where('id_role', Role::confectionerRoleId())
-            ->get();
-        $responses = [];
-        foreach ($users as $user) {
-            $responses[] = $user->toUserResponse();
-        }
-
-        return $responses;
+        return $user->toUserResponse();
     }
 }

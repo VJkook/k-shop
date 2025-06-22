@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('order_statuses', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50);
+            $table->string('color', 50);
         });
     }
 

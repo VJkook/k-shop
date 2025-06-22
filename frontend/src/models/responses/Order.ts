@@ -1,17 +1,25 @@
 import {OrderOrBasketItem} from "./OrderOrBasketItemsResponse";
+import {Confectioner, User} from "./User";
 
 export interface Order {
     id: number
     total_cost: number
     registration_date: string
-    delivery_date: string | null
+    delivery_date: string
+    work_date: string | null
     completed_date: string | null
     delivery_address: string
-    status: string
+    status: OrderStatus
     payment_status: string
     products: OrderOrBasketItem[]
     name: string
-    price: number,
     weight: number | null
-    id_confectioner: number | null
+    confectioner: Confectioner | null
+    client: User
+}
+
+export interface OrderStatus {
+    id: number
+    name: string
+    color: string
 }

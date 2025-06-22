@@ -1,41 +1,45 @@
-import React, { FC, useState } from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import Link from 'next/link';
 import styles from './OrderTable.module.scss';
-
-type Order = {
-    id: number;
-    customer: string;
-    date: string;
-    items: string;
-    price: number;
-    status: string;
-    statusColor: 'yellow' | 'blue' | 'green' | 'red';
-    phone: string;
-    address: string;
-    confectioner: string;
-};
+import {Order, OrderStatus} from "../../../../models/responses/Order";
+import {apiGet} from "@/utils/apiInstance";
 
 interface OrdersTableProps {
     orders: Order[];
 }
 
-const OrdersTable: FC<OrdersTableProps> = ({ orders }) => {
+const OrdersTable: FC<OrdersTableProps> = ({orders}) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('All');
     const [confectionerFilter, setConfectionerFilter] = useState('All');
 
-    const statusOptions = ['All', 'Received', 'In Production', 'Confirmed', 'Cancelled'];
-    const confectionerOptions = ['All', 'Unassigned', 'Jean Dubois', 'Maria Rossi'];
+    const [statuses, setStatuses] = useState<OrderStatus[]>([]);
 
+
+    const loadStatuses = () => {
+        apiGet('/api/orders/statuses')
+            .then((response) => {
+                if (response.data != undefined) {
+                    setStatuses(response.data);
+                }
+            }).catch((error) => {
+            console.log(error);
+        });
+    };
+
+    useEffect(() => {
+        loadStatuses()
+    }, []);
     const filteredOrders = orders.filter(order => {
-        const matchesSearch =
-            order.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            order.phone.includes(searchTerm) ||
-            order.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            order.items.toLowerCase().includes(searchTerm.toLowerCase());
 
-        const matchesStatus = statusFilter === 'All' || order.status === statusFilter;
-        const matchesConfectioner = confectionerFilter === 'All' || order.confectioner === confectionerFilter;
+        const matchesSearch =
+            order.client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            order.client.phone?.includes(searchTerm) ||
+            order.delivery_address.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            order.products.map(product => product.name).join(', ').toLowerCase().includes(searchTerm.toLowerCase());
+
+        const matchesStatus = statusFilter === 'All' || order.status.name === statusFilter;
+        const matchesConfectioner = confectionerFilter === 'All' || order.confectioner?.name === confectionerFilter;
 
         return matchesSearch && matchesStatus && matchesConfectioner;
     });
@@ -72,9 +76,10 @@ const OrdersTable: FC<OrdersTableProps> = ({ orders }) => {
                             value={statusFilter}
                             onChange={(e) => setStatusFilter(e.target.value)}
                         >
-                            {statusOptions.map(option => (
-                                <option key={option} value={option}>
-                                    {option === 'All' ? 'All Statuses' : option}
+                            <option value="All">All</option>
+                            {statuses.map(option => (
+                                <option key={option.id} value={option.name}>
+                                    {option.name === 'All' ? 'All Statuses' : option.name}
                                 </option>
                             ))}
                         </select>
@@ -88,26 +93,26 @@ const OrdersTable: FC<OrdersTableProps> = ({ orders }) => {
                         </div>
                     </div>
 
-                    <div className={styles.selectWrapper}>
-                        <select
-                            value={confectionerFilter}
-                            onChange={(e) => setConfectionerFilter(e.target.value)}
-                        >
-                            {confectionerOptions.map(option => (
-                                <option key={option} value={option}>
-                                    {option === 'All' ? 'All Confectioners' : option}
-                                </option>
-                            ))}
-                        </select>
-                        <div className={styles.selectArrow}>
-                            <svg className="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                 fill="currentColor">
-                                <path fillRule="evenodd"
-                                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                      clipRule="evenodd"/>
-                            </svg>
-                        </div>
-                    </div>
+                    {/*<div className={styles.selectWrapper}>*/}
+                    {/*    <select*/}
+                    {/*        value={confectionerFilter}*/}
+                    {/*        onChange={(e) => setConfectionerFilter(e.target.value)}*/}
+                    {/*    >*/}
+                    {/*        {confectionerOptions.map(option => (*/}
+                    {/*            <option key={option} value={option}>*/}
+                    {/*                {option === 'All' ? 'All Confectioners' : option}*/}
+                    {/*            </option>*/}
+                    {/*        ))}*/}
+                    {/*    </select>*/}
+                    {/*    <div className={styles.selectArrow}>*/}
+                    {/*        <svg className="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"*/}
+                    {/*             fill="currentColor">*/}
+                    {/*            <path fillRule="evenodd"*/}
+                    {/*                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"*/}
+                    {/*                  clipRule="evenodd"/>*/}
+                    {/*        </svg>*/}
+                    {/*    </div>*/}
+                    {/*</div>*/}
                 </div>
             </div>
 
@@ -131,32 +136,32 @@ const OrdersTable: FC<OrdersTableProps> = ({ orders }) => {
                         <tr key={order.id}>
                             <td className="font-semibold">#{order.id}</td>
                             <td>
-                                {new Date(order.date).toLocaleDateString('en-US', {
+                                {new Date(order.registration_date).toLocaleDateString('en-US', {
                                     month: 'short',
                                     day: 'numeric',
                                 })}
                                 <div className="text-xs text-gray-400">
-                                    {new Date(order.date).getFullYear()}
+                                    {new Date(order.registration_date).getFullYear()}
                                 </div>
                             </td>
-                            <td className="font-semibold">{order.customer}</td>
-                            <td>{order.phone}</td>
+                            <td className="font-semibold">{order.client.name}</td>
+                            <td>{order.client.phone}</td>
                             <td className={styles.truncate} title={order.address}>
-                                {order.address}
+                                {order.delivery_address}
                             </td>
                             <td>
-                <span className={`${styles.status} ${styles[order.statusColor]}`}>
-                  {order.status}
+                <span className={`${styles.status} ${styles[order.status.color]}`}>
+                  {order.status.name}
                 </span>
                             </td>
                             <td>
-                                {order.confectioner}
+                                {order.confectioner?.name}
                             </td>
                             <td className="text-right font-semibold">
-                                ${order.price.toFixed(2)}
+                                ${order.total_cost.toFixed(2)}
                             </td>
                             <td>
-                                <Link href={`/adminOrderDetails/`}>
+                                <Link href={`/admin-order-details/` + order.id}>
                                     <button className={styles.detailsLink}>View Details</button>
                                 </Link>
                             </td>
@@ -166,7 +171,7 @@ const OrdersTable: FC<OrdersTableProps> = ({ orders }) => {
                 </table>
             </div>
         </section>
-);
+    );
 };
 
 export default OrdersTable;

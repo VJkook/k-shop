@@ -1,8 +1,11 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Sidebar  from '@/screens/adminOrderDetails/elements/SideBar';
 import OrdersTable  from '../element/orderCard';
 import  './Hero.module.scss'
 import styles from './Hero.module.scss'
+import {UserRole} from "../../../../models/responses/User";
+import {apiGet} from "@/utils/apiInstance";
+import {Order} from "../../../../models/responses/Order";
 
 
 const ordersData = [
@@ -59,6 +62,25 @@ const ordersData = [
 
 
 const OrdersPage: React.FC = () => {
+    const [orders, setOrders] = useState<Order[]>([]);
+
+    const loadOrders = () => {
+        let url = '/api/orders/all'
+
+        apiGet(url)
+            .then((response) => {
+                if (response.data != undefined) {
+                    setOrders(response.data);
+                }
+            }).catch((error) => {
+            console.log(error);
+        });
+    };
+
+    useEffect(() => {
+        loadOrders();
+    }, []);
+
     return (
         <div className={styles.app_container}>
             <Sidebar />
@@ -66,7 +88,7 @@ const OrdersPage: React.FC = () => {
                 <h1 className={styles.page_title}>Orders Management</h1>
                 <p className={styles.page_description}>View and manage all pastry shop orders</p>
                 <section className={styles.orders_list}>
-                    <OrdersTable orders={ordersData} />
+                    <OrdersTable orders={orders} />
                 </section>
             </main>
         </div>

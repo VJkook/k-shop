@@ -5,13 +5,13 @@ import Image from 'next/image';
 import {apiGet, apiPost} from "@/utils/apiInstance";
 import {Order} from "../../../../models/responses/Order";
 import {OrderOrBasketItem} from "../../../../models/responses/OrderOrBasketItemsResponse";
-import {User, UserRole} from "../../../../models/responses/User";
+import {Confectioner, User, UserRole} from "../../../../models/responses/User";
 
 const Orders: FC = () => {
     const [orders, setOrders] = useState<Order[]>([]);
     const [expandedItems, setExpandedItems] = useState<Record<number, boolean>>({});
     const [user, setUser] = useState<User>();
-    const [confectioners, setConfectioners] = useState<User[]>([]);
+    const [confectioners, setConfectioners] = useState<Confectioner[]>([]);
 
     const loadOrders = () => {
         let url = '/api/orders';
@@ -85,7 +85,7 @@ const Orders: FC = () => {
                         <div key={order.id} className={styles.banner}>
                             <div className={styles.order_header}>
                                 <p>№ заказа: {order.id}</p>
-                                <p>Статус: {order.status}</p>
+                                <p>Статус: {order.status.name}</p>
                                 <p>Общая сумма заказа: {order.total_cost} ₽</p>
                                 {user?.role === UserRole.Admin && (
                                     <div>

@@ -20,7 +20,12 @@ class BasicDate extends Carbon
     {
         return $this->format(self::YEAR_MONTH_DAY_FORMAT);
     }
-
+//
+//    public function toStringDate()
+//    {
+//        return $this->format(self::DATE_FORMAT);
+//
+//    }
     /**
      * @throws Exception
      */

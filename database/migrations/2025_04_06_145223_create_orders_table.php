@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->id();
             $table->decimal('total_cost', 12, 2);
             $table->timestamp('registration_date');
-            $table->timestamp('delivery_date')->nullable();
+            $table->timestamp('delivery_date');
             $table->timestamp('complete_date')->nullable();
             $table->date('work_date')->nullable();
 
