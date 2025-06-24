@@ -1,4 +1,4 @@
-import Home from '@/screens/konditers/home/Home'
+import Home from '@/screens/confectioners/home/Home'
 
 export default function StockPage() {
 	return <Home />
