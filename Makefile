@@ -32,14 +32,13 @@ up:
 	@docker compose up -d
 	@sleep 2
 	@docker compose exec app php artisan migrate
-	@docker compose exec app php artisan optimize
-	@docker compose exec app php artisan cache:clear
-	@docker compose exec app php artisan config:clear
-	@docker compose exec app php artisan config:cache
-	@docker compose exec app php artisan view:clear
+	@make optimize
 	@docker compose exec app bash -c "cd frontend && npm i --legacy-peer-deps"
 	@docker compose exec -d app bash -c "cd frontend && npm run dev"
 	@echo FRONT_URL: $(FRONT_URL)
+
+down:
+	@docker compose down
 
 restart:
 	@docker compose down

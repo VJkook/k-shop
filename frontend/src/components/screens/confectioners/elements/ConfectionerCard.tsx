@@ -4,8 +4,9 @@ import Image from "next/image";
 import cn from "classnames";
 import {getDateString} from "@/screens/confectioners/functions/functions";
 import {allOrders, mockConfectioners, weeklyOrders} from "@/screens/confectioners/data/data";
+import {Confectioner} from "../../../../models/responses/User";
 
-const ConfectionerCard = ({ confectioner }: { confectioner: typeof mockConfectioners[0] }) => {
+const ConfectionerCard = ({ confectioner }: { confectioner: Confectioner }) => {
     const [isBusy, setIsBusy] = useState(confectioner.status === "busy");
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
@@ -86,9 +87,9 @@ const ConfectionerCard = ({ confectioner }: { confectioner: typeof mockConfectio
             </div>
 
             <ul className={styles.confectionerCardDescription}>
-                {confectioner.description.split('. ').map((item, i) => (
-                    item && <li key={i}>{item.trim()}</li>
-                ))}
+                {/*{confectioner.description.split('. ').map((item, i) => (*/}
+                {/*    item && <li key={i}>{item.trim()}</li>*/}
+                {/*))}*/}
             </ul>
 
             {/* Недельный календарь добавлен ПОД основной информацией */}

@@ -169,6 +169,29 @@ class OrdersController extends Controller
         return response()->json($response);
     }
 
+    /**
+     * Display the specified resource.
+     */
+    public function showByWorkDates(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'date_from' => ['date_format:' . BasicDate::YEAR_MONTH_DAY_FORMAT, 'required'],
+            'date_to' => ['date_format:' . BasicDate::YEAR_MONTH_DAY_FORMAT, 'required'],
+            'id_confectioners' => ['array'],
+            'id_confectioners.*' => ['integer', 'numeric']
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->getMessages(), 400);
+        }
+
+        $dateFrom = BasicDate::fromYearMonthDayString($request->get('date_from'));
+        $dateTo = BasicDate::fromYearMonthDayString($request->get('date_to'));
+        
+        $response = $this->orderRepo->getByWorkDates($dateFrom, $dateTo);
+        return response()->json($response);
+    }
+
     public function statuses(): JsonResponse
     {
         $response = $this->orderRepo->getStatuses();

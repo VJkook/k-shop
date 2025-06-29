@@ -3,12 +3,14 @@ import React, {useState, useEffect} from "react";
 import styles from './Hero.module.scss'
 import cn from 'classnames'
 import Sidebar from '@/screens/adminOrderDetails/elements/SideBar';
-import {formatDateParts, getDateString} from "@/screens/confectioners/functions/functions";
+import {formatDate, formatDateParts, getDateString} from "@/screens/confectioners/functions/functions";
 import {allOrders, mockConfectioners, weeklyOrders} from "@/screens/confectioners/data/data";
 import ConfectionerCard from "@/screens/confectioners/elements/ConfectionerCard";
 import {apiGet} from '@/utils/apiInstance'
 import {ConfectionerCalendar} from "../../../../models/responses/Calendar";
 import {Confectioner} from "../../../../models/responses/User";
+import {Order} from "../../../../models/responses/Order";
+import {from} from "stylis";
 
 
 const MAX_HOURS_PER_DAY = 16;
@@ -51,6 +53,9 @@ const Hero: React.FC = () => {
     const [disabledDays, setDisabledDays] = useState<string[]>([]);
     const [confectionerCalendar, setConfectionerCalendar] = useState<ConfectionerCalendar>(null);
 
+    const [weeklyOrders1, setWeeklyOrders] = useState<{ [date: string]: Order[] }>([])
+    const [confectioners, setConfectioners] = useState<Confectioner[]>([]);
+
     useEffect(() => {
         setDisabledDays(loadDisabledDays());
     }, []);
@@ -83,8 +88,46 @@ const Hero: React.FC = () => {
         });
     };
 
+    const loadWeeklyDays = () => {
+        const today = new Date();
+        const futureDate = new Date(today); // создаем копию даты
+        futureDate.setDate(futureDate.getDate() + 7);
+        const dateFromString = formatDate(today); // Например: "29.06.2025" (в зависимости от локали)
+        const dateToString = formatDate(futureDate);
+
+        apiGet('/api/orders/by-work-dates?date_from=' + dateFromString + '&date_to=' + dateToString)
+            .then((response) => {
+                if (response.data != undefined) {
+                    let orders = [];
+
+                    response.data.map((order) => {
+                        if (!orders[order.work_date]) {
+                            orders[order.work_date] = [];
+                        }
+                        orders[order.work_date].push(order)
+                    })
+                    setWeeklyOrders(orders);
+                }
+            }).catch((error) => {
+            console.log(error);
+        });
+    }
+
+    const loadConfectioners = () => {
+        apiGet('/api/users/confectioners')
+            .then((response) => {
+                if (response.data != undefined) {
+                    setConfectioners(response.data);
+                }
+            }).catch((error) => {
+            console.log(error);
+        });
+    };
+
     useEffect(() => {
         loadCalendar()
+        loadWeeklyDays()
+        loadConfectioners()
     }, [currentMonth]);
 
     const prevMonth = () => {
@@ -106,7 +149,6 @@ const Hero: React.FC = () => {
     };
 
     const currentDateString = today.toISOString().slice(0, 10);
-
 
     return (isClient ?
             <div className={styles.container}>
@@ -133,12 +175,13 @@ const Hero: React.FC = () => {
                                     <div key={"empty-" + idx}></div>
                                 ))}
                                 {monthDays.map((day) => {
-                                    const dateStr = new Date(currentYear, currentMonth, day).toISOString().slice(0, 10);
+                                    const currentDate = new Date(currentYear, currentMonth, day);
+                                    const dateStr = formatDate(currentDate);
                                     const isToday = dateStr === currentDateString;
                                     return (
                                         <div
-                                             key={day}
-                                             className={cn(styles.dayCell, isToday && styles.today)}
+                                            key={day}
+                                            className={cn(styles.dayCell, isToday && styles.today)}
                                         >
                                             <div>{day}</div>
                                             {confectionerCalendar?.dates.find((d) => d.date === dateStr)?.confectioners
@@ -149,6 +192,7 @@ const Hero: React.FC = () => {
                                                         : progress >= 50 && progress < 80
                                                             ? 'medium'
                                                             : 'high';
+
                                                     return (
                                                         <div key={i}>
                                                             <span>{c.name}</span>
@@ -216,11 +260,17 @@ const Hero: React.FC = () => {
                                         month: "long"
                                     })}
                                     </h3>
-                                    <ul>
-                                        {(weeklyOrders[selectedDay] || ["Нет заказов"]).map((order, i) => (
-                                            <li key={i}>{order}</li>
-                                        ))}
-                                    </ul>
+
+                                    {weeklyOrders1[selectedDay]?.map((order, index) => (
+                                        <div key={index}>
+                                            <p>Кондитер: {order.confectioner?.name}</p>
+                                            <ul key={index}>
+                                                {order.products.map((product, i) => (
+                                                    <li key={i}>Название{product.name}, Цена: {product.price}р</li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    ))}
                                 </div>
                             )}
                         </section>
@@ -229,7 +279,7 @@ const Hero: React.FC = () => {
                         <section className={styles.confectioners}>
                             <h2>Наши кондитеры</h2>
                             <div className={styles.confectionersGrid}>
-                                {mockConfectioners.map((confectioner) => (
+                                {confectioners?.map((confectioner) => (
                                     <ConfectionerCard key={confectioner.name} confectioner={confectioner}/>
                                 ))}
                             </div>

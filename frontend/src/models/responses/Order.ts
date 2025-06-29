@@ -12,7 +12,6 @@ export interface Order {
     status: OrderStatus
     payment_status: string
     products: OrderOrBasketItem[]
-    name: string
     weight: number | null
     confectioner: Confectioner | null
     client: User

@@ -108,6 +108,33 @@ class OrderRepository
         return $this->buildResponse($order);
     }
 
+    /**
+     * @param BasicDate $dateFrom
+     * @param BasicDate $dateTo
+     * @param int[] $confectionerIds
+     * @return OrderResponse[]
+     */
+    public function getByWorkDates(BasicDate $dateFrom, BasicDate $dateTo, array $confectionerIds = []): array
+    {
+        $builder = Order::query()
+            ->whereBetween('work_date', [$dateFrom, $dateTo])
+            ->orderBy('work_date', 'desc');
+
+        if (!empty($confectionerId)) {
+            $builder->whereIn('id_confectioner', $confectionerId);
+        }
+
+        $orders = $builder->get();
+
+        $response = [];
+        /** @var Order $order */
+        foreach ($orders as $order) {
+            $response[] = $this->buildResponse($order);
+        }
+
+        return $response;
+    }
+
     public function getStatuses(): array
     {
         /** @var OrderStatus[] $statuses */
@@ -116,7 +143,7 @@ class OrderRepository
         foreach ($statuses as $status) {
             $response[] = $status->toResponse();
         }
-        
+
         return $response;
     }
 
@@ -249,7 +276,7 @@ class OrderRepository
             $confectionerRepo = new ConfectionerRepository();
             $confectionerResponse = $confectionerRepo->getById($order->id_confectioner);
         }
-        
+
         return new OrderResponse(
             $order->id,
             $order->total_cost,
@@ -344,12 +371,12 @@ class OrderRepository
     {
         /** @var Order $order */
         $order = Order::query()->where('id', '=', $orderId)->first();
-        
+
         $status = OrderStatus::query()->where('id', '=', $orderStatusId)->first();
         if (is_null($status)) {
             return $this->buildResponse($order);
         }
-        
+
         $order->id_order_status = $orderStatusId;
         $order->save();
 
