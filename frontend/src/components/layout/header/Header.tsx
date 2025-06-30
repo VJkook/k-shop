@@ -39,8 +39,11 @@ const Header: FC = () => {
                     </div>
                     <div className={styles.tabs} style={{width: '25vw'}}>
                         {user?.role === UserRole.Admin ?
-                            <Link style={{marginRight: '5px'}} href={'/products/create'}>
-                            <button className={styles.tab}>Создать товар</button>
+                            // <Link style={{marginRight: '5px'}} href={'/products/create'}>
+                            // <button className={styles.tab}>Создать товар</button>
+                            // </Link>
+                            <Link style={{marginRight: '5px'}} href={'/admin'}>
+                                <button className={styles.tab}>Админ панель</button>
                             </Link>
                             : <div></div>
                         }

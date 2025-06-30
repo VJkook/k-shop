@@ -170,6 +170,10 @@ const OrderPage: React.FC<OrderDetailsProps> = ({id}) => {
                                     <dd>{order?.client.name}</dd>
                                 </div>
                                 <div>
+                                    <dt>Время изготовления</dt>
+                                    <dd>{order?.work_time}</dd>
+                                </div>
+                                <div>
                                     <dt>
                                         Дата работы
                                     </dt>

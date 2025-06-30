@@ -6,10 +6,30 @@ import {apiDelete, apiGet, apiPost} from "@/utils/apiInstance";
 import {OrderOrBasketItem} from "../../../../models/responses/OrderOrBasketItemsResponse";
 import {router} from "next/client";
 
+interface Address {
+    id: number;
+    address: string;
+    index: string | null;
+    comment: string | null;
+}
+
 const Basket: FC = () => {
     const [baskets, setBaskets] = useState<OrderOrBasketItem[]>([]);
     const [sumPrice, setSumPrice] = useState<number>(0);
     const [expandedItems, setExpandedItems] = useState<Record<number, boolean>>({});
+    const [addresses, setAddresses] = useState<Address[]>([]);
+    const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
+    const [deliveryDate, setDeliveryDate] = useState<string>('');
+    const [deliveryTime, setDeliveryTime] = useState<string>('17:00');
+
+    // Функция для получения текущей даты в формате YYYY-MM-DD
+    const getCurrentDate = () => {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
 
     const loadBasket = () => {
         apiGet('/api/basket')
@@ -20,6 +40,21 @@ const Basket: FC = () => {
             }).catch((error) => {
             console.log(error);
         });
+    };
+
+    const loadAddresses = () => {
+        apiGet('/api/users/addresses')
+            .then((response) => {
+                if (response.data) {
+                    setAddresses(response.data);
+                    if (response.data.length > 0) {
+                        setSelectedAddressId(response.data[0].id);
+                    }
+                }
+            })
+            .catch((error) => {
+                console.log('Ошибка при загрузке адресов:', error);
+            });
     };
 
     const toggleDetails = (id: number) => {
@@ -41,6 +76,8 @@ const Basket: FC = () => {
 
     useEffect(() => {
         updateSumPrice();
+        // Устанавливаем текущую дату по умолчанию
+        setDeliveryDate(getCurrentDate());
     }, [baskets]);
 
     const updateBasket = (id: number, count: number) => {
@@ -57,9 +94,27 @@ const Basket: FC = () => {
     };
 
     const createOrder = () => {
+        if (!selectedAddressId) {
+            alert('Пожалуйста, выберите адрес доставки');
+            return;
+        }
+
+        if (!deliveryDate) {
+            alert('Пожалуйста, выберите дату доставки');
+            return;
+        }
+
+        if (!deliveryTime) {
+            alert('Пожалуйста, выберите время доставки');
+            return;
+        }
+
+        // Форматируем дату и время в нужный формат: YYYY-MM-DD HH:MM:00
+        const deliveryDateTime = `${deliveryDate} ${deliveryTime}:00`;
+
         apiPost('/api/orders', {
-            id_delivery_address: 1,
-            delivery_date: '2025-08-10 17:00:00'
+            id_delivery_address: selectedAddressId,
+            delivery_date: deliveryDateTime
         })
             .then((response) => {
                 if (response.data != undefined) {
@@ -85,6 +140,7 @@ const Basket: FC = () => {
 
     useEffect(() => {
         loadBasket();
+        loadAddresses();
     }, []);
 
     return (
@@ -179,11 +235,61 @@ const Basket: FC = () => {
                     </div>
                     <div className={styles.right}>
                         <div className={styles.summary}>
+                            <div className={styles.address_section}>
+                                <h3>Адрес доставки</h3>
+                                {addresses.length > 0 ? (
+                                    <select
+                                        value={selectedAddressId || ''}
+                                        onChange={(e) => setSelectedAddressId(Number(e.target.value))}
+                                        className={styles.address_select}
+                                    >
+                                        {addresses.map(address => (
+                                            <option key={address.id} value={address.id}>
+                                                {address.address}
+                                                {address.index ? ` (${address.index})` : ''}
+                                            </option>
+                                        ))}
+                                    </select>
+                                ) : (
+                                    <p>У вас нет сохраненных адресов</p>
+                                )}
+                            </div>
+
+                            <div className={styles.delivery_datetime}>
+                                <h3>Дата и время доставки</h3>
+                                <div className={styles.datetime_fields}>
+                                    <div className={styles.form_group}>
+                                        <label>Дата:</label>
+                                        <input
+                                            type="date"
+                                            value={deliveryDate}
+                                            onChange={(e) => setDeliveryDate(e.target.value)}
+                                            min={getCurrentDate()}
+                                            required
+                                        />
+                                    </div>
+                                    <div className={styles.form_group}>
+                                        <label>Время:</label>
+                                        <input
+                                            type="time"
+                                            value={deliveryTime}
+                                            onChange={(e) => setDeliveryTime(e.target.value)}
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
                             <div className={styles.sum}>
                                 <p className={styles.it}>Итого</p>
                                 <p className={styles.price}>{sumPrice} ₽</p>
                             </div>
-                            <button onClick={() => createOrder()}>Оформить заказ</button>
+                            <button
+                                onClick={() => createOrder()}
+                                disabled={!selectedAddressId || baskets.length === 0}
+                            >
+                                Оформить заказ
+                            </button>
                         </div>
                     </div>
                 </div>

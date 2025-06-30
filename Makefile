@@ -76,12 +76,12 @@ refill-db:
 fill-db:
 	@make insert-roles
 	@make insert-users
-	@make insert-address
 	@make insert-payment-statuses
 	@make insert-order-statutes
 	@make insert-max-time
 	@make register-users
 	@make update-users
+	@make insert-address
 	@make fill-by-api
 
 register-users:
@@ -114,6 +114,7 @@ update-users:
 insert-address:
 	@echo "Заполнение таблицы delivery_addresses:"
 	@$(PSQL_CMD) -c "INSERT INTO public.delivery_addresses (id, address, comment, index, id_user) VALUES (DEFAULT, 'Kirov', null, null, 1)"
+	@$(PSQL_CMD) -c "INSERT INTO public.delivery_addresses (id, address, comment, index, id_user) VALUES (DEFAULT, 'Kirov', null, null, 5)"
 
 insert-payment-statuses:
 	@echo "Заполнение таблицы payment_statuses:"

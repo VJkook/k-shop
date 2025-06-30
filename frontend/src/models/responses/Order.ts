@@ -7,6 +7,7 @@ export interface Order {
     registration_date: string
     delivery_date: string
     work_date: string | null
+    work_time: string | null
     completed_date: string | null
     delivery_address: string
     status: OrderStatus

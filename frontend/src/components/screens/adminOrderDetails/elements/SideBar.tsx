@@ -7,17 +7,17 @@ const Sidebar: React.FC = () => {
     return (
     <aside className={styles.sidebar}>
         <div className={styles.logo}>
-            <span>Sweet Delights</span>
+            <span>Сладкие наслаждения</span>
         </div>
         <nav>
-            <a href="#" className={styles.nav_link}><span>My Account</span></a>
-            <a href="/admin" className={`${styles.nav_link} ${styles.nav_link_active}`}><span>Orders</span></a>
+            <a href="#" className={styles.nav_link}><span>Мой аккаунт</span></a>
+            <a href="/admin" className={`${styles.nav_link} ${styles.nav_link_active}`}><span>Заказы</span></a>
 
-            <a href="/confectioners" className={styles.nav_link}><span>Confectioners</span></a>
-
-            <a href="#" className={styles.nav_link}><span>Inventory</span></a>
-            <a href="#" className={styles.nav_link}><span>Notifications</span></a>
-            <a href="#" className={styles.nav_link}><span>Statistics</span></a>
+            <a href="/confectioners" className={styles.nav_link}><span>Кондитеры</span></a>
+            <a href="/products/create" className={styles.nav_link}><span>Создать товар</span></a>
+            <a href="#" className={styles.nav_link}><span>Инвентарь</span></a>
+            <a href="#" className={styles.nav_link}><span>Уведомления</span></a>
+            <a href="#" className={styles.nav_link}><span>Статистика</span></a>
         </nav>
     </aside>
 );

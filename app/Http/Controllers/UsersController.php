@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\FillingRepository;
+use App\Models\User;
+use App\Repositories\DeliveryAddressesRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller
 {
@@ -30,6 +31,16 @@ class UsersController extends Controller
     {
 //        $response = $this->fillingRepo->getById($id);
 //        return response()->json($response);
+    }
+    
+    public function addresses(): JsonResponse
+    {
+        /** @var User $user */
+        $user = Auth::user();
+        $deliveryAddressesRepo = new DeliveryAddressesRepository();
+        $addresses = $deliveryAddressesRepo->getByUserId($user->id);
+        
+        return response()->json($addresses);
     }
 
     /**

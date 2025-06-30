@@ -33,11 +33,6 @@ const Footer: FC = () => {
                     ул. Карла Маркса д. 21
                 </p>
             </div>
-            <div>
-                <p style={{textDecoration: 'underline'}}><Link href={'/admin-order-details'}>Детали заказов</Link></p>
-                <p style={{textDecoration: 'underline'}}><Link href={'/confectioners'}>Кондитеры</Link></p>
-                <p style={{textDecoration: 'underline'}}><Link href={'/admin'}>Страница админа</Link></p>
-            </div>
         </div>
     )
 }
