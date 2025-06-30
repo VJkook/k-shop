@@ -107,9 +107,10 @@ Route::middleware('auth:sanctum')->prefix('orders')->group(function () {
     Route::get('/', [OrdersController::class, 'index']);
     Route::get('/all', [OrdersController::class, 'all']);
     Route::get('/statuses', [OrdersController::class, 'statuses']);
+    Route::get('/by-work-dates', [OrdersController::class, 'showByWorkDates']);
 
     Route::post('/{id}', [OrdersController::class, 'update']);
-    Route::get('/by-work-dates', [OrdersController::class, 'showByWorkDates']);
+    Route::get('/{id}', [OrdersController::class, 'show']);
 });
 
 Route::prefix('fillings')->group(function () {

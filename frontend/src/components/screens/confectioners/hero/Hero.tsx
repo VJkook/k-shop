@@ -11,6 +11,7 @@ import {ConfectionerCalendar} from "../../../../models/responses/Calendar";
 import {Confectioner} from "../../../../models/responses/User";
 import {Order} from "../../../../models/responses/Order";
 import {from} from "stylis";
+import Link from "next/link";
 
 
 const MAX_HOURS_PER_DAY = 16;
@@ -264,9 +265,14 @@ const Hero: React.FC = () => {
                                     {weeklyOrders1[selectedDay]?.map((order, index) => (
                                         <div key={index}>
                                             <p>Кондитер: {order.confectioner?.name}</p>
+                                            <p style={{textDecoration: 'underline'}}>
+                                                <Link href={'/admin-order-details/' + order.id}>Детали заказа</Link>
+                                            </p> <br/>
                                             <ul key={index}>
                                                 {order.products.map((product, i) => (
-                                                    <li key={i}>Название{product.name}, Цена: {product.price}р</li>
+                                                    <li key={i}>
+                                                        Название{product.name}, Цена: {product.price}р
+                                                    </li>
                                                 ))}
                                             </ul>
                                         </div>

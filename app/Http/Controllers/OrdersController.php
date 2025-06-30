@@ -187,7 +187,7 @@ class OrdersController extends Controller
 
         $dateFrom = BasicDate::fromYearMonthDayString($request->get('date_from'));
         $dateTo = BasicDate::fromYearMonthDayString($request->get('date_to'));
-        
+
         $response = $this->orderRepo->getByWorkDates($dateFrom, $dateTo);
         return response()->json($response);
     }
