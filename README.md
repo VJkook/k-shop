@@ -170,3 +170,4 @@ public function confectioner(): BelongsTo
     }
 ```
 
+
