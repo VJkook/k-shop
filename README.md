@@ -169,3 +169,4 @@ public function confectioner(): BelongsTo
         return $this->belongsTo(User::class, 'id_confectioner', 'id');
     }
 ```
+
