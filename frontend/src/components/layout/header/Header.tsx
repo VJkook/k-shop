@@ -48,6 +48,16 @@ const Header: FC = () => {
                             : <div></div>
                         }
 
+                        {user?.role === UserRole.Confectioner ?
+                            // <Link style={{marginRight: '5px'}} href={'/products/create'}>
+                            // <button className={styles.tab}>Создать товар</button>
+                            // </Link>
+                            <Link style={{marginRight: '5px'}} href={'/confectioner-orders'}>
+                                <button className={styles.tab}>Панель кондитера</button>
+                            </Link>
+                            : <div></div>
+                        }
+
                         <Link style={{marginRight: '5px'}} href={'/orders'}>
                             <button className={styles.tab}>Заказы</button>
                         </Link>

@@ -54,4 +54,10 @@ class Role extends Model
         $roleName = array_flip(self::ROLE_BY_NAME)[$roleId] ?? null;
         return $roleName === self::ADMIN_ROLE;
     }
+
+    public static function isConfectioner(int $roleId): bool
+    {
+        $roleName = array_flip(self::ROLE_BY_NAME)[$roleId] ?? null;
+        return $roleName === self::CONFECTIONER_ROLE;
+    }
 }

@@ -89,4 +89,9 @@ class User extends Authenticatable
     {
         return Role::isAdmin($this->id_role);
     }
+
+    public function isConfectioner(): bool
+    {
+        return Role::isConfectioner($this->id_role);
+    }
 }

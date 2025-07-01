@@ -1,6 +1,6 @@
 import React, { FC, useRef } from 'react'
 import Meta from '@/utils/meta/Meta'
-import Hero from '@/screens/konditerOrders/hero/Hero'
+import Hero from '@/screens/confectionerOrders/hero/Hero'
 import styles from './Home.module.scss'
 import { useRouter } from 'next/router'
 import Link from 'next/link'

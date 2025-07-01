@@ -97,6 +97,25 @@ class OrderRepository
         return $response;
     }
 
+    /**
+     * @param int $confectionerId
+     * @return OrderResponse[]
+     */
+    public function getByConfectionerId(int $confectionerId): array
+    {
+        /** @var Order[] $orders */
+        $orders = Order::query()
+            ->where('id_confectioner', '=', $confectionerId)
+            ->orderBy('registration_date', 'desc')
+            ->get();
+        $response = [];
+        foreach ($orders as $order) {
+            $response[] = $this->buildResponse($order);
+        }
+
+        return $response;
+    }
+
     public function getById(int $id): OrderResponse
     {
         /** @var Order $order */

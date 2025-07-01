@@ -110,6 +110,7 @@ Route::middleware('auth:sanctum')->prefix('orders')->group(function () {
     Route::get('/all', [OrdersController::class, 'all']);
     Route::get('/statuses', [OrdersController::class, 'statuses']);
     Route::get('/by-work-dates', [OrdersController::class, 'showByWorkDates']);
+    Route::get('/for-confectioner', [OrdersController::class, 'showForConfectioner']);
 
     Route::post('/{id}', [OrdersController::class, 'update']);
     Route::get('/{id}', [OrdersController::class, 'show']);

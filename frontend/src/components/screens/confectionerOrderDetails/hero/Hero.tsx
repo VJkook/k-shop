@@ -2,89 +2,173 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import styles from './Hero.module.scss';
 import Sidebar from '../elements/SideBar';
-
-type OrderProduct = {
-    id: number;
-    name: string;
-    quantity: number;
-    price: number;
-    workTimeMinutes: number; // добавляем время работы на этот продукт
-};
-
-type Order = {
-    id: number;
-    delivery_date: string;
-    work_date: string;
-    comment?: string; // комментарий клиента
-    products: OrderProduct[];
-};
+import { apiGet, apiPost } from '@/utils/apiInstance';
+import { Order, OrderStatus } from "../../../../models/responses/Order";
 
 interface OrderDetailsProps {
     id: number;
 }
 
-const mockOrder: Order = {
-    id: 42,
-    delivery_date: '2025-07-01 10:00',
-    work_date: '2025-06-30',
-    comment: 'Пожалуйста, без орехов и с легкой глазурью',
-    products: [
-        { id: 1, name: 'Торт "Наполеон"', quantity: 2, price: 1200, workTimeMinutes: 60 },
-        { id: 2, name: 'Эклеры с кремом', quantity: 12, price: 600, workTimeMinutes: 30 },
-        { id: 3, name: 'Маффины с черникой', quantity: 6, price: 450, workTimeMinutes: 20 },
-    ]
-};
-
 const OrderPage: React.FC<OrderDetailsProps> = ({ id }) => {
     const [order, setOrder] = useState<Order | null>(null);
     const [productStatus, setProductStatus] = useState<Record<number, boolean>>({});
-    const [orderCompleted, setOrderCompleted] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    // Состояния для работы со статусами
+    const [statuses, setStatuses] = useState<OrderStatus[]>([]);
+    const [selectedStatusId, setSelectedStatusId] = useState<number | null>(null);
+
+    // Состояния для редактирования даты доставки
+    const [isEditingDate, setIsEditingDate] = useState(false);
+    const [tempDate, setTempDate] = useState<string>('');
+
+    const loadOrderDetails = async () => {
+        try {
+            setLoading(true);
+            const response = await apiGet(`/api/orders/${id}`);
+
+            if (response.data) {
+                const orderData = response.data;
+                setOrder(orderData);
+                setSelectedStatusId(orderData.status.id);
+
+                // Инициализируем статусы продуктов
+                const initialStatus: Record<number, boolean> = {};
+
+                // Автоматически отмечаем все товары для статусов "В доставке" и "Доставлен"
+                const shouldMarkAllCompleted =
+                    orderData.status.name === "В доставке" ||
+                    orderData.status.name === "Доставлен";
+
+                orderData.products.forEach((product: any) => {
+                    initialStatus[product.id] = shouldMarkAllCompleted;
+                });
+
+                setProductStatus(initialStatus);
+            }
+        } catch (err) {
+            console.error('Ошибка при загрузке заказа:', err);
+            setError('Не удалось загрузить данные заказа');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Функция загрузки статусов
+    const loadStatuses = () => {
+        apiGet('/api/orders/statuses')
+            .then((response) => {
+                if (response.data != undefined) {
+                    setStatuses(response.data);
+                }
+            }).catch((error) => {
+            console.log(error);
+        });
+    };
+
+    // Функция сохранения статуса
+    const saveStatus = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!selectedStatusId) return;
+
+        apiPost('/api/orders/' + id, {
+            id_order_status: selectedStatusId
+        }).finally(() => {
+            loadOrderDetails();
+        });
+    };
+
+    // Функции для редактирования даты доставки
+    const handleDateEdit = () => {
+        setIsEditingDate(true);
+        setTempDate(order?.delivery_date || '');
+    };
+
+    const handleDateSave = () => {
+        setIsEditingDate(false);
+
+        apiPost('/api/orders/' + id, {
+            delivery_date: tempDate
+        }).finally(() => {
+            loadOrderDetails();
+        });
+    };
+
+    const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setTempDate(e.target.value);
+    };
+
+    // Проверяем, все ли продукты выполнены
+    const allProductsCompleted = order?.products.every(p => productStatus[p.id]);
 
     useEffect(() => {
-        // Эмуляция загрузки заказа
-        setOrder(mockOrder);
-
-        const initialStatus: Record<number, boolean> = {};
-        mockOrder.products.forEach((product) => {
-            initialStatus[product.id] = false;
-        });
-        setProductStatus(initialStatus);
+        if (id) {
+            loadOrderDetails();
+            loadStatuses();
+        }
     }, [id]);
 
-    useEffect(() => {
-        if (!order) return;
-
-        const allDone = order.products.every(product => productStatus[product.id]);
-        setOrderCompleted(allDone);
-    }, [productStatus, order]);
-
     const toggleProductStatus = (productId: number) => {
+        // Если статус "В доставке" или "Доставлен", блокируем изменения
+        if (order?.status.name === "В доставке" || order?.status.name === "Доставлен") {
+            return;
+        }
+
         setProductStatus((prev) => ({
             ...prev,
             [productId]: !prev[productId],
         }));
     };
 
-    const toggleOrderStatus = () => {
-        if (!order) return;
+    if (loading) {
+        return (
+            <div className={styles.app}>
+                <div className={styles.order_page}>
+                    <Sidebar />
+                    <main>
+                        <div className={styles.header}>
+                            <Link href={'/admin'}>
+                                <button>
+                                    <span>Назад к заказам</span>
+                                </button>
+                            </Link>
+                            <h1><span>Загрузка заказа #{id}...</span></h1>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        );
+    }
 
-        // Можно отметить заказ выполненным только если все продукты сделаны
-        if (orderCompleted) {
-            // Если уже выполнен, запретим снять статус (просто игнорируем)
-            return;
-        }
+    if (error) {
+        return (
+            <div className={styles.app}>
+                <div className={styles.order_page}>
+                    <Sidebar />
+                    <main>
+                        <div className={styles.header}>
+                            <Link href={'/admin'}>
+                                <button>
+                                    <span>Назад к заказам</span>
+                                </button>
+                            </Link>
+                            <h1><span>Ошибка загрузки заказа</span></h1>
+                        </div>
+                        <p style={{ color: 'red', padding: '20px' }}>{error}</p>
+                        <button onClick={loadOrderDetails} className={styles.btn}>
+                            Повторить попытку
+                        </button>
+                    </main>
+                </div>
+            </div>
+        );
+    }
 
-        // Устанавливаем статус заказа выполненным — все продукты должны быть помечены как сделанные
-        const updatedStatus: Record<number, boolean> = {};
-        order.products.forEach(p => {
-            updatedStatus[p.id] = true;
-        });
-        setProductStatus(updatedStatus);
-    };
-
-    // Считаем общее время выполнения заказа в минутах
-    const totalWorkTime = order?.products.reduce((acc, p) => acc + p.workTimeMinutes, 0) ?? 0;
-    const allProductsCompleted = order?.products.every(p => productStatus[p.id]);
+    // Проверяем, заблокированы ли чекбоксы
+    const isCheckboxDisabled =
+        order?.status.name === "В доставке" ||
+        order?.status.name === "Доставлен";
 
     return (
         <div className={styles.app}>
@@ -109,7 +193,6 @@ const OrderPage: React.FC<OrderDetailsProps> = ({ id }) => {
                                 <span>Информация заказа</span>
                             </h2>
                             <dl>
-
                                 <div>
                                     <dt>
                                         Дата выполнения:
@@ -120,28 +203,66 @@ const OrderPage: React.FC<OrderDetailsProps> = ({ id }) => {
                                 </div>
                                 <div>
                                     <dt>Время на выполнение:</dt>
-
-                                        <dd className={styles.date_display}>
-                                            {totalWorkTime} мин.
-                                        </dd>
-
+                                    <dd>
+                                        {order?.work_time}
+                                    </dd>
                                 </div>
                                 <div>
                                     <dt>Дата доставки</dt>
-
-                                    <dd className={styles.date_display}>
-                                        {order?.delivery_date}
-                                    </dd>
-
+                                    {isEditingDate ? (
+                                        <div className={styles.date_edit_wrapper}>
+                                            <input
+                                                type="datetime-local"
+                                                value={tempDate}
+                                                onChange={handleDateChange}
+                                                className={styles.date_input}
+                                            />
+                                            <button
+                                                onClick={handleDateSave}
+                                                className={styles.date_save}
+                                            >
+                                                Сохранить
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <dd className={styles.date_display}>
+                                            {order?.delivery_date}
+                                            <button
+                                                onClick={handleDateEdit}
+                                                className={styles.date_edit_button}
+                                            >
+                                                Изменить
+                                            </button>
+                                        </dd>
+                                    )}
                                 </div>
                                 <div>
                                     <dt>Комментарий клиента</dt>
                                     <dd className={styles.notes}>{order?.comment || '—'}</dd>
                                 </div>
+                                <div>
+                                    <dt>Статус заказа</dt>
+                                    <dd className={styles.notes}>
+                                        <span style={{
+                                            fontWeight: 'bold'
+                                        }}>
+                                            {order?.status.name}
+                                        </span>
+                                    </dd>
+                                </div>
                             </dl>
                         </section>
                         <section className={styles.card}>
                             <h2>Состав заказа</h2>
+                            <span style={{
+                                fontWeight: 'bold',
+                                color: allProductsCompleted ? 'green' : 'orange',
+                                display: 'block',
+                                marginBottom: '10px'
+                            }}>
+                                {allProductsCompleted ? 'Все продукты выполнены' : 'Не все продукты выполнены'}
+                                {isCheckboxDisabled && " (автоматически отмечены)"}
+                            </span>
                             <ul className={styles.item_list}>
                                 {order?.products.map((item) => (
                                     <li key={item.id} className={styles.item}>
@@ -150,12 +271,13 @@ const OrderPage: React.FC<OrderDetailsProps> = ({ id }) => {
                                                 type="checkbox"
                                                 checked={productStatus[item.id]}
                                                 onChange={() => toggleProductStatus(item.id)}
+                                                disabled={isCheckboxDisabled}
                                             />
                                             <span className={productStatus[item.id] ? styles.completed : ''}>
                                                 {item.name} — {item.quantity} шт.
                                             </span>
                                         </label>
-                                        <Link href={'/Recipe'}>
+                                        <Link href={'/recipe'}>
                                             <button className={styles.btn_small}>Рецепт</button>
                                         </Link>
                                     </li>
@@ -163,23 +285,33 @@ const OrderPage: React.FC<OrderDetailsProps> = ({ id }) => {
                             </ul>
                         </section>
 
-
                         <section className={styles.card}>
                             <h2>Редактирование статуса</h2>
-                            <form className={styles.form_group}>
-                                <label htmlFor="order-status">Order Status</label>
-                                <select>
-                                    <option value="">Изготавливается</option>
-                                    <option value="">Выполнен</option>
-                                    {/* другие опции */}
+                            <form onSubmit={saveStatus} className={styles.form_group}>
+                                <label htmlFor="order-status">Статус заказа</label>
+                                <select
+                                    value={selectedStatusId || ''}
+                                    onChange={(e) => setSelectedStatusId(Number(e.target.value))}
+                                >
+                                    <option value="">-- Выберите --</option>
+                                    {statuses.map((status) => (
+                                        <option key={status.id} value={status.id}>
+                                            {status.name}
+                                        </option>
+                                    ))}
                                 </select>
                                 <button
                                     type="submit"
                                     className={`${styles.btn} ${styles.update} ${!allProductsCompleted ? styles.btnDisabled : ''}`}
                                     disabled={!allProductsCompleted}
                                 >
-                                    Сохранить
+                                    Сохранить статус
                                 </button>
+                                {!allProductsCompleted && (
+                                    <div style={{ color: 'red', marginTop: '10px' }}>
+                                        Для сохранения статуса все продукты должны быть выполнены
+                                    </div>
+                                )}
                             </form>
                         </section>
                     </div>
