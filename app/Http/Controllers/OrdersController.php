@@ -86,7 +86,7 @@ class OrdersController extends Controller
     {
         /** @var User $user */
         $user = Auth::user();
-        if (!$user->isAdmin()) {
+        if (!$user->isAdmin() && !$user->isConfectioner()) {
             return response()->json(status: 403);
         }
 
@@ -161,7 +161,7 @@ class OrdersController extends Controller
     {
         /** @var User $user */
         $user = Auth::user();
-        if (!$user->isAdmin()) {
+        if (!$user->isAdmin() && !$user->isConfectioner()) {
             return response()->json(status: 403);
         }
 
@@ -189,6 +189,18 @@ class OrdersController extends Controller
         $dateTo = BasicDate::fromYearMonthDayString($request->get('date_to'));
 
         $response = $this->orderRepo->getByWorkDates($dateFrom, $dateTo);
+        return response()->json($response);
+    }
+
+    public function showForConfectioner(): JsonResponse
+    {
+        /** @var User $user */
+        $user = Auth::user();
+        if (!$user->isConfectioner()) {
+            return response()->json(status: 403);
+        }
+
+        $response = $this->orderRepo->getByConfectionerId($user->id);
         return response()->json($response);
     }
 

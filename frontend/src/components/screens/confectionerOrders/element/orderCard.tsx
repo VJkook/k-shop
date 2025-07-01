@@ -1,28 +1,14 @@
-import React, { FC, useState, useMemo } from 'react';
+import React, {FC, useState, useMemo} from 'react';
 import Link from 'next/link';
 import styles from './OrderTable.module.scss';
-
-type Order = {
-    id: number;
-    customer: string;
-    date: string;
-    items: string;
-    price: number;
-    status: string;
-    statusColor: 'yellow' | 'blue' | 'green' | 'red';
-    phone: string;
-    prepTime: string;      // Новое: диапазон времени приготовления, например "10:00–12:00"
-    comment?: string;      // Опциональный комментарий клиента
-    confectioner: string;
-};
-
+import {Order} from "../../../../models/responses/Order";
 
 interface OrdersTableProps {
     orders: Order[];
     onMarkDone?: (id: number) => void; // Функция, вызываемая при пометке заказа как «Готов»
 }
 
-const OrdersTable: FC<OrdersTableProps> = ({ orders, onMarkDone }) => {
+const OrdersTable: FC<OrdersTableProps> = ({orders, onMarkDone}) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('All');
     const [confectionerFilter, setConfectionerFilter] = useState('All');
@@ -39,15 +25,14 @@ const OrdersTable: FC<OrdersTableProps> = ({ orders, onMarkDone }) => {
 
         return orders.filter(order => {
             const matchesSearch =
-                order.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                order.phone.includes(searchTerm) ||
-                order.items.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                (order.comment?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false);
+                order.client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                order.phone.includes(searchTerm)
+            order.products.map(product => product.name).join(', ').toLowerCase().includes(searchTerm.toLowerCase());
 
             const matchesStatus = statusFilter === 'All' || order.status === statusFilter;
             const matchesConfectioner = confectionerFilter === 'All' || order.confectioner === confectionerFilter;
 
-            const orderDate = new Date(order.date);
+            const orderDate = new Date(order.work_date);
             const matchesDate =
                 dateFilter === 'all' ||
                 (dateFilter === 'today' && orderDate >= startOfToday && orderDate < endOfToday) ||
@@ -110,17 +95,14 @@ const OrdersTable: FC<OrdersTableProps> = ({ orders, onMarkDone }) => {
 
                 <div className={styles.filterGroup}>
                     <div className={styles.selectWrapper}>
-                    <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}>
-                        {statusOptions.map(o =>
-                            <option key={o} value={o}>{o === 'All' ? 'Все статусы' : o}</option>
-                        )}
-                    </select>
+                        <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}>
+                            {statusOptions.map(o =>
+                                <option key={o} value={o}>{o === 'All' ? 'Все статусы' : o}</option>
+                            )}
+                        </select>
 
                     </div>
                 </div>
-
-
-
 
 
             </div>
@@ -146,11 +128,16 @@ const OrdersTable: FC<OrdersTableProps> = ({ orders, onMarkDone }) => {
                         <tr key={o.id}>
                             <td>#{o.id}</td>
                             <td>
-                                {new Date(o.date).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' })}
+                                {new Date(o.date).toLocaleDateString('ru-RU', {
+                                    day: 'numeric',
+                                    month: 'short',
+                                    year: 'numeric'
+                                })}
                             </td>
 
                             <td>{o.prepTime}</td>
-                            <td><span className={`${styles.status} ${styles[o.statusColor]}`}>{o.status}</span></td>
+                            <td><span className={`${styles.status} ${styles[o.status.color]}`}>{o.status.name}</span>
+                            </td>
 
 
                             <td>{o.comment || '-'}</td>
