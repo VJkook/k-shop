@@ -5,13 +5,7 @@ import Image from 'next/image';
 import {apiDelete, apiGet, apiPost} from "@/utils/apiInstance";
 import {OrderOrBasketItem} from "../../../../models/responses/OrderOrBasketItemsResponse";
 import {router} from "next/client";
-
-interface Address {
-    id: number;
-    address: string;
-    index: string | null;
-    comment: string | null;
-}
+import {Address} from "../../../../models/responses/Address";
 
 const Basket: FC = () => {
     const [baskets, setBaskets] = useState<OrderOrBasketItem[]>([]);
