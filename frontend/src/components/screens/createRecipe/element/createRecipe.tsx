@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect } from 'react';
-import styles from './OrderTable.module.scss';
+import styles from './CreateRecipe.module.scss';
 import instance, { apiGet, apiPost } from '@/utils/apiInstance';
 
 interface Ingredient {
@@ -21,11 +21,6 @@ interface ReadyCake {
     id: number;
     name: string;
     price: number;
-}
-
-interface ImageResponse {
-    id: number;
-    address: string;
 }
 
 // Функция форматирования ввода времени
