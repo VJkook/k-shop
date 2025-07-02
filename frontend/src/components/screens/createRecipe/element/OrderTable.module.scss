@@ -362,3 +362,21 @@
     background-color: #4338ca;
 }
 
+.timeInput {
+    width: 100px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+
+    &Error {
+        border-color: red;
+        background-color: #fff0f0;
+    }
+}
+
+.timeError {
+    color: red;
+    font-size: 12px;
+    margin-top: 4px;
+    white-space: nowrap;
+}

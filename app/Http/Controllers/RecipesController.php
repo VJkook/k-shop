@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\IngredientRecipeRelation;
 use App\Models\Requests\Recipes\IngredientForRecipeRequest;
 use App\Repositories\RecipesRepository;
 use Illuminate\Http\JsonResponse;

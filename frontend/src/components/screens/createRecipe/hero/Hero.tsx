@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from '../element/sidebar';
-import OrdersTable from '../element/orderCard';
+import CreateRecipe from '../element/createRecipe';
 import styles from './Hero.module.scss';
 import { UserRole } from '../../../../models/responses/User';
 import { apiGet } from '@/utils/apiInstance';
@@ -17,7 +17,7 @@ const OrdersPage: React.FC = () => {
             <main className={styles.main_content}>
 
                 <section className={styles.orders_list}>
-                    <OrdersTable  />
+                    <CreateRecipe  />
                 </section>
             </main>
         </div>
