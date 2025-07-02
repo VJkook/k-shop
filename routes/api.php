@@ -62,9 +62,9 @@ Route::get('/test', [TestController::class, 'index']);
 Route::prefix('ingredients')->group(function () {
     Route::post('/', [IngredientsController::class, 'create']);
     Route::get('/', [IngredientsController::class, 'index']);
-    Route::get('/{ingredient}', [IngredientsController::class, 'show']);
-    Route::post('/{ingredient}', [IngredientsController::class, 'update']);
-    Route::delete('/{ingredient}', [IngredientsController::class, 'destroy']);
+    Route::get('/{id}', [IngredientsController::class, 'show']);
+    Route::post('/{id}', [IngredientsController::class, 'update']);
+    Route::delete('/{id}', [IngredientsController::class, 'destroy']);
 });
 
 Route::prefix('ready-cakes')->group(function () {
@@ -191,7 +191,11 @@ Route::middleware('auth:sanctum')->prefix('recipes')->group(function () {
     Route::post('/ready-cakes', [RecipesController::class, 'createForReadyCake']);
     Route::post('/fillings', [RecipesController::class, 'createForFilling']);
     Route::post('/decors', [RecipesController::class, 'createForDecor']);
-    Route::get('/{id}', [RecipesController::class, 'show']);
-    Route::post('/{id}/add-technological-map', [RecipesController::class, 'addTechnologicalMap']);
-    Route::delete('/{id}', [RecipesController::class, 'destroy']);
+
+    Route::prefix('/{id}')->group(function () {
+        Route::get('/', [RecipesController::class, 'show']);
+        Route::post('/add-technological-map', [RecipesController::class, 'addTechnologicalMap']);
+        Route::post('/ingredients', [RecipesController::class, 'addIngredients']);
+        Route::delete('/', [RecipesController::class, 'destroy']);
+    });
 });

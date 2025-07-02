@@ -3,18 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ingredient;
+use App\Repositories\IngredientsRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class IngredientsController extends Controller
 {
+    public function __construct(protected IngredientsRepository $ingredientsRepo)
+    {
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index(): JsonResponse
     {
-        return response()->json(Ingredient::all()->toArray());
+        return response()->json($this->ingredientsRepo->all());
     }
 
     /**
@@ -38,9 +43,8 @@ class IngredientsController extends Controller
             'quantity_in_stock' => $request->quantity_in_stock ?? null,
         ];
 
-        $ingredient = Ingredient::query()->create($attributes);
-        $ingredient = Ingredient::query()->find($ingredient->id);
-        return \response()->json($ingredient);
+        $response = $this->ingredientsRepo->create($attributes);
+        return \response()->json($response);
     }
 
     /**
@@ -54,7 +58,7 @@ class IngredientsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Ingredient $ingredient): JsonResponse
+    public function update(Request $request, int $id): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'name' => ['string'],
@@ -66,26 +70,27 @@ class IngredientsController extends Controller
             return \response()->json($validator->errors()->getMessages(), 400);
         }
 
-        if (!is_null($request->name)) {
-            $ingredient->name = $request->name;
+        $attributes = [];
+        if (!is_null($request->get('name'))) {
+            $attributes['name'] = $request->get('name');
         }
-        if (!is_null($request->measurement)) {
-            $ingredient->measurement = $request->measurement;
+        if (!is_null($request->get('measurement'))) {
+            $attributes['measurement'] = $request->get('measurement');
         }
-        if (!is_null($request->quantity_in_stock)) {
-            $ingredient->quantity_in_stock = $request->quantity_in_stock;
+        if (!is_null($request->get('quantity_in_stock'))) {
+            $attributes['quantity_in_stock'] = $request->get('quantity_in_stock');
         }
 
-        $ingredient->save();
-        return response()->json($ingredient);
+        $response = $this->ingredientsRepo->updateById($id, $attributes);
+        return response()->json($response);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Ingredient $ingredient): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
-        $isSuccess = Ingredient::query()->find($ingredient->id)->delete();
+        $isSuccess = $this->ingredientsRepo->deleteById($id);
         if (!$isSuccess) {
             return response()->json(['result' => 'error'], 500);
         }

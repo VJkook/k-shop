@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name', 50);
             $table->string('measurement', 50);
-            $table->float('quantity_in_stock')->nullable();
+            $table->float('quantity_in_stock')->default(0);
         });
     }
 

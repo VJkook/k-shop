@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ingredients_of_recipe', function (Blueprint $table) {
+        Schema::create('ingredient_recipe_relations', function (Blueprint $table) {
             $table->id();
             $table->decimal('quantity');
 
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ingredients_of_recipe');
+        Schema::dropIfExists('ingredient_recipe_relations');
     }
 };

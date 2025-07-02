@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\IngredientRecipeRelation;
+use App\Models\Requests\Recipes\IngredientForRecipeRequest;
 use App\Repositories\RecipesRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -99,6 +101,31 @@ class RecipesController extends Controller
         $response = $this->recipesRepo->addTechnologicalMap(
             $id_recipe,
             $request->get('id_technological_map')
+        );
+
+        return response()->json($response);
+    }
+
+    public function addIngredients(Request $request, int $id_recipe): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'ingredients' => ['array', 'required'],
+            'ingredients.*.id' => ['integer', 'required'],
+            'ingredients.*.quantity' => ['decimal:0,2', 'required'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->getMessages(), 400);
+        }
+
+        /** @var IngredientForRecipeRequest[] $ingredients */
+        $ingredients = [];
+        foreach ($request->get('ingredients') as $ingredient) {
+            $ingredients[] = new IngredientForRecipeRequest($ingredient['id'], $ingredient['quantity']);
+        }
+        $response = $this->recipesRepo->addIngredients(
+            $id_recipe,
+            $ingredients
         );
 
         return response()->json($response);

@@ -83,6 +83,7 @@ fill-db:
 	@make update-users
 	@make insert-address
 	@make fill-by-api
+	@make insert-ingredients
 
 register-users:
 	@echo "Заполнение по api:----------------------------------------------------------"
@@ -131,8 +132,15 @@ insert-order-statutes:
 	@$(PSQL_CMD) -c "INSERT INTO public.order_statuses (name, color) VALUES ('Отменён', 'red')"
 
 insert-max-time:
-	@echo "Заполнение таблицы order_statuses:"
+	@echo "Заполнение таблицы max_time_for_cooking:"
 	@$(PSQL_CMD) -c "INSERT INTO public.max_time_for_cooking (time) VALUES ('18:00:00')"
+
+insert-ingredients:
+	@echo 'Заполнение таблицы ingredients:'
+	@$(PSQL_CMD) -c "INSERT INTO public.ingredients (name, measurement) VALUES ('Молоко', 'Литры')"
+	@$(PSQL_CMD) -c "INSERT INTO public.ingredients (name, measurement) VALUES ('Яйцо', 'Штуки')"
+	@$(PSQL_CMD) -c "INSERT INTO public.ingredients (name, measurement) VALUES ('Изюм', 'Кг')"
+	@$(PSQL_CMD) -c "INSERT INTO public.ingredients (name, measurement) VALUES ('Малина', 'Кг')"
 
 # Описание таблицы users
 describe-users:

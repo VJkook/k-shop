@@ -3,7 +3,9 @@
 namespace App\Repositories;
 
 use App\Models\BasicIntervalTime;
+use App\Models\IngredientRecipeRelation;
 use App\Models\Recipe;
+use App\Models\Requests\Recipes\IngredientForRecipeRequest;
 use App\Models\Responses\Recipes\RecipeDecorResponse;
 use App\Models\Responses\Recipes\RecipeFillingResponse;
 use App\Models\Responses\Recipes\RecipeReadyCakeResponse;
@@ -12,12 +14,12 @@ use Exception;
 
 class RecipesRepository
 {
-    public function createForReadyCake(string $name, ?string $description, int $id_ready_cake): ?RecipeReadyCakeResponse
+    public function createForReadyCake(string $name, ?string $description, int $readyCakeId): ?RecipeReadyCakeResponse
     {
         $attributes = [
             'name' => $name,
             'description' => $description,
-            'id_ready_cake' => $id_ready_cake,
+            'id_ready_cake' => $readyCakeId,
         ];
 
         /** @var Recipe $recipe */
@@ -26,12 +28,12 @@ class RecipesRepository
         return $recipe->toRecipeReadyCakeResponse();
     }
 
-    public function createForDecor(string $name, ?string $description, int $id_decor): ?RecipeDecorResponse
+    public function createForDecor(string $name, ?string $description, int $decorId): ?RecipeDecorResponse
     {
         $attributes = [
             'name' => $name,
             'description' => $description,
-            'id_decor' => $id_decor,
+            'id_decor' => $decorId,
         ];
 
         /** @var Recipe $recipe */
@@ -55,14 +57,41 @@ class RecipesRepository
     }
 
     public function addTechnologicalMap(
-        int $id_recipe,
-        int $id_technological_map
+        int $recipeId,
+        int $technologicalMapId
     ): RecipeFillingResponse|RecipeDecorResponse|RecipeReadyCakeResponse
     {
         /** @var Recipe $recipe */
-        $recipe = Recipe::query()->find($id_recipe);
-        $recipe->id_technological_map = $id_technological_map;
+        $recipe = Recipe::query()->find($recipeId);
+        $recipe->id_technological_map = $technologicalMapId;
         $recipe->save();
+
+        return $recipe->toResponse();
+    }
+
+    /**
+     * @param int $recipeId
+     * @param IngredientForRecipeRequest[] $ingredients
+     * @return RecipeFillingResponse|RecipeDecorResponse|RecipeReadyCakeResponse|null
+     */
+    public function addIngredients(
+        int   $recipeId,
+        array $ingredients
+    ): RecipeFillingResponse|RecipeDecorResponse|RecipeReadyCakeResponse|null
+    {
+        /** @var Recipe $recipe */
+        $recipe = Recipe::query()->find($recipeId);
+        if (is_null($recipe)) {
+            return null;
+        }
+
+        foreach ($ingredients as $ingredient) {
+            $ingredientRelation = new IngredientRecipeRelation();
+            $ingredientRelation->id_recipe = $recipeId;
+            $ingredientRelation->id_ingredient = $ingredient->ingredientId;
+            $ingredientRelation->quantity = $ingredient->quantity;
+            $ingredientRelation->save();
+        }
 
         return $recipe->toResponse();
     }
