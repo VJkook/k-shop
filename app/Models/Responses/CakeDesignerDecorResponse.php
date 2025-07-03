@@ -13,6 +13,7 @@ class CakeDesignerDecorResponse
         public float              $price,
         public int                $count,
         public ImageResponse|null $image = null,
+        public int|null           $id_recipe = null,
     )
     {
     }
@@ -31,6 +32,7 @@ class CakeDesignerDecorResponse
             $decorResponse->price,
             $count,
             $decorResponse->image,
+            $decorResponse->id_recipe
         );
     }
 }

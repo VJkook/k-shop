@@ -215,10 +215,6 @@ const OrderPage: React.FC<OrderDetailsProps> = ({id}) => {
                                     <dt>Total Price</dt>
                                     <dd>${order?.total_cost.toFixed(2)}</dd>
                                 </div>
-                                <div>
-                                    <dt>Notes</dt>
-                                    <dd className={styles.notes}>For office meeting tomorrow</dd>
-                                </div>
                             </dl>
                         </section>
 

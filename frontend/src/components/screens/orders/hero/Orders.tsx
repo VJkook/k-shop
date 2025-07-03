@@ -92,11 +92,11 @@ const Orders: FC = () => {
                                         <h3>Выбрать кондитера: </h3>
                                         <br/>
                                         <select
-                                            value={order.id_confectioner || ''}
+                                            value={order.confectioner?.id || ''}
                                             onChange={(e) => selectConfectioner(Number(e.target.value), order.id)}
                                         >
                                             <option value="" disabled>Выберите кондитера</option>
-                                            {confectioners.map((c: User) => (
+                                            {confectioners.map((c: Confectioner) => (
                                                 <option key={c.id} value={c.id}>{c.name}</option>
                                             ))}
                                         </select>

@@ -12,6 +12,7 @@ class FillingResponse
         public string|null        $description,
         public float              $price_by_kg,
         public ImageResponse|null $image = null,
+        public int|null           $id_recipe = null,
     )
     {
     }
