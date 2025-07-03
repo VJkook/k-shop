@@ -11,17 +11,15 @@ const CakeCreateHome: FC = () => {
 	const router = useRouter()
 	const pathSegments = router.asPath.split(`/`).filter(Boolean)
 	return (
-		<Meta title="Создание товара" description="Создание товара" image="logo_preview.png">
-			<div className={styles.wrapper}>
-				<div className={styles.bread_crumbs}>
-					<Link href={'/'}>Главная страница</Link> {'>'} <Link href={'/products/create'}>Создание товара</Link>
-				</div>
+
+
+
 				<CakeCreate/>
 
 
 
-			</div>
-		</Meta>
+
+
 	)
 }
 

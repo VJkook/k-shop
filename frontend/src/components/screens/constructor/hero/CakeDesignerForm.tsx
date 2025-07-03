@@ -278,6 +278,19 @@ const CakeDesignerForm: FC = () => {
         return count <= getAvailableTiersCount(weight);
     };
 
+
+
+
+
+    const [fillingPage, setFillingPage] = useState(0);
+    const itemsPerPage = 3;
+
+    const startIndex = fillingPage * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const currentFillings = fillings.slice(startIndex, endIndex);
+
+    const totalPages = Math.ceil(fillings.length / itemsPerPage);
+
     return (
         <div className={styles.container}>
             <div className={styles['flex-container']}>
@@ -285,9 +298,9 @@ const CakeDesignerForm: FC = () => {
                     <div className={styles['options-container']}>
                         <div className={styles['option-group']}>
                             <span>Выберите вес</span>
-                            <button className={styles['control-button']} onClick={handleIncrement}>+</button>
+                            <button className={styles['control-button']} onClick={handleDecrement}>-</button>
                             <span className={styles['weight-value']}>{weight} кг</span>
-                            <button className={styles['control-button']} onClick={handleDecrement}>−</button>
+                            <button className={styles['control-button']} onClick={handleIncrement}>+</button>
                         </div>
                         <div className={styles['option-group']}>
                             <span>Кол-во ярусов</span>
@@ -343,36 +356,51 @@ const CakeDesignerForm: FC = () => {
                         <div className={styles['tier-content']}>
                             <div className={styles['selection-title']}>Выберите начинку для {selectedTab} яруса</div>
                             <div className={styles['selection-container']}>
-                                <button className={styles['arrow-button']}>←</button>
+                                <button
+                                    className={styles['arrow-button']}
+                                    onClick={() => setFillingPage((prev) => Math.max(prev - 1, 0))}
+                                    disabled={fillingPage === 0}
+                                >
+                                    ←
+                                </button>
+
                                 <div className={styles['selection-options']}>
-                                    {fillings.map((item: Filling) => (
+                                    {currentFillings.map((item: Filling) => (
                                         <div
                                             key={item.id}
                                             className={cn(
-                                                styles['option-item'],
-                                                {[styles.selected]: selectedFillings[selectedTab] === item.id}
+                                                styles['option-item'],styles.card,
+                                                { [styles.selected]: selectedFillings[selectedTab] === item.id }
                                             )}
                                             onClick={() => addFilling(selectedTab, item.id)}
                                         >
-                                            <img src={item.image.url} alt={item.name}/>
-                                            <span>{item.name}</span><br/>
+                                            <img src={item.image.url} alt={item.name} />
+                                            <span>{item.name}</span><br />
                                             <span>{item.price_by_kg}р цена за кг</span>
                                         </div>
                                     ))}
                                 </div>
-                                <button className={styles['arrow-button']}>→</button>
+
+                                <button
+                                    className={styles['arrow-button']}
+                                    onClick={() => setFillingPage((prev) => Math.min(prev + 1, totalPages - 1))}
+                                    disabled={fillingPage >= totalPages - 1}
+                                >
+                                    →
+                                </button>
                             </div>
+
                         </div>
                     </div>
 
                     <div className={styles.block}>
                         <div className={styles['section-title']}>Остались последние шаги! Выберите покрытие:</div>
-                        <div className={styles['options-grid']}>
+                        <div className={styles['scroll-container']}>
                             {coverages.map((item: Coverage) => (
                                 <div
                                     key={item.id}
                                     className={cn(
-                                        styles['grid-item'],
+                                        styles['grid-item'],styles.card,
                                         {[styles.selected]: selectedCoverage === item.id}
                                     )}
                                     onClick={() => handleCoverageSelect(item.id)}
@@ -389,12 +417,12 @@ const CakeDesignerForm: FC = () => {
                         <div className={styles['section-title']}>
                             Вы можете дополнительно выбрать украшения для вашего тортика
                         </div>
-                        <div className={styles['options-grid']}>
+                        <div className={styles['scroll-container']}>
                             {decors.map((item: Decor) => (
                                 <div
                                     key={item.id}
                                     className={cn(
-                                        styles['grid-item'],
+                                        styles['grid-item'],styles.card,
                                         {[styles.selected]: selectedDecors.includes(item.id)}
                                     )}
                                     onClick={() => addSelectedDecor(item.id)}
@@ -410,17 +438,17 @@ const CakeDesignerForm: FC = () => {
                                             className={styles['quantity-button']}
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                updateQuantity(item.id, +1);
+                                                updateQuantity(item.id, -1);
                                             }}
-                                        >+</button>
+                                        >-</button>
                                         <span className={styles['quantity-value']}>{quantities[item.id] || 1}</span>
                                         <button
                                             className={styles['quantity-button']}
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                updateQuantity(item.id, -1);
+                                                updateQuantity(item.id, +1);
                                             }}
-                                        >−</button>
+                                        >+</button>
                                     </div>
                                 </div>
                             ))}

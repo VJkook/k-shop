@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+.sidebar {
+    width: 256px;
+    background: #fff;
+    border-right: 1px solid #E5E7EB;
+    padding: 32px 24px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    margin-bottom: 48px;
+}
+
+.logo i {
+    color: #7C3AED;
+    font-size: 1.875rem;
+}
+
+.logo span {
+    margin-left: 8px;
+    font-weight: 600;
+    font-size: 1.125rem;
+    user-select: none;
+}
+
+.nav_link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #4B5563;
+    text-decoration: none;
+    margin-bottom: 20px;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.nav_link:hover {
+    color: #111827;
+}
+
+.nav_link_active {
+    background-color: #7C3AED;
+    color: #fff;
+}

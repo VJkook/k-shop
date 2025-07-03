@@ -13,7 +13,7 @@ const Sidebar: React.FC = () => {
             <nav>
                 <a href="#" className={styles.nav_link}><span>Мой профиль</span></a>
                 <a href="/confectioner-orders" className={`${styles.nav_link} ${styles.nav_link_active}`}><span>Заказы</span></a>
-
+                <a href="/confectioner-recipe" className={styles.nav_link}><span>Рецепты</span></a>
                 <a href="/create-recipe" className={styles.nav_link}><span>Новый рецепт</span></a>
 
 

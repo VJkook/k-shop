@@ -2,7 +2,7 @@
 import React, {useState, useEffect} from "react";
 import styles from './Hero.module.scss'
 import cn from 'classnames'
-import Sidebar from '@/screens/adminOrderDetails/elements/SideBar';
+import Sidebar from '../elements/SideBar';
 import {formatDate, formatDateParts, getDateString} from "@/screens/confectioners/functions/functions";
 import {allOrders, mockConfectioners, weeklyOrders} from "@/screens/confectioners/data/data";
 import ConfectionerCard from "@/screens/confectioners/elements/ConfectionerCard";

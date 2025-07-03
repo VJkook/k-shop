@@ -229,8 +229,13 @@ const Basket: FC = () => {
                     </div>
                     <div className={styles.right}>
                         <div className={styles.summary}>
-                            <div className={styles.address_section}>
+
+
+
+
+                            <div className={styles.formGroup}>
                                 <h3>Адрес доставки</h3>
+
                                 {addresses.length > 0 ? (
                                     <select
                                         value={selectedAddressId || ''}
@@ -248,11 +253,13 @@ const Basket: FC = () => {
                                     <p>У вас нет сохраненных адресов</p>
                                 )}
                             </div>
-
+                            <div className={styles.formGroup}>
                             <div className={styles.delivery_datetime}>
                                 <h3>Дата и время доставки</h3>
+
+
                                 <div className={styles.datetime_fields}>
-                                    <div className={styles.form_group}>
+                                    <div className={styles.formGroup}>
                                         <label>Дата:</label>
                                         <input
                                             type="date"
@@ -262,7 +269,7 @@ const Basket: FC = () => {
                                             required
                                         />
                                     </div>
-                                    <div className={styles.form_group}>
+                                    <div className={styles.formGroup}>
                                         <label>Время:</label>
                                         <input
                                             type="time"
@@ -273,7 +280,7 @@ const Basket: FC = () => {
                                     </div>
                                 </div>
                             </div>
-
+                            </div>
                             <div className={styles.sum}>
                                 <p className={styles.it}>Итого</p>
                                 <p className={styles.price}>{sumPrice} ₽</p>

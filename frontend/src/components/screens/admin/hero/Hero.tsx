@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import Sidebar  from '@/screens/adminOrderDetails/elements/SideBar';
+import Sidebar  from '../element/sidebar';
 import OrdersTable  from '../element/orderCard';
 import  './Hero.module.scss'
 import styles from './Hero.module.scss'

@@ -3,7 +3,7 @@ import styles from './Hero.module.scss';
 import cn from 'classnames';
 import instance, {apiPost} from "@/utils/apiInstance";
 import {router} from "next/client";
-
+import Sidebar from '../elements/SideBar';
 const CreateCake: FC = () => {
     const [formData, setFormData] = useState({
         name: '',
@@ -78,12 +78,13 @@ const CreateCake: FC = () => {
     };
 
     return (
-        <div className={cn(styles.base, 'wrapper')}>
-            <div className={styles.main_container}>
-                <div className={styles.first_box}>
-                    <h1 className={styles.page_title}>Создание нового торта</h1>
+        <div className={styles.container}>
+            <div className={styles.order_page}>
+                    <Sidebar/>
 
+                <section className={styles.margBlock}>
                     <form onSubmit={handleSubmit} className={styles.banner}>
+                        <h1 className={styles.page_title}>Создание нового товара</h1>
                         <div className={styles.order_header}>
                             <h2>Основная информация</h2>
                         </div>
@@ -112,7 +113,7 @@ const CreateCake: FC = () => {
                             <div className={styles.main_details}>
                                 <div className={styles.details}>
                                     <div className={styles.form_group}>
-                                        <label>Название торта</label>
+                                        <label>Название</label>
                                         <input
                                             type="text"
                                             name="name"
@@ -169,13 +170,14 @@ const CreateCake: FC = () => {
                                 className={styles.submit_button}
                                 disabled={isLoading}
                             >
-                                {isLoading ? 'Создание...' : 'Создать торт'}
+                                {isLoading ? 'Создание...' : 'Создать'}
                             </button>
                         </div>
                     </form>
+                </section>
                 </div>
             </div>
-        </div>
+
     );
 };
 
