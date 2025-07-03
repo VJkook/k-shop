@@ -213,7 +213,7 @@ const OrderPage: React.FC<OrderDetailsProps> = ({id}) => {
                                 </div>
                                 <div>
                                     <dt>Total Price</dt>
-                                    <dd>${order?.total_cost.toFixed(2)}</dd>
+                                    <dd>{order?.total_cost.toFixed(2)}</dd>
                                 </div>
                             </dl>
                         </section>
@@ -228,7 +228,7 @@ const OrderPage: React.FC<OrderDetailsProps> = ({id}) => {
                                             <h3>{item.name}</h3>
                                             <p>Quantity: {item.quantity}</p>
                                         </div>
-                                        <span>${item.price.toFixed(2)}</span>
+                                        <span>{item.price.toFixed(2)}</span>
                                     </li>
                                 ))}
                             </ul>
