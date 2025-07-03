@@ -1,0 +1,412 @@
+.wrapper {
+    background-color: white;
+    color: #1f2937;
+    font-family: sans-serif;
+    min-height: 100vh;
+    padding: 1.5rem;
+}
+
+.container {
+    max-width: 720rem;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.section {
+    background-color: #eef2ff;
+    border-radius: 0.375rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.heading {
+    font-weight: 600;
+    color: #1e3a8a;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.label {
+    display: block;
+    font-size: 0.75rem;
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+    color: #1e3a8a;
+}
+
+.input, .textarea, .select {
+    width: 100%;
+    border-radius: 0.375rem;
+    border: 1px solid #c7d2fe;
+    background-color: white;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    resize: none;
+}
+
+.buttonAdd, .buttonDelete {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.375rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    cursor: pointer;
+    border: 1px solid;
+    transition: background 0.2s;
+}
+
+.buttonAdd {
+    color: #6366f1;
+    border-color: #6366f1;
+}
+
+.buttonAdd:hover {
+    background-color: #e0e7ff;
+}
+
+.buttonDelete {
+    color: #f87171;
+    border-color: #f87171;
+}
+
+.buttonDelete:hover {
+    background-color: #dc2626;
+    color: white;
+}
+/* OrderTable.module.scss */
+
+.recipeForm {
+    background-color: white;
+    color: #1f2937;
+    font-family: sans-serif;
+    min-height: 100vh;
+    padding: 1.5rem;
+
+    &__container {
+        max-width: 72rem;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    &__section {
+        background-color: #eef2ff;
+        border-radius: 0.375rem;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    &__title {
+        font-weight: 600;
+        color: #1e3a8a;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.25rem;
+    }
+
+    &__icon {
+        font-size: 1.5rem;
+    }
+
+    &__sectionHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &__sectionTitle {
+        font-weight: 600;
+        color: #1e3a8a;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    &__sectionIcon {
+        font-size: 1rem;
+    }
+
+    &__sectionContent {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    &__label {
+        display: block;
+        font-size: 0.75rem;
+        margin-bottom: 0.25rem;
+        font-weight: 600;
+        color: #1e3a8a;
+    }
+
+    &__required {
+        color: #dc2626; /* красный цвет для звездочки */
+    }
+
+    &__input,
+    &__textarea,
+    &__select {
+        width: 100%;
+        border-radius: 0.375rem;
+        border: 1px solid #c7d2fe;
+        background-color: white;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+        font-family: inherit;
+        color: #1f2937;
+    }
+
+    &__textarea {
+        resize: vertical;
+    }
+
+    &__inputShort {
+        width: 5rem;
+        border-radius: 0.375rem;
+        border: 1px solid #c7d2fe;
+        background-color: white;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+        font-family: inherit;
+        color: #1f2937;
+    }
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .ingredientRow {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: nowrap;
+    }
+
+    .ingredientName {
+        flex-grow: 1;
+        min-width: 0;
+    }
+
+    .ingredientWeight {
+        width: 5rem;
+    }
+
+    .ingredientMeasure {
+        width: 6rem;
+    }
+
+    .buttonRemove {
+        flex-shrink: 0;
+    }
+
+    &__buttonAdd,
+    &__buttonRemove {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 0.375rem;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        cursor: pointer;
+        border: 1px solid;
+        transition: background 0.2s ease;
+        background-color: white;
+    }
+
+    &__buttonAdd {
+        color: #6366f1;
+        border-color: #6366f1;
+
+        &:hover {
+            background-color: #e0e7ff;
+        }
+    }
+
+    &__buttonRemove {
+        color: #f87171;
+        border-color: #f87171;
+
+        &:hover {
+            background-color: #dc2626;
+            color: white;
+        }
+    }
+}
+.recipeForm__stepRow {
+    display: flex;
+    align-items: center; /* Вертикальное выравнивание по центру */
+    gap: 12px; /* Отступы между элементами */
+    margin-bottom: 12px;
+}
+
+.recipeForm__textarea {
+    flex-grow: 1; /* Текстовое поле занимает всё доступное пространство */
+    resize: vertical; /* Можно менять высоту, но не ширину */
+    min-width: 0; /* Чтобы textarea корректно сжималась внутри flex */
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #c7d2fe;
+    font-size: 0.9rem;
+    font-family: inherit;
+    height: 3.5rem; /* Или auto, если хотите */
+}
+
+.image_wrapper {
+    width: 50px; /* фиксированная ширина под превью/иконку */
+    height:35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #c7d2fe;
+    border-radius: 6px;
+    overflow: hidden;
+    background-color: white;
+    cursor: pointer;
+    position: relative;
+}
+
+.img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.upload_area {
+    font-size: 1.5rem;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.upload_input {
+    display: none;
+}
+.recipeForm__buttonRemove {
+    background-color: transparent;
+    border: none;
+    color: #f87171;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 6px 10px;
+    border-radius: 6px;
+
+    transition: opacity 0.2s;
+}
+
+.recipeForm__stepRow:hover .recipeForm__buttonRemove {
+    opacity: 1;             /* Показываем кнопку при наведении на весь шаг */
+    pointer-events: auto;   /* Включаем клики */
+}
+
+.recipeForm__stepRow {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+
+    textarea {
+        flex: 2;
+    }
+}
+
+.timeInput {
+    width: 60px;         /* или любая подходящая ширина */
+    resize: none;        /* запретить изменение размера */
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    font-family: inherit;
+    border-radius: 0.375rem;
+    border: 1px solid #c7d2fe;
+    background-color: white;
+    color: #1f2937;
+    height: auto;        /* высота по содержимому */
+    line-height: 1.2;
+}
+.widght{
+    width: 50px;
+}
+.recipeForm__buttonCreate {
+    margin: 1.5rem auto 0 auto; /* сверху отступ, слева и справа auto — центрирование */
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    background-color: #4f46e5;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    display: block; /* чтобы margin auto работал */
+    max-width: fit-content; /* чтобы кнопка не растягивалась */
+}
+
+.recipeForm__buttonCreate:hover {
+    background-color: #4338ca;
+}
+
+.timeInput {
+    width: 100px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+
+    &Error {
+        border-color: red;
+        background-color: #fff0f0;
+    }
+}
+
+.timeError {
+    color: red;
+    font-size: 12px;
+    margin-top: 4px;
+    white-space: nowrap;
+}
+
+.productSelection {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.productType {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #eee;
+
+    h3 {
+        margin-top: 0;
+        margin-bottom: 10px;
+        font-size: 16px;
+        color: #555;
+    }
+}
+
+.recipeForm__select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    font-size: 14px;
+}

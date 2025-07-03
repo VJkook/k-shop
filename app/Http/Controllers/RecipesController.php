@@ -23,7 +23,7 @@ class RecipesController extends Controller
         $recipes = $this->recipesRepo->all();
         return response()->json($recipes);
     }
-    
+
     /**
      * Show the form for creating a new resource.
      */
@@ -130,6 +130,13 @@ class RecipesController extends Controller
         return response()->json($response);
     }
 
+    public function deleteIngredients(int $id_recipe): JsonResponse
+    {
+        $response = $this->recipesRepo->deleteIngredients($id_recipe);
+
+        return response()->json($response);
+    }
+
     /**
      * Display the specified resource.
      */
@@ -146,9 +153,10 @@ class RecipesController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => ['string'],
-            'price_by_kg' => ['decimal:0,2'],
-            'description' => ['string', 'nullable'],
-            'id_image' => ['integer', 'numeric',],
+            'description' => ['string'],
+            'id_decor' => ['integer', 'numeric',],
+            'id_ready_cake' => ['integer', 'numeric',],
+            'id_filling' => ['integer', 'numeric',],
         ]);
 
         if ($validator->fails()) {
@@ -156,26 +164,35 @@ class RecipesController extends Controller
         }
 
         $attributes = [];
-        if (!is_null($request->name)) {
-            $attributes['name'] = $request->name;
+        if (!is_null($request->get('name'))) {
+            $attributes['name'] = $request->get('name');
         }
-        if (!is_null($request->price_by_kg)) {
-            $attributes['price_by_kg'] = $request->price_by_kg;
+        if (!is_null($request->get('description'))) {
+            $attributes['description'] = $request->get('description');
         }
-        if (!is_null($request->description)) {
-            $attributes['description'] = $request->description;
+        if (!is_null($request->get('id_decor'))) {
+            $attributes['id_decor'] = $request->get('id_decor');
+            $attributes['id_ready_cake'] = null;
+            $attributes['id_filling'] = null;
         }
-        if (!is_null($request->id_image)) {
-            $attributes['id_image'] = $request->id_image;
+        if (!is_null($request->get('id_filling'))) {
+            $attributes['id_filling'] = $request->get('id_filling');
+            $attributes['id_decor'] = null;
+            $attributes['id_ready_cake'] = null;
+        }
+        if (!is_null($request->get('id_ready_cake'))) {
+            $attributes['id_ready_cake'] = $request->get('id_ready_cake');
+            $attributes['id_decor'] = null;
+            $attributes['id_filling'] = null;
         }
 
         if (empty($attributes)) {
-            $fillingResponse = $this->recipesRepo->getById($id);
-            return response()->json($fillingResponse);
+            $recipe = $this->recipesRepo->getById($id);
+            return response()->json($recipe);
         }
 
-        $fillingResponse = $this->recipesRepo->updateById($id, $attributes);
-        return response()->json($fillingResponse);
+        $recipe = $this->recipesRepo->updateById($id, $attributes);
+        return response()->json($recipe);
     }
 
     /**

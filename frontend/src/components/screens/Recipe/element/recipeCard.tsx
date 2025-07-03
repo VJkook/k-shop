@@ -156,7 +156,7 @@ const Recipe: FC<RecipeProps> = ({ id }) => {
                             )}
                         </div>
                         <a
-                            href={`/edit-recipe/${recipe.id}`}
+                            href={`/recipe/${recipe.id}/update`}
                             className={styles["recipe-link"]}
                         >
                             <i className="fas fa-external-link-alt"></i> Редактировать рецепт

@@ -97,6 +97,25 @@ class RecipesRepository
     }
 
     /**
+     * @param int $recipeId
+     * @return RecipeFillingResponse|RecipeDecorResponse|RecipeReadyCakeResponse|null
+     */
+    public function deleteIngredients(
+        int $recipeId
+    ): RecipeFillingResponse|RecipeDecorResponse|RecipeReadyCakeResponse|null
+    {
+        /** @var Recipe $recipe */
+        $recipe = Recipe::query()->find($recipeId);
+        if (is_null($recipe)) {
+            return null;
+        }
+
+        IngredientRecipeRelation::query()->where('id_recipe', '=', $recipeId)->delete();
+
+        return $recipe->toResponse();
+    }
+
+    /**
      * @return RecipeFillingResponse[]|RecipeDecorResponse[]|RecipeReadyCakeResponse[]
      */
     public function all(): array
