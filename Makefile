@@ -146,6 +146,20 @@ insert-ingredients:
 	@$(PSQL_CMD) -c "INSERT INTO public.ingredients (name, measurement) VALUES ('Яйцо', 'Штуки')"
 	@$(PSQL_CMD) -c "INSERT INTO public.ingredients (name, measurement) VALUES ('Изюм', 'Кг')"
 	@$(PSQL_CMD) -c "INSERT INTO public.ingredients (name, measurement) VALUES ('Малина', 'Кг')"
+	@$(PSQL_CMD) -c "INSERT INTO public.ingredients (name, measurement) VALUES ('Клубника', 'Кг')"
+	@$(PSQL_CMD) -c "INSERT INTO public.ingredients (name, measurement) VALUES ('Мука пшеничная', 'Кг')"
+	@$(PSQL_CMD) -c "INSERT INTO public.ingredients (name, measurement) VALUES ('Сахар', 'Кг')"
+	@$(PSQL_CMD) -c "INSERT INTO public.ingredients (name, measurement) VALUES ('Какао-порошок', 'Граммы')"
+	@$(PSQL_CMD) -c "INSERT INTO public.ingredients (name, measurement) VALUES ('Сливочное масло', 'Граммы')"
+	@$(PSQL_CMD) -c "INSERT INTO public.ingredients (name, measurement) VALUES ('Растительное масло', 'Мл')"
+	@$(PSQL_CMD) -c "INSERT INTO public.ingredients (name, measurement) VALUES ('Пахта', 'Мл')"
+	@$(PSQL_CMD) -c "INSERT INTO public.ingredients (name, measurement) VALUES ('Краситель красный пищевой', 'Мл')"
+	@$(PSQL_CMD) -c "INSERT INTO public.ingredients (name, measurement) VALUES ('Уксус', 'Мл')"
+	@$(PSQL_CMD) -c "INSERT INTO public.ingredients (name, measurement) VALUES ('Сода', 'Граммы')"
+	@$(PSQL_CMD) -c "INSERT INTO public.ingredients (name, measurement) VALUES ('Соль', 'Граммы')"
+	@$(PSQL_CMD) -c "INSERT INTO public.ingredients (name, measurement) VALUES ('Ванильный экстракт', 'Мл')"
+	@$(PSQL_CMD) -c "INSERT INTO public.ingredients (name, measurement) VALUES ('Сливочный сыр', 'Граммы')"
+	@$(PSQL_CMD) -c "INSERT INTO public.ingredients (name, measurement) VALUES ('Сахарная пудра', 'Граммы')"
 
 # Описание таблицы users
 describe-users:

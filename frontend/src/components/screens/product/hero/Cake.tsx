@@ -86,7 +86,7 @@ const Cake: FC = (params: { id: number }) => {
                                 <h1>{cake?.name}</h1>
                             </div>
                             <div className={styles.pprice}>
-                                <p className={styles.price}>{cake?.price} ₽/кг</p>
+                                <p className={styles.price}>{cake?.price} ₽/ {cake?.weight} кг</p>
                             </div>
 
                             <div className={styles.pdescription}>

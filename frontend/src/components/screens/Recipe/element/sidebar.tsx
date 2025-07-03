@@ -15,9 +15,6 @@ const Sidebar: React.FC = () => {
 
                 <a href="/confectioner-recipe" className={styles.nav_link}><span>Рецепты</span></a>
                 <a href="/create-recipe" className={styles.nav_link}><span>Новый рецепт</span></a>
-
-
-
             </nav>
         </aside>
     );

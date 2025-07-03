@@ -41,13 +41,27 @@ make_request 'http://localhost:8000/api/recipes/ready-cakes' 'POST' '{
  }'
 
 make_request 'http://localhost:8000/api/recipes/fillings' 'POST' '{
-  "name": "Рецепт приготовления начинки",
-  "description": "Рецепт приготовления вкусной начинки",
+  "name": "Рецепт приготовления начинки красный бархат",
+  "description": "Рецепт приготовления начинки красный бархат",
   "id_filling": 1
 }'
 
+make_request 'http://localhost:8000/api/recipes/fillings' 'POST' '{
+  "name": "Рецепт приготовления начинки Сниккерса",
+  "description": "Рецепт приготовления начинки Сниккерса",
+  "id_filling": 3
+}'
+
 make_request 'http://localhost:8000/api/recipes/decors' 'POST' '{
-  "name": "Рецепт приготовления декора",
-  "description": "Рецепт приготовления красивого и вкусного декора",
+  "name": "Рецепт приготовления декора Безе на палочке",
+  "description": "Рецепт приготовления декора Безе на палочке",
   "id_decor": 1
 }'
+
+make_request 'http://localhost:8000/api/recipes/decors' 'POST' '{
+  "name": "Рецепт приготовления декора Цветы из крема",
+  "description": "Рецепт приготовления декора Цветы из крема",
+  "id_decor": 2
+}'
+
+
