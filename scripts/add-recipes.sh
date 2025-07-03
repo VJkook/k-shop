@@ -34,17 +34,17 @@ make_request() {
 }
 
 echo "Создание рецептов"
-make_request 'http://localhost:8000/api/recipes/ready-cakes' 'POST' '{
-     "name": "Рецепт приготовление вкусного тортика",
-     "description": "Рецепт для приготовления вкусного тортика",
-     "id_ready_cake": 1
- }'
+#make_request 'http://localhost:8000/api/recipes/ready-cakes' 'POST' '{
+#     "name": "Рецепт приготовление вкусного тортика",
+#     "description": "Рецепт для приготовления вкусного тортика",
+#     "id_ready_cake": 1
+# }'
 
-make_request 'http://localhost:8000/api/recipes/fillings' 'POST' '{
-  "name": "Рецепт приготовления начинки красный бархат",
-  "description": "Рецепт приготовления начинки красный бархат",
-  "id_filling": 1
-}'
+#make_request 'http://localhost:8000/api/recipes/fillings' 'POST' '{
+#  "name": "Рецепт приготовления начинки красный бархат",
+#  "description": "Рецепт приготовления начинки красный бархат",
+#  "id_filling": 1
+#}'
 
 make_request 'http://localhost:8000/api/recipes/fillings' 'POST' '{
   "name": "Рецепт приготовления начинки Сниккерса",
