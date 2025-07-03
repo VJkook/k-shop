@@ -38,10 +38,12 @@ up:
 	@echo FRONT_URL: $(FRONT_URL)
 
 down:
+	#Погасить frontend
 	@docker compose exec app killall -9 node
 	@docker compose down
 
 restart:
+	#Погасить frontend
 	@docker compose down
 	@make up
 
