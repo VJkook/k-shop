@@ -20,10 +20,10 @@ class RecipesController extends Controller
      */
     public function index(): JsonResponse
     {
-        $fillings = $this->recipesRepo->all();
-        return response()->json($fillings);
+        $recipes = $this->recipesRepo->all();
+        return response()->json($recipes);
     }
-
+    
     /**
      * Show the form for creating a new resource.
      */

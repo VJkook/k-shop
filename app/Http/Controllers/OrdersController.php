@@ -192,15 +192,34 @@ class OrdersController extends Controller
         return response()->json($response);
     }
 
-    public function showForConfectioner(): JsonResponse
+    public function showForConfectioner(Request $request): JsonResponse
     {
+        $validator = Validator::make($request->all(), [
+            'id_confectioner' => ['integer', 'numeric'],
+            'work_date' => ['date_format:' . BasicDate::YEAR_MONTH_DAY_FORMAT],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->getMessages(), 400);
+        }
+
         /** @var User $user */
         $user = Auth::user();
-        if (!$user->isConfectioner()) {
+        $confectionerId = null;
+        if ($user->isConfectioner()) {
+            $confectionerId = $user->id;
+        } elseif ($user->isAdmin() && !is_null($request->get('id_confectioner'))) {
+            $confectionerId = $request->get('id_confectioner');
+        } else {
             return response()->json(status: 403);
         }
 
-        $response = $this->orderRepo->getByConfectionerId($user->id);
+        $workDate = null;
+        if (!is_null($request->get('work_date'))) {
+            $workDate = BasicDate::fromYearMonthDayString($request->get('work_date'));
+        }
+
+        $response = $this->orderRepo->getByConfectionerId($confectionerId, $workDate);
         return response()->json($response);
     }
 

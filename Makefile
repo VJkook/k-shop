@@ -75,6 +75,7 @@ refill-db:
 	@docker compose exec app php artisan db:wipe
 	@docker compose exec app php artisan migrate
 	@make fill-db
+	@echo "\n"
 	@echo "Пересборка завершена"
 
 fill-db:
@@ -88,6 +89,7 @@ fill-db:
 	@make insert-address
 	@make fill-by-api
 	@make insert-ingredients
+	@./scripts/add-recipes.sh
 
 register-users:
 	@echo "Заполнение по api:----------------------------------------------------------"

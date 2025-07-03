@@ -116,9 +116,7 @@ const OrdersTable: FC<OrdersTableProps> = ({orders, onMarkDone}) => {
 
                         <th>Время приготовления</th>
                         <th>Статус</th>
-
-
-                        <th>Коммент.</th>
+                        
                         {onMarkDone && <th>Готово</th>}
                         <th>Детали</th>
                     </tr>
@@ -128,19 +126,17 @@ const OrdersTable: FC<OrdersTableProps> = ({orders, onMarkDone}) => {
                         <tr key={o.id}>
                             <td>#{o.id}</td>
                             <td>
-                                {new Date(o.date).toLocaleDateString('ru-RU', {
+                                {new Date(o.work_date).toLocaleDateString('ru-RU', {
                                     day: 'numeric',
                                     month: 'short',
                                     year: 'numeric'
                                 })}
                             </td>
 
-                            <td>{o.prepTime}</td>
+                            <td>{o.work_time}</td>
                             <td><span className={`${styles.status} ${styles[o.status.color]}`}>{o.status.name}</span>
                             </td>
-
-
-                            <td>{o.comment || '-'}</td>
+                            
                             {onMarkDone && (
                                 <td>
                                     {o.status === 'In Production' && (

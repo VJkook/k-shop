@@ -49,6 +49,11 @@ class ReadyCake extends Model
         return $this->hasOne(Product::class, 'id_ready_cake', 'id');
     }
 
+    public function recipe(): HasOne
+    {
+        return $this->hasOne(Recipe::class, 'id_ready_cake', 'id');
+    }
+    
     public function toResponse(): ReadyCakeResponse
     {
         /** @var Product $product */

@@ -14,6 +14,7 @@ const OrderPage: React.FC<OrderDetailsProps> = ({ id }) => {
     const [productStatus, setProductStatus] = useState<Record<number, boolean>>({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [expandedProducts, setExpandedProducts] = useState<Record<number, boolean>>({});
 
     // Состояния для работы со статусами
     const [statuses, setStatuses] = useState<OrderStatus[]>([]);
@@ -46,6 +47,13 @@ const OrderPage: React.FC<OrderDetailsProps> = ({ id }) => {
                 });
 
                 setProductStatus(initialStatus);
+
+                // Инициализируем состояние раскрытия деталей
+                const initialExpanded: Record<number, boolean> = {};
+                orderData.products.forEach((product: any) => {
+                    initialExpanded[product.id] = false;
+                });
+                setExpandedProducts(initialExpanded);
             }
         } catch (err) {
             console.error('Ошибка при загрузке заказа:', err);
@@ -97,6 +105,14 @@ const OrderPage: React.FC<OrderDetailsProps> = ({ id }) => {
 
     const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTempDate(e.target.value);
+    };
+
+    // Переключение видимости деталей продукта
+    const toggleProductDetails = (productId: number) => {
+        setExpandedProducts(prev => ({
+            ...prev,
+            [productId]: !prev[productId]
+        }));
     };
 
     // Проверяем, все ли продукты выполнены
@@ -237,10 +253,6 @@ const OrderPage: React.FC<OrderDetailsProps> = ({ id }) => {
                                     )}
                                 </div>
                                 <div>
-                                    <dt>Комментарий клиента</dt>
-                                    <dd className={styles.notes}>{order?.comment || '—'}</dd>
-                                </div>
-                                <div>
                                     <dt>Статус заказа</dt>
                                     <dd className={styles.notes}>
                                         <span style={{
@@ -277,12 +289,86 @@ const OrderPage: React.FC<OrderDetailsProps> = ({ id }) => {
                                                 {item.name} — {item.quantity} шт.
                                             </span>
                                         </label>
-                                        <Link href={'/recipe'}>
-                                            <button className={styles.btn_small}>Рецепт</button>
-                                        </Link>
+
+                                        {/* Для готовых тортов */}
+                                        {item.id_recipe ? (
+                                            <Link href={`/recipe/${item.id_recipe}`}>
+                                                <button className={styles.btn_small}>Рецепт</button>
+                                            </Link>
+                                        ) : (
+                                            /* Для сборных тортов */
+                                            <button
+                                                className={styles.btn_small}
+                                                onClick={() => toggleProductDetails(item.id)}
+                                            >
+                                                {expandedProducts[item.id] ? 'Скрыть детали' : 'Показать детали'}
+                                            </button>
+                                        )}
                                     </li>
                                 ))}
                             </ul>
+
+                            {/* Детали для сборных тортов */}
+                            {order?.products.map((item) => (
+                                expandedProducts[item.id] && item.details && (
+                                    <div key={`details-${item.id}`} className={styles.product_details}>
+                                        <h3>Детали продукта: {item.name}</h3>
+
+                                        {/* Ярусы */}
+                                        {item.details.tiers && item.details.tiers.length > 0 && (
+                                            <div className={styles.details_section}>
+                                                <h4>Ярусы:</h4>
+                                                <ul>
+                                                    {item.details.tiers.map((tier, tierIndex) => (
+                                                        <li key={`tier-${tier.id}-${tierIndex}`}>
+                                                            <div className={styles.detail_item}>
+                                                                <span>{tier.filling.name} ({tier.weight} кг)</span>
+                                                                {tier.filling.id_recipe && (
+                                                                    <Link href={`/recipe/${tier.filling.id_recipe}`}>
+                                                                        <button className={styles.btn_small}>Рецепт</button>
+                                                                    </Link>
+                                                                )}
+                                                            </div>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )}
+
+                                        {/* Декоры */}
+                                        {item.details.decors && item.details.decors.length > 0 && (
+                                            <div className={styles.details_section}>
+                                                <h4>Декоры:</h4>
+                                                <ul>
+                                                    {item.details.decors.map((decor, decorIndex) => (
+                                                        <li key={`decor-${decor.id}-${decorIndex}`}>
+                                                            <div className={styles.detail_item}>
+                                                                <span>{decor.name}</span>
+                                                                {decor.id_recipe && (
+                                                                    <Link href={`/recipe/${decor.id_recipe}`}>
+                                                                        <button className={styles.btn_small}>Рецепт</button>
+                                                                    </Link>
+                                                                )}
+                                                            </div>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )}
+
+                                        {/* Покрытие */}
+                                        {item.details.coverage && (
+                                            <div className={styles.details_section}>
+                                                <h4>Покрытие:</h4>
+                                                <div className={styles.detail_item}>
+                                                    <span>{item.details.coverage.name}</span>
+                                                    <button className={styles.btn_small}>Рецепт</button>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                )
+                            ))}
                         </section>
 
                         <section className={styles.card}>

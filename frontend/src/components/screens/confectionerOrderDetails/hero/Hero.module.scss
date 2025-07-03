@@ -507,3 +507,40 @@
     outline: 2px solid #c7d2fe;
     outline-offset: 2px;
 }
+
+.product_details {
+    margin-top: 15px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+
+.details_section {
+    margin-bottom: 15px;
+
+    h4 {
+        margin-bottom: 8px;
+        font-size: 16px;
+        color: #555;
+    }
+}
+
+.detail_item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}

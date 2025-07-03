@@ -13,6 +13,7 @@ class OrderOrBasketItemResponse
      * @param int $id_product
      * @param string|null $image
      * @param DetailsResponse|null $details
+     * @param int|null $id_recipe
      */
     public function __construct(
         public readonly int         $id,
@@ -22,7 +23,8 @@ class OrderOrBasketItemResponse
         public readonly int         $count,
         public readonly int         $id_product,
         public string|null          $image = '',
-        public DetailsResponse|null $details = null
+        public DetailsResponse|null $details = null,
+        public readonly int|null    $id_recipe = null,
     )
     {
     }

@@ -44,12 +44,17 @@ class Filling extends Model
     {
         /** @var Image $image */
         $image = $this->image()->first();
+        /** @var Recipe $recipe */
+        $recipe = $this->recipe()->first();
+
+        $recipeId = $recipe?->id;
         return new FillingResponse(
-          $this->id,
-          $this->name,
-          $this->description,
-          $this->price_by_kg,
-          $image->toResponse(),
+            $this->id,
+            $this->name,
+            $this->description,
+            $this->price_by_kg,
+            $image->toResponse(),
+            $recipeId
         );
     }
 }

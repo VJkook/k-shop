@@ -2,8 +2,6 @@
 
 namespace App\Models\Responses;
 
-use App\Models\Decor;
-
 class DecorResponse
 {
     public function __construct(
@@ -12,6 +10,7 @@ class DecorResponse
         public string|null        $description,
         public float              $price,
         public ImageResponse|null $image = null,
+        public int|null           $id_recipe = null
     )
     {
     }

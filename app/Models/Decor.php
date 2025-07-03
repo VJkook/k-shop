@@ -44,12 +44,18 @@ class Decor extends Model
     {
         /** @var Image $image */
         $image = $this->image()->first();
+
+        /** @var Recipe $recipe */
+        $recipe = $this->recipe()->first();
+
+        $recipeId = $recipe?->id;
         return new DecorResponse(
             $this->id,
             $this->name,
             $this->description,
             $this->price,
             $image->toResponse(),
+            $recipeId
         );
     }
 }

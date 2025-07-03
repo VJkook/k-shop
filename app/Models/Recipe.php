@@ -36,7 +36,8 @@ class Recipe extends Model
         'id_technological_map',
     ];
 
-    protected $table = 'recipes';
+    public const string TABLE_NAME = 'recipes';
+    protected $table = self::TABLE_NAME;
 
     public $timestamps = false;
 

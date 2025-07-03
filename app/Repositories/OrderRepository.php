@@ -17,6 +17,7 @@ use App\Models\PaymentStatus;
 use App\Models\Product;
 use App\Models\ProductOrderRelation;
 use App\Models\ReadyCake;
+use App\Models\Recipe;
 use App\Models\Responses\DetailsResponse;
 use App\Models\Responses\OrderOrBasketItemResponse;
 use App\Models\Responses\CakeDesignerDecorResponse;
@@ -99,15 +100,22 @@ class OrderRepository
 
     /**
      * @param int $confectionerId
+     * @param BasicDate|null $workDate
      * @return OrderResponse[]
      */
-    public function getByConfectionerId(int $confectionerId): array
+    public function getByConfectionerId(int $confectionerId, ?BasicDate $workDate = null): array
     {
         /** @var Order[] $orders */
-        $orders = Order::query()
+        $builder = Order::query()
             ->where('id_confectioner', '=', $confectionerId)
-            ->orderBy('registration_date', 'desc')
-            ->get();
+            ->orderBy('registration_date', 'desc');
+
+        if (!is_null($workDate)) {
+            $builder->where('work_date', '=', $workDate->toDateString());
+        }
+
+        $orders = $builder->get();
+
         $response = [];
         foreach ($orders as $order) {
             $response[] = $this->buildResponse($order);
@@ -195,6 +203,7 @@ class OrderRepository
             $imageUrl = null;
             /** @var DetailsResponse|null $detailResponse */
             $detailResponse = null;
+            $recipeId = null;
             if (!is_null($product->id_cake_designer)) {
                 /** @var CakeDesignerDecorResponse[] $decorResponses */
                 $decorResponses = [];
@@ -253,6 +262,12 @@ class OrderRepository
                 if (!is_null($image)) {
                     $imageUrl = $image->getUrl();
                 }
+                
+                /** @var Recipe $recipe */
+                $recipe = $readyCake->recipe()->first();
+                if (!is_null($recipe)) {
+                    $recipeId = $recipe->id;
+                }
             }
 
             /** @var ProductOrderRelation $productOrderRelation */
@@ -270,7 +285,8 @@ class OrderRepository
                 $count,
                 $product->id,
                 $imageUrl,
-                $detailResponse
+                $detailResponse,
+                $recipeId
             );
         }
 
