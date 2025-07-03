@@ -4,7 +4,7 @@ import styles from './Hero.module.scss';
 import { UserRole } from '../../../../models/responses/User';
 import { apiGet } from '@/utils/apiInstance';
 import { Order } from '../../../../models/responses/Order';
-import RecipeCard from "@/screens/Recipe/element/recipeCard";
+import UpdateRecipe from "@/screens/Recipe/element/updateRecipe";
 
 
 
@@ -18,7 +18,7 @@ const OrdersPage: React.FC = ({ id }) => {
     return (
         <div className={styles.app_container}>
             <Sidebar />
-                    <RecipeCard id={id} />
+                    <UpdateRecipe id={id} />
 
         </div>
     );

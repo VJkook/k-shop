@@ -184,3 +184,166 @@
         }
     }
 }
+
+// Добавьте в существующие стили
+.fillingBadge {
+    background-color: #e0f7fa;
+    color: #00796b;
+    border-radius: 12px;
+    padding: 2px 8px;
+    margin-left: 10px;
+    font-size: 0.8em;
+}
+
+.cookingTime {
+    margin-left: auto;
+    font-size: 0.9em;
+    color: #666;
+    font-weight: normal;
+}
+
+.stepTime {
+    font-size: 0.85em;
+    color: #666;
+    margin-top: 5px;
+    font-style: italic;
+}
+
+.error {
+    color: #d32f2f;
+    font-weight: bold;
+}
+
+/* Стили для изображений и модального окна */
+.imageWrapper {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: transform 0.2s;
+
+    &:hover {
+        transform: scale(1.05);
+    }
+
+    &:hover .zoomHint {
+        opacity: 1;
+    }
+}
+
+.stepImage {
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 4px;
+    object-fit: cover;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.zoomHint {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 5px;
+    border-radius: 0 0 0 4px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+    font-size: 0.8em;
+}
+
+/* Модальное окно для изображения */
+.imageModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: zoom-out;
+}
+
+.modalContent {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.enlargedImage {
+    max-width: 80vw;
+    max-height: 80vh;
+    display: block;
+    margin: 0 auto;
+}
+
+.imageCaption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 10px;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.closeButton {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background 0.2s;
+
+    &:hover {
+        background: rgba(0, 0, 0, 0.8);
+    }
+}
+
+/* Остальные стили (уже существующие) */
+.fillingBadge {
+    background-color: #e0f7fa;
+    color: #00796b;
+    border-radius: 12px;
+    padding: 2px 8px;
+    margin-left: 10px;
+    font-size: 0.8em;
+}
+
+.cookingTime {
+    margin-left: auto;
+    font-size: 0.9em;
+    color: #666;
+    font-weight: normal;
+}
+
+.stepTime {
+    font-size: 0.85em;
+    color: #666;
+    margin-top: 5px;
+    font-style: italic;
+}
+
+.error {
+    color: #d32f2f;
+    font-weight: bold;
+}

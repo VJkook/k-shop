@@ -42,7 +42,7 @@ class TechnologicalMap extends Model
         );
 
         /** @var CookingStep[] $steps */
-        $steps = $this->steps()->get();
+        $steps = $this->steps()->orderBy('step_number')->get();
         $cookingStepsResponses = [];
         foreach ($steps as $step) {
             $cookingStepsResponses[] = $step->toResponse();

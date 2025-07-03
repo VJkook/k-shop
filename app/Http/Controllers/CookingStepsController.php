@@ -19,8 +19,14 @@ class CookingStepsController extends Controller
      */
     public function index(): JsonResponse
     {
-        $fillings = $this->cookingStepsRepo->all();
-        return response()->json($fillings);
+        $steps = $this->cookingStepsRepo->all();
+        return response()->json($steps);
+    }
+
+    public function byMapId(int $mapId): JsonResponse
+    {
+        $steps = $this->cookingStepsRepo->byMapId($mapId);
+        return response()->json($steps);
     }
 
     /**
@@ -54,7 +60,7 @@ class CookingStepsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(int $id): JsonResponse
+    public function show(int $technologicalMapId, int $id): JsonResponse
     {
         $response = $this->cookingStepsRepo->getById($id);
         return response()->json($response);
@@ -63,13 +69,13 @@ class CookingStepsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, int $id): JsonResponse
+    public function update(Request $request, int $technologicalMapId, int $id): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'name' => ['string'],
-            'price' => ['decimal:0,2'],
-            'description' => ['string', 'nullable'],
-            'id_image' => ['integer', 'numeric',],
+            'description' => ['string',],
+            'step_time' => ['regex:/\d+:\d+:\d+/',],
+            'id_image' => ['integer', 'numeric', 'nullable'],
+            'step_number' => ['integer', 'numeric',],
         ]);
 
         if ($validator->fails()) {
@@ -77,26 +83,26 @@ class CookingStepsController extends Controller
         }
 
         $attributes = [];
-        if (!is_null($request->name)) {
-            $attributes['name'] = $request->name;
+        if (!is_null($request->get('description'))) {
+            $attributes['description'] = $request->get('description');
         }
-        if (!is_null($request->price)) {
-            $attributes['price'] = $request->price;
+        if (!is_null($request->get('step_time'))) {
+            $attributes['step_time'] = $request->get('step_time');
         }
-        if (!is_null($request->description)) {
-            $attributes['description'] = $request->description;
+        if (!is_null($request->get('id_image'))) {
+            $attributes['id_image'] = $request->get('id_image');
         }
-        if (!is_null($request->id_image)) {
-            $attributes['id_image'] = $request->id_image;
+        if (!is_null($request->get('step_number'))) {
+            $attributes['step_number'] = $request->get('step_number');
         }
 
         if (empty($attributes)) {
-            $fillingResponse = $this->cookingStepsRepo->getById($id);
-            return response()->json($fillingResponse);
+            $step = $this->cookingStepsRepo->getById($id);
+            return response()->json($step);
         }
 
-        $fillingResponse = $this->cookingStepsRepo->updateById($id, $attributes);
-        return response()->json($fillingResponse);
+        $step = $this->cookingStepsRepo->updateById($id, $attributes);
+        return response()->json($step);
     }
 
     /**

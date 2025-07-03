@@ -54,6 +54,22 @@ class CookingStepsRepository
         return $result;
     }
 
+    public function byMapId(int $mapId): array
+    {
+        $result = [];
+
+        /** @var TechnologicalMap $technologicalMap */
+        $technologicalMap = TechnologicalMap::query()->find($mapId);
+        $cookingSteps = $technologicalMap->steps()->orderBy('step_number')->get();
+        /** @var CookingStep $cookingStep */
+        foreach ($cookingSteps as $cookingStep) {
+            $response = $cookingStep->toResponse();
+            $result[] = $response;
+        }
+
+        return $result;
+    }
+
     public function getById(int $id): CookingStepResponse
     {
         /** @var CookingStep $cookingStep */
@@ -63,9 +79,17 @@ class CookingStepsRepository
 
     public function updateById(int $id, array $attributes): CookingStepResponse
     {
-        /** @var CookingStep $cookingStep */
-        $cookingStep = CookingStep::query()->find($id);
-        $cookingStep->update($attributes);
+        DB::transaction(function () use ($id, $attributes) {
+            /** @var CookingStep $cookingStep */
+            $cookingStep = CookingStep::query()->find($id);
+            $cookingStep->update($attributes);
+
+            /** @var TechnologicalMap $technologicalMap */
+            $technologicalMap = $cookingStep->technologicalMap()->first();
+            $technologicalMapRepo = new TechnologicalMapsRepository();
+            $technologicalMapRepo->updateCookingTime($technologicalMap->id);
+        });
+
         return $this->getById($id);
     }
 
