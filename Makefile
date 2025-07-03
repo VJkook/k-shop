@@ -38,6 +38,7 @@ up:
 	@echo FRONT_URL: $(FRONT_URL)
 
 down:
+	@docker compose exec app killall -9 node
 	@docker compose down
 
 restart:
@@ -45,6 +46,7 @@ restart:
 	@make up
 
 stop:
+	@docker compose exec app killall -9 node
 	@docker compose stop
 
 help:
