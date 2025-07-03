@@ -17,56 +17,85 @@ interface Step {
     imageId?: number | null;
 }
 
-interface ReadyCake {
+interface Product {
     id: number;
     name: string;
-    price: number;
+    price?: number;
 }
-
-// Функция форматирования ввода времени
-const formatTimeInput = (value: string) => {
-    const digits = value.replace(/\D/g, '');
-    const limited = digits.slice(0, 6);
-
-    let formatted = '';
-    for (let i = 0; i < limited.length; i++) {
-        if (i === 2 || i === 4) formatted += ':';
-        formatted += limited[i];
-    }
-
-    return formatted;
-};
-
-// Проверка валидности времени
-const isValidTime = (time: string) => {
-    const timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/;
-    return timeRegex.test(time);
-};
 
 const CreateRecipe: FC = () => {
     const [recipeName, setRecipeName] = useState('');
     const [description, setDescription] = useState('');
-    const [selectedCake, setSelectedCake] = useState<number | null>(null);
-    const [readyCakes, setReadyCakes] = useState<ReadyCake[]>([]);
-    const [allIngredients, setAllIngredients] = useState<any[]>([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [allIngredients, setAllIngredients] = useState<any[]>([]);
 
+
+    // Продукты для рецептов
+    const [readyCakes, setReadyCakes] = useState<Product[]>([]);
+    const [fillings, setFillings] = useState<Product[]>([]);
+    const [decors, setDecors] = useState<Product[]>([]);
+    const [coverages, setCoverages] = useState<Product[]>([]);
+
+    // Выбранные продукты
+    const [selectedReadyCake, setSelectedReadyCake] = useState<number | null>(null);
+    const [selectedFilling, setSelectedFilling] = useState<number | null>(null);
+    const [selectedDecor, setSelectedDecor] = useState<number | null>(null);
+    const [selectedCoverage, setSelectedCoverage] = useState<number | null>(null);
+
+    // Ингредиенты и шаги
     const [ingredients, setIngredients] = useState<Ingredient[]>([
         { id: null, name: '', quantity: '', measurement: '' }
     ]);
-
     const [steps, setSteps] = useState<Step[]>([
         { text: '', time: '', imageFile: null, preview: null, imageId: null }
     ]);
 
-    // Загрузка товаров и ингредиентов
+    // Функция форматирования ввода времени
+    const formatTimeInput = (value: string) => {
+        const digits = value.replace(/\D/g, '');
+        const limited = digits.slice(0, 6);
+
+        let formatted = '';
+        for (let i = 0; i < limited.length; i++) {
+            if (i === 2 || i === 4) formatted += ':';
+            formatted += limited[i];
+        }
+
+        return formatted;
+    };
+
+    // Проверка валидности времени
+    const isValidTime = (time: string) => {
+        const timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/;
+        return timeRegex.test(time);
+    };
+
+    // Загрузка продуктов для рецептов
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Загрузка товаров
+                // Загрузка готовых тортов
                 const cakesResponse = await apiGet('/api/ready-cakes');
                 if (cakesResponse.data) {
                     setReadyCakes(cakesResponse.data);
+                }
+
+                // Загрузка начинок
+                const fillingsResponse = await apiGet('/api/fillings');
+                if (fillingsResponse.data) {
+                    setFillings(fillingsResponse.data);
+                }
+
+                // Загрузка декоров
+                const decorsResponse = await apiGet('/api/decors');
+                if (decorsResponse.data) {
+                    setDecors(decorsResponse.data);
+                }
+
+                // Загрузка покрытий
+                const coveragesResponse = await apiGet('/api/coverages');
+                if (coveragesResponse.data) {
+                    setCoverages(coveragesResponse.data);
                 }
 
                 // Загрузка ингредиентов
@@ -187,10 +216,25 @@ const CreateRecipe: FC = () => {
         }
     };
 
+    // Сброс выбора при изменении типа продукта
+    const resetProductSelection = (exclude: string) => {
+        if (exclude !== 'cake') setSelectedReadyCake(null);
+        if (exclude !== 'filling') setSelectedFilling(null);
+        if (exclude !== 'decor') setSelectedDecor(null);
+        if (exclude !== 'coverage') setSelectedCoverage(null);
+    };
+
     // Отправка формы
     const handleSubmit = async () => {
-        if (!selectedCake) {
-            alert('Выберите товар!');
+        // Проверка выбора продукта
+        const productType =
+            selectedReadyCake ? 'ready-cake' :
+                selectedFilling ? 'filling' :
+                    selectedDecor ? 'decor' :
+                        null;
+
+        if (!productType) {
+            alert('Выберите тип продукта для рецепта!');
             return;
         }
 
@@ -225,17 +269,43 @@ const CreateRecipe: FC = () => {
             }
 
             // 2. Создаем рецепт
-            const recipeResponse = await apiPost('/api/recipes/ready-cakes', {
-                name: recipeName,
-                description: description,
-                id_ready_cake: selectedCake
-            });
+            let recipeResponse;
+            let recipeId;
+
+            switch (productType) {
+                case 'ready-cake':
+                    recipeResponse = await apiPost('/api/recipes/ready-cakes', {
+                        name: recipeName,
+                        description: description,
+                        id_ready_cake: selectedReadyCake
+                    });
+                    break;
+
+                case 'filling':
+                    recipeResponse = await apiPost('/api/recipes/fillings', {
+                        name: recipeName,
+                        description: description,
+                        id_filling: selectedFilling
+                    });
+                    break;
+
+                case 'decor':
+                    recipeResponse = await apiPost('/api/recipes/decors', {
+                        name: recipeName,
+                        description: description,
+                        id_decor: selectedDecor
+                    });
+                    break;
+
+                default:
+                    throw new Error('Неизвестный тип продукта');
+            }
 
             if (!recipeResponse.data || !recipeResponse.data.id) {
                 throw new Error('Не удалось создать рецепт');
             }
 
-            const recipeId = recipeResponse.data.id;
+            recipeId = recipeResponse.data.id;
 
             // 3. Создаем технологическую карту
             const mapResponse = await apiPost('/api/technological-maps', {
@@ -288,6 +358,13 @@ const CreateRecipe: FC = () => {
         }
     };
 
+    // Проверка, выбран ли хоть один продукт
+    const isProductSelected =
+        selectedReadyCake !== null ||
+        selectedFilling !== null ||
+        selectedDecor !== null ||
+        selectedCoverage !== null;
+
     return (
         <div className={styles.recipeForm}>
             <div className={styles.recipeForm__container}>
@@ -319,20 +396,86 @@ const CreateRecipe: FC = () => {
                                 disabled={isSubmitting}
                             />
                         </div>
-                        <div>
-                            <label className={styles.recipeForm__label}>
-                                Товар <span className={styles.recipeForm__required}>*</span>
-                            </label>
+                    </div>
+                </section>
+
+                <section className={styles.recipeForm__section}>
+                    <h2 className={styles.recipeForm__sectionTitle}>Выберите тип продукта</h2>
+                    <div className={styles.productSelection}>
+                        <div className={styles.productType}>
+                            <h3>Готовые торты</h3>
                             <select
                                 className={styles.recipeForm__select}
-                                value={selectedCake || ''}
-                                onChange={(e) => setSelectedCake(Number(e.target.value))}
+                                value={selectedReadyCake || ''}
+                                onChange={(e) => {
+                                    setSelectedReadyCake(Number(e.target.value));
+                                    resetProductSelection('cake');
+                                }}
                                 disabled={isSubmitting}
                             >
-                                <option value="">Выберите товар</option>
+                                <option value="">Выберите торт</option>
                                 {readyCakes.map(cake => (
                                     <option key={cake.id} value={cake.id}>
-                                        {cake.name} - {cake.price} руб.
+                                        {cake.name} {cake.price && `- ${cake.price} руб.`}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className={styles.productType}>
+                            <h3>Начинки</h3>
+                            <select
+                                className={styles.recipeForm__select}
+                                value={selectedFilling || ''}
+                                onChange={(e) => {
+                                    setSelectedFilling(Number(e.target.value));
+                                    resetProductSelection('filling');
+                                }}
+                                disabled={isSubmitting}
+                            >
+                                <option value="">Выберите начинку</option>
+                                {fillings.map(filling => (
+                                    <option key={filling.id} value={filling.id}>
+                                        {filling.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className={styles.productType}>
+                            <h3>Декоры</h3>
+                            <select
+                                className={styles.recipeForm__select}
+                                value={selectedDecor || ''}
+                                onChange={(e) => {
+                                    setSelectedDecor(Number(e.target.value));
+                                    resetProductSelection('decor');
+                                }}
+                                disabled={isSubmitting}
+                            >
+                                <option value="">Выберите декор</option>
+                                {decors.map(decor => (
+                                    <option key={decor.id} value={decor.id}>
+                                        {decor.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className={styles.productType}>
+                            <h3>Покрытия</h3>
+                            <select
+                                className={styles.recipeForm__select}
+                                value={selectedCoverage || ''}
+                                onChange={(e) => {
+                                    setSelectedCoverage(Number(e.target.value));
+                                    resetProductSelection('coverage');
+                                }}
+                            >
+                                <option value="">Выберите покрытие</option>
+                                {coverages.map(coverage => (
+                                    <option key={coverage.id} value={coverage.id}>
+                                        {coverage.name}
                                     </option>
                                 ))}
                             </select>
@@ -379,9 +522,6 @@ const CreateRecipe: FC = () => {
                                     step="0.01"
                                     disabled={isSubmitting}
                                 />
-                                <span className={styles.measurement}>
-                                    {ingredient.measurement}
-                                </span>
                                 <button
                                     type="button"
                                     className={styles.recipeForm__buttonRemove}
@@ -495,7 +635,7 @@ const CreateRecipe: FC = () => {
                     type="button"
                     onClick={handleSubmit}
                     className={styles.recipeForm__buttonCreate}
-                    disabled={!selectedCake || !recipeName || isSubmitting}
+                    disabled={!isProductSelected || !recipeName || isSubmitting}
                 >
                     {isSubmitting ? 'Создание...' : 'Создать рецепт'}
                 </button>
