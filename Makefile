@@ -109,13 +109,12 @@ insert-roles:
 insert-users:
 	@echo "Заполнение таблицы users:"
 	@$(PSQL_CMD) -c "INSERT INTO public.users (name, email, email_verified_at, password, remember_token, created_at, updated_at, id_role) VALUES ('marina', 'test@test.ru', null, '123', null, null, null, 1)"
-	@#$(PSQL_CMD) -c "INSERT INTO public.users (name, email, email_verified_at, password, remember_token, created_at, updated_at, id_role) VALUES ('Вася', 'test2@test.ru', null, '123', null, null, null, 3)"
-	@$(PSQL_CMD) -c "INSERT INTO public.users (name, email, email_verified_at, password, remember_token, created_at, updated_at, id_role) VALUES ('Петя', 'test3@test.ru', null, '123', null, null, null, 3)"
-	@$(PSQL_CMD) -c "INSERT INTO public.users (name, email, email_verified_at, password, remember_token, created_at, updated_at, id_role) VALUES ('Коля', 'test4@test.ru', null, '123', null, null, null, 3)"
 
 update-users:
 	@$(PSQL_CMD) -c "UPDATE public.users SET id_role = 1::bigint WHERE name = 'admin'"
-	@$(PSQL_CMD) -c "UPDATE public.users SET id_role = 3::bigint WHERE name = 'Вася'"
+	@$(PSQL_CMD) -c "UPDATE public.users SET id_role = 3::bigint WHERE email = 'confectioner@gmail.com'"
+	@$(PSQL_CMD) -c "UPDATE public.users SET id_role = 3::bigint WHERE email = 'confectioner2@gmail.com'"
+	@$(PSQL_CMD) -c "UPDATE public.users SET id_role = 3::bigint WHERE email = 'confectioner3@gmail.com'"
 
 insert-address:
 	@echo "Заполнение таблицы delivery_addresses:"

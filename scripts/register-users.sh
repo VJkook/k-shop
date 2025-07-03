@@ -7,8 +7,24 @@ echo $SCRIPT_DIR
 curl --location 'http://localhost:8000/api/register' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-    "name": "Вася",
+    "name": "Василий",
     "email": "confectioner@gmail.com",
+    "password": "123456789"
+}'
+
+curl --location 'http://localhost:8000/api/register' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "name": "Пётр",
+    "email": "confectioner2@gmail.com",
+    "password": "123456789"
+}'
+
+curl --location 'http://localhost:8000/api/register' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "name": "Николай",
+    "email": "confectioner3@gmail.com",
     "password": "123456789"
 }'
 
