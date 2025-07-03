@@ -362,3 +362,57 @@
         background-color: #fef9c3;
     }
 }
+
+.confectionerCardCalendarDay {
+    &.selected {
+        background-color: #4CAF50;
+        color: white;
+        font-weight: bold;
+    }
+}
+
+.orderItem {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+    background: #f9f9f9;
+}
+
+.orderHeader {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 6px;
+}
+
+.orderId {
+    font-weight: bold;
+}
+
+.orderStatus {
+    font-size: 0.9em;
+}
+
+.orderInfo {
+    margin-bottom: 10px;
+    font-size: 0.9em;
+
+    div {
+        margin-bottom: 4px;
+    }
+}
+
+.orderProducts {
+    font-size: 0.9em;
+
+    ul {
+        margin-top: 5px;
+        padding-left: 20px;
+
+        li {
+            margin-bottom: 3px;
+        }
+    }
+}

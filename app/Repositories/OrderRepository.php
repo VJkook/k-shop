@@ -99,15 +99,22 @@ class OrderRepository
 
     /**
      * @param int $confectionerId
+     * @param BasicDate|null $workDate
      * @return OrderResponse[]
      */
-    public function getByConfectionerId(int $confectionerId): array
+    public function getByConfectionerId(int $confectionerId, ?BasicDate $workDate = null): array
     {
         /** @var Order[] $orders */
-        $orders = Order::query()
+        $builder = Order::query()
             ->where('id_confectioner', '=', $confectionerId)
-            ->orderBy('registration_date', 'desc')
-            ->get();
+            ->orderBy('registration_date', 'desc');
+
+        if (!is_null($workDate)) {
+            $builder->where('work_date', '=', $workDate->toDateString());
+        }
+        
+        $orders = $builder->get();
+
         $response = [];
         foreach ($orders as $order) {
             $response[] = $this->buildResponse($order);
