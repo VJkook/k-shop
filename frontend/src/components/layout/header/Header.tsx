@@ -69,14 +69,8 @@ const Header: FC = () => {
                             </button>
                         </Link>
 
-                        <Link href={'/orders'}>
-                            <button
-                                onClick={() => {
-                                    setModalOpen(true)
-                                }}
-                            >
-                                <IconInstance name={EIcons.profile}/>
-                            </button>
+                        <Link href={'/login'}>
+                            <IconInstance name={EIcons.profile}/>
                         </Link>
                     </div>
 
