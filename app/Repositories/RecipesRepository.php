@@ -14,8 +14,16 @@ use Exception;
 
 class RecipesRepository
 {
+    /**
+     * @throws \Throwable
+     */
     public function createForReadyCake(string $name, ?string $description, int $readyCakeId): ?RecipeReadyCakeResponse
     {
+        $recipe = Recipe::query()->where('id_ready_cake', '=', $readyCakeId)->first();
+        if (!is_null($recipe)) {
+            $recipe->deleteOrFail();
+        }
+        
         $attributes = [
             'name' => $name,
             'description' => $description,
@@ -28,8 +36,15 @@ class RecipesRepository
         return $recipe->toRecipeReadyCakeResponse();
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function createForDecor(string $name, ?string $description, int $decorId): ?RecipeDecorResponse
     {
+        $recipe = Recipe::query()->where('id_decor', '=', $decorId)->first();
+        if (!is_null($recipe)) {
+            $recipe->deleteOrFail();
+        }
         $attributes = [
             'name' => $name,
             'description' => $description,
@@ -42,12 +57,19 @@ class RecipesRepository
         return $recipe->toRecipeDecorResponse();
     }
 
-    public function createForFilling(string $name, ?string $description, int $id_filling): ?RecipeFillingResponse
+    /**
+     * @throws \Throwable
+     */
+    public function createForFilling(string $name, ?string $description, int $fillingId): ?RecipeFillingResponse
     {
+        $recipe = Recipe::query()->where('id_filling', '=', $fillingId)->first();
+        if (!is_null($recipe)) {
+            $recipe->deleteOrFail();
+        }
         $attributes = [
             'name' => $name,
             'description' => $description,
-            'id_filling' => $id_filling,
+            'id_filling' => $fillingId,
         ];
 
         /** @var Recipe $recipe */

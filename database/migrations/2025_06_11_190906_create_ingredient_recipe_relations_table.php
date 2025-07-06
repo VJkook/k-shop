@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreign('id_ingredient')->references('id')->on('ingredients');
 
             $table->unsignedBigInteger('id_recipe');
-            $table->foreign('id_recipe')->references('id')->on('recipes');
+            $table->foreign('id_recipe')->references('id')->on('recipes')->cascadeOnDelete();
         });
     }
 

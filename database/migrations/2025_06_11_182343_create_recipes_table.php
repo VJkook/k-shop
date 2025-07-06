@@ -16,16 +16,16 @@ return new class extends Migration {
             $table->string('name');
             $table->text('description')->nullable();
 
-            $table->unsignedBigInteger('id_ready_cake')->nullable();
+            $table->unsignedBigInteger('id_ready_cake')->unique()->nullable();
             $table->foreign('id_ready_cake')->references('id')->on('ready_cakes');
 
-            $table->unsignedBigInteger('id_filling')->nullable();
+            $table->unsignedBigInteger('id_filling')->unique()->nullable();
             $table->foreign('id_filling')->references('id')->on('fillings');
 
-            $table->unsignedBigInteger('id_decor')->nullable();
+            $table->unsignedBigInteger('id_decor')->unique()->nullable();
             $table->foreign('id_decor')->references('id')->on('decors');
 
-            $table->unsignedBigInteger('id_technological_map')->nullable();
+            $table->unsignedBigInteger('id_technological_map')->unique()->nullable();
             $table->foreign('id_technological_map')->references('id')->on('technological_maps');
         });
 
