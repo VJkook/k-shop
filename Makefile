@@ -30,7 +30,7 @@ install-vendor:
 up:
 	@make install-vendor
 	@docker compose up -d
-	@sleep 2
+	@sleep 3
 	@docker compose exec app php artisan migrate
 	@make optimize
 	@docker compose exec app bash -c "cd frontend && npm i --legacy-peer-deps"
