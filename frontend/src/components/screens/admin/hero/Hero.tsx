@@ -85,8 +85,8 @@ const OrdersPage: React.FC = () => {
         <div className={styles.app_container}>
             <Sidebar />
             <main className={styles.main_content}>
-                <h1 className={styles.page_title}>Orders Management</h1>
-                <p className={styles.page_description}>View and manage all pastry shop orders</p>
+                <h1 className={styles.page_title}>Управление заказами</h1>
+                <p className={styles.page_description}></p>
                 <section className={styles.orders_list}>
                     <OrdersTable orders={orders} />
                 </section>

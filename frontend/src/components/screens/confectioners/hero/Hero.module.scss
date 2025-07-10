@@ -18,6 +18,7 @@
 
 .margBlock{
     margin-left: 40px;
+    width: 120vh;
 }
 /* Hero.module.scss */
 .hero {
@@ -90,6 +91,7 @@
         border: 1px solid #e5e7eb;
         padding: 1rem;
         border-radius: 0.75rem;
+        font-size: 1.1rem;
     }
 }
 
@@ -159,82 +161,104 @@
         font-size: 1.5rem;
         font-weight: bold;
         margin-bottom: 1rem;
+        margin-top: 20px;
     }
 
     &Grid {
         display: grid;
-        gap: 1rem;
-        grid-template-columns: repeat(1, minmax(0, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 20px;
 
         @media (min-width: 768px) {
             grid-template-columns: repeat(2, minmax(0, 1fr));
         }
 
-        @media (min-width: 1024px) {
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-        }
+        //@media (min-width: 1024px) {
+        //    grid-template-columns: repeat(3, minmax(0, 1fr));
+        //}
     }
 }
 
 // Стили для отдельной карточки кондитера
+
+
 .confectionerCard {
     background-color: white;
     border-radius: 0.5rem;
+    border: 1px solid rgba(31, 41, 55, 0.07);
     padding: 1.5rem;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.3);
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    max-width: 28rem;
-    &Calendar {
-        margin-top: 1rem;
-        border-top: 1px solid #e5e7eb;
-        padding-top: 1rem;
+    justify-content: flex-start;
+    max-width: 40rem;
+    width: 100%;
+    font-size: 1.3rem;
+    line-height: 1.5;
 
-        &Week {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 0.25rem;
-            margin-bottom: 0.5rem;
-        }
+    // 👇 Сделаем карточки одинаковой высоты
+    min-height: 0; // подбери своё значение
+}
 
-        &Day {
-            text-align: center;
-            font-size: 0.75rem;
-            padding: 0.25rem;
-            border-radius: 0.25rem;
-            cursor: pointer;
+.confectionerCardCalendar {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
 
-            &:hover {
-                background-color: #f3f4f6;
-            }
+.confectionerCardCalendarWeek {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.25rem;
+    margin-bottom: 0.5rem;
 
-            &.hasOrders {
-                background-color: #e0f2fe;
-                font-weight: bold;
-            }
+    // 👇 Зафиксируем высоту, чтобы не прыгало
+    min-height: 3.5rem;
+    height: 4rem;
+    overflow: hidden;
+}
 
-            &.today {
-                background-color: #fef9c3;
-            }
-        }
+.confectionerCardCalendarDay {
+    text-align: center;
+    font-size: 1.1rem;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
 
-        &Orders {
-            font-size: 0.75rem;
-            color: #4b5563;
-
-            ul {
-                list-style-type: none;
-                padding-left: 0;
-                margin-top: 0.5rem;
-            }
-
-            li {
-                padding: 0.25rem 0;
-                border-bottom: 1px solid #f3f4f6;
-            }
-        }
+    &:hover {
+        background-color: #f3f4f6;
     }
+
+    &.hasOrders {
+        background-color: #e0f2fe;
+        font-weight: bold;
+    }
+
+    &.today {
+        background-color: #fef9c3;
+    }
+}
+
+.confectionerCardCalendarOrders {
+    font-size: 1.1rem;
+    color: #4b5563;
+    flex-grow: 1;
+    max-height: 800px;  // ограничение максимальной высоты
+       // появляется скролл, если много заказов
+    min-height: 0;      // чтобы не занимать место без заказов
+    ul {
+        list-style-type: none;
+        padding-left: 0;
+        margin-top: 0.5rem;
+    }
+
+    li {
+        padding: 0.25rem 0;
+        border-bottom: 1px solid #f3f4f6;
+    }
+}
+
+.confectionerCard {
     &Header {
         display: flex;
         align-items: center;
@@ -258,7 +282,7 @@
 
             h2 {
                 font-weight: 600;
-                font-size: 1rem;
+                font-size: 1.3rem;
             }
 
             p {

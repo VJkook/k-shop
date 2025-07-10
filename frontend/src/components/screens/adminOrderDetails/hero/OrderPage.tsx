@@ -162,7 +162,7 @@ const OrderPage: React.FC<OrderDetailsProps> = ({id}) => {
                     <div className={styles.grid_2x2}>
                         <section className={styles.card}>
                             <h2>
-                                <span>Информация заказа</span>
+                                <span>Информация о заказе</span>
                             </h2>
                             <dl>
                                 <div>
@@ -174,9 +174,7 @@ const OrderPage: React.FC<OrderDetailsProps> = ({id}) => {
                                     <dd>{order?.work_time}</dd>
                                 </div>
                                 <div>
-                                    <dt>
-                                        Дата работы
-                                    </dt>
+                                    <dt>Дата выполнения</dt>
                                     <dd className={styles.date_display}>
                                         {order?.work_date}
                                     </dd>
@@ -205,20 +203,18 @@ const OrderPage: React.FC<OrderDetailsProps> = ({id}) => {
                                                 onClick={handleDateEdit}
                                                 className={styles.date_edit_button}
                                             >
-                                                Edit
+                                                Редактировать
                                             </button>
                                         </dd>
                                     )}
-
                                 </div>
                                 <div>
-                                    <dt>Total Price</dt>
+                                    <dt>Итоговая стоимость</dt>
                                     <dd>{order?.total_cost.toFixed(2)}</dd>
                                 </div>
                             </dl>
                         </section>
 
-                        {/* Остальные секции остаются без изменений */}
                         <section className={styles.card}>
                             <h2>Элементы заказа</h2>
                             <ul className={styles.item_list}>
@@ -226,7 +222,7 @@ const OrderPage: React.FC<OrderDetailsProps> = ({id}) => {
                                     <li key={index} className={styles.item}>
                                         <div>
                                             <h3>{item.name}</h3>
-                                            <p>Quantity: {item.quantity}</p>
+                                            <p>Количество: {item.quantity}</p>
                                         </div>
                                         <span>{item.price.toFixed(2)}</span>
                                     </li>
@@ -237,13 +233,14 @@ const OrderPage: React.FC<OrderDetailsProps> = ({id}) => {
                         <section className={styles.card}>
                             <h2>Редактирование статуса</h2>
                             <form onSubmit={saveStatus} className={styles.form_group}>
-                                <label htmlFor="order-status">Order Status</label>
+                                <label htmlFor="order-status">Статус заказа</label>
                                 <select
-                                    id="order-status" name="order-status"
+                                    id="order-status"
+                                    name="order-status"
                                     value={selectedStatusId}
                                     onChange={(e) => setSelectedStatusId(e.target.value)}
                                 >
-                                    <option value="">-- Select --</option>
+                                    <option value="">-- Выберите --</option>
                                     {statuses?.map((status) => (
                                         <option key={status.id} value={status.id}>
                                             {status.name}
@@ -254,17 +251,15 @@ const OrderPage: React.FC<OrderDetailsProps> = ({id}) => {
                                     Сохранить
                                 </button>
                             </form>
-                            {/*<button type="submit" className={`${styles.btn} ${styles.update}`}>Update</button>*/}
                         </section>
 
                         <section className={styles.card}>
                             <h2>
-                                <span>Confectioner Assignment</span>
+                                <span>Кондитер</span>
                             </h2>
                             {order?.confectioner && (
                                 <div className={styles.assigned}>
-                                    <p>Currently Assigned</p>
-                                    {/*<p>{order?.confectioner.name} ({order?.confectioner.specialty})</p>*/}
+                                    <p>Назначен</p>
                                     <p>{order?.confectioner.name}</p>
                                 </div>
                             )}
@@ -276,11 +271,10 @@ const OrderPage: React.FC<OrderDetailsProps> = ({id}) => {
                                     onChange={(e) => setSelectedConfectionerId(e.target.value)}
                                     className={styles.confectioner_select}
                                 >
-                                    <option value="">-- Select --</option>
+                                    <option value="">-- Выберите --</option>
                                     {confectioners.map((conf) => (
                                         <option key={conf.id} value={conf.id}>
-                                            {/*{conf.name} - {conf.specialty} ({conf.level}) - {conf.workload}% busy*/}
-                                            {conf.name} - Загружен на: {conf.busy_time} ч:м:с
+                                            {conf.name} — Загружен на: {conf.busy_time} ч:м:с
                                         </option>
                                     ))}
                                 </select>
@@ -293,6 +287,7 @@ const OrderPage: React.FC<OrderDetailsProps> = ({id}) => {
                 </main>
             </div>
         </div>
+
     );
 };
 

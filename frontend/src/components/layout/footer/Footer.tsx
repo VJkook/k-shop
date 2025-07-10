@@ -35,12 +35,12 @@ const Footer: FC = () => {
             </div>
 
             <div>
-                <p style={{textDecoration: 'underline'}}><Link href={'/confectioner-orders'}>Заказы кондитера</Link></p>
-                <p style={{textDecoration: 'underline'}}><Link href={'/confectioner-orders-details'}>Детали заказа кондитера</Link></p>
-                <p style={{textDecoration: 'underline'}}><Link href={'/create-recipe'}>Создать рецепт</Link></p>
-                <p style={{textDecoration: 'underline'}}><Link href={'/recipe'}>Рецепт</Link></p>
-                <p style={{textDecoration: 'underline'}}><Link href={'/login'}>Login admin</Link></p>
-                <p style={{textDecoration: 'underline'}}><Link href={'/profile'}>Profile</Link></p>
+                {/*<p style={{textDecoration: 'underline'}}><Link href={'/confectioner-orders'}>Заказы кондитера</Link></p>*/}
+                {/*<p style={{textDecoration: 'underline'}}><Link href={'/confectioner-orders-details'}>Детали заказа кондитера</Link></p>*/}
+                {/*<p style={{textDecoration: 'underline'}}><Link href={'/create-recipe'}>Создать рецепт</Link></p>*/}
+                {/*<p style={{textDecoration: 'underline'}}><Link href={'/recipe'}>Рецепт</Link></p>*/}
+                {/*<p style={{textDecoration: 'underline'}}><Link href={'/login'}>Login admin</Link></p>*/}
+                {/*<p style={{textDecoration: 'underline'}}><Link href={'/profile'}>Profile</Link></p>*/}
             </div>
         </div>
     )

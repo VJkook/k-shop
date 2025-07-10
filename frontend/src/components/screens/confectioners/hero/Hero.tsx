@@ -216,70 +216,70 @@ const Hero: React.FC = () => {
                         </section>
 
                         {/* Личный календарь (неделя) */}
-                        <section className={styles.weekCalendar}>
-                            <h2>Личный календарь (неделя)</h2>
-                            <div className={styles.weekCalendarGrid}>
-                                {Array.from({length: 7}, (_, i) => {
-                                    const dateStr = getDateString(i);
-                                    const date = new Date(dateStr);
-                                    const label = date.toLocaleDateString("ru-RU", {
-                                        weekday: "short",
-                                        day: "2-digit",
-                                        month: "2-digit"
-                                    });
-                                    const isToday = dateStr === currentDateString;
-                                    const isDisabled = disabledDays.includes(dateStr);
+                        {/*<section className={styles.weekCalendar}>*/}
+                        {/*    <h2>Личный календарь (неделя)</h2>*/}
+                        {/*    <div className={styles.weekCalendarGrid}>*/}
+                        {/*        {Array.from({length: 7}, (_, i) => {*/}
+                        {/*            const dateStr = getDateString(i);*/}
+                        {/*            const date = new Date(dateStr);*/}
+                        {/*            const label = date.toLocaleDateString("ru-RU", {*/}
+                        {/*                weekday: "short",*/}
+                        {/*                day: "2-digit",*/}
+                        {/*                month: "2-digit"*/}
+                        {/*            });*/}
+                        {/*            const isToday = dateStr === currentDateString;*/}
+                        {/*            const isDisabled = disabledDays.includes(dateStr);*/}
 
-                                    return (
-                                        <div
-                                            key={i}
-                                            onClick={(e) => {
-                                                if (e.altKey) {
-                                                    toggleDisabledDay(dateStr);
-                                                } else {
-                                                    setSelectedDay(dateStr);
-                                                }
-                                            }}
-                                            className={cn(
-                                                styles.weekCalendarDay,
-                                                isToday && styles.today,
-                                                isDisabled && styles.disabled
-                                            )}
-                                        >
-                                            <div>{label}</div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
+                        {/*            return (*/}
+                        {/*                <div*/}
+                        {/*                    key={i}*/}
+                        {/*                    onClick={(e) => {*/}
+                        {/*                        if (e.altKey) {*/}
+                        {/*                            toggleDisabledDay(dateStr);*/}
+                        {/*                        } else {*/}
+                        {/*                            setSelectedDay(dateStr);*/}
+                        {/*                        }*/}
+                        {/*                    }}*/}
+                        {/*                    className={cn(*/}
+                        {/*                        styles.weekCalendarDay,*/}
+                        {/*                        isToday && styles.today,*/}
+                        {/*                        isDisabled && styles.disabled*/}
+                        {/*                    )}*/}
+                        {/*                >*/}
+                        {/*                    <div>{label}</div>*/}
+                        {/*                </div>*/}
+                        {/*            );*/}
+                        {/*        })}*/}
+                        {/*    </div>*/}
 
-                            {selectedDay && !disabledDays.includes(selectedDay) && (
-                                <div className={styles.weekCalendarOrders}>
-                                    <h3>
-                                        Заказы на {new Date(selectedDay).toLocaleDateString("ru-RU", {
-                                        weekday: "long",
-                                        day: "numeric",
-                                        month: "long"
-                                    })}
-                                    </h3>
+                        {/*    {selectedDay && !disabledDays.includes(selectedDay) && (*/}
+                        {/*        <div className={styles.weekCalendarOrders}>*/}
+                        {/*            <h3>*/}
+                        {/*                Заказы на {new Date(selectedDay).toLocaleDateString("ru-RU", {*/}
+                        {/*                weekday: "long",*/}
+                        {/*                day: "numeric",*/}
+                        {/*                month: "long"*/}
+                        {/*            })}*/}
+                        {/*            </h3>*/}
 
-                                    {weeklyOrders1[selectedDay]?.map((order, index) => (
-                                        <div key={index}>
-                                            <p>Кондитер: {order.confectioner?.name}</p>
-                                            <p style={{textDecoration: 'underline'}}>
-                                                <Link href={'/admin-order-details/' + order.id}>Детали заказа</Link>
-                                            </p> <br/>
-                                            <ul key={index}>
-                                                {order.products.map((product, i) => (
-                                                    <li key={i}>
-                                                        Название{product.name}, Цена: {product.price}р
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </section>
+                        {/*            {weeklyOrders1[selectedDay]?.map((order, index) => (*/}
+                        {/*                <div key={index}>*/}
+                        {/*                    <p>Кондитер: {order.confectioner?.name}</p>*/}
+                        {/*                    <p style={{textDecoration: 'underline'}}>*/}
+                        {/*                        <Link href={'/admin-order-details/' + order.id}>Детали заказа</Link>*/}
+                        {/*                    </p> <br/>*/}
+                        {/*                    <ul key={index}>*/}
+                        {/*                        {order.products.map((product, i) => (*/}
+                        {/*                            <li key={i}>*/}
+                        {/*                                Название{product.name}, Цена: {product.price}р*/}
+                        {/*                            </li>*/}
+                        {/*                        ))}*/}
+                        {/*                    </ul>*/}
+                        {/*                </div>*/}
+                        {/*            ))}*/}
+                        {/*        </div>*/}
+                        {/*    )}*/}
+                        {/*</section>*/}
 
                         {/* Карточки кондитеров */}
                         <section className={styles.confectioners}>
