@@ -28,7 +28,6 @@ install-vendor:
     	composer install --ignore-platform-reqs
 
 up:
-	@make install-vendor
 	@docker compose up -d
 	@sleep 3
 	@docker compose exec app php artisan migrate

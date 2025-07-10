@@ -85,7 +85,7 @@ const EditRecipe: FC<EditRecipeProps> = ({ id }) => {
 
                 setRecipeName(recipeData.name);
                 setDescription(recipeData.description);
-                setTechnologicalMapId(recipeData.technological_map.id);
+                setTechnologicalMapId(recipeData.technological_map?.id);
 
                 // Установка типа продукта
                 if (recipeData.id_ready_cake) {
@@ -105,7 +105,7 @@ const EditRecipe: FC<EditRecipeProps> = ({ id }) => {
                 })));
 
                 // Загрузка шагов
-                setSteps(recipeData.technological_map.cooking_steps.map((step: any) => ({
+                setSteps(recipeData?.technological_map?.cooking_steps.map((step: any) => ({
                     id: step.id,
                     text: step.description,
                     time: step.step_time,
@@ -605,7 +605,7 @@ const EditRecipe: FC<EditRecipeProps> = ({ id }) => {
                         </button>
                     </div>
                     <div className={styles.recipeForm__list}>
-                        {steps.map((step, index) => (
+                        {steps?.map((step, index) => (
                             <div key={index} className={styles.recipeForm__stepRow}>
                                 <textarea
                                     rows={3}
