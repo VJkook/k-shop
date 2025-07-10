@@ -23,18 +23,29 @@ const ConfectionerCard = ({ confectioner }: { confectioner: Confectioner }) => {
     const [error, setError] = useState<string | null>(null);
 
     // Генерация дат на 7 дней вперед
+    // Генерация дат от понедельника текущей недели до воскресенья
     const generateWeekDates = () => {
         const dates = [];
         const today = new Date();
 
+        // Определяем день недели (0 = воскресенье, 1 = понедельник, ..., 6 = суббота)
+        const dayOfWeek = today.getDay();
+
+        // Вычисляем смещение, чтобы получить понедельник
+        const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+
+        const monday = new Date(today);
+        monday.setDate(today.getDate() + diffToMonday);
+
         for (let i = 0; i < 7; i++) {
-            const date = new Date();
-            date.setDate(today.getDate() + i);
+            const date = new Date(monday);
+            date.setDate(monday.getDate() + i);
             dates.push(formatDate(date));
         }
 
         return dates;
     };
+
 
     // Загрузка заказов при выборе даты
     useEffect(() => {
@@ -84,26 +95,26 @@ const ConfectionerCard = ({ confectioner }: { confectioner: Confectioner }) => {
                 </div>
                 <div className={styles.confectionerCardHeaderInfo}>
                     <h2>{confectioner.name}</h2>
-                    <p>{confectioner.specialty} Specialist</p>
+                    <p>{confectioner.specialty} Кондитер</p>
                 </div>
                 <span className={cn(
                     styles.confectionerCardHeaderStatus,
                     !isBusy ? styles.available : styles.busy
                 )}>
-                    {!isBusy ? "Available" : "Busy"}
+                    {!isBusy ? "Доступен" : "Busy"}
                 </span>
             </header>
 
-            <div className={styles.confectionerCardExperience}>
-                <div className={styles.confectionerCardExperienceLabel}>
-                    <i className="far fa-id-badge"></i>
-                    Experience Level
-                </div>
-                <span className={styles.confectionerCardExperienceLevel}>
-                    {confectioner.experience}
-                </span>
-            </div>
-            
+            {/*<div className={styles.confectionerCardExperience}>*/}
+            {/*    <div className={styles.confectionerCardExperienceLabel}>*/}
+            {/*        <i className="far fa-id-badge"></i>*/}
+            {/*        Опыт*/}
+            {/*    </div>*/}
+            {/*    <span className={styles.confectionerCardExperienceLevel}>*/}
+            {/*        3 года*/}
+            {/*    </span>*/}
+            {/*</div>*/}
+
             {/* Недельный календарь */}
             <div className={styles.confectionerCardCalendar}>
                 <h4>График на неделю</h4>
@@ -112,7 +123,7 @@ const ConfectionerCard = ({ confectioner }: { confectioner: Confectioner }) => {
                         const date = new Date(dateStr);
                         const dayOfMonth = date.getDate();
                         const isToday = dateStr === today;
-
+                        const dayLabel = date.toLocaleDateString("ru-RU", { weekday: "short" });
                         return (
                             <div
                                 key={index}
@@ -123,7 +134,8 @@ const ConfectionerCard = ({ confectioner }: { confectioner: Confectioner }) => {
                                 )}
                                 onClick={() => setSelectedDate(dateStr === selectedDate ? null : dateStr)}
                             >
-                                {dayOfMonth}
+                                <div>{dayLabel}</div>
+                                <div>{dayOfMonth}</div>
                             </div>
                         );
                     })}

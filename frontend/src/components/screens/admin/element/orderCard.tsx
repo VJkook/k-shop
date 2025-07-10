@@ -47,23 +47,23 @@ const OrdersTable: FC<OrdersTableProps> = ({orders}) => {
     return (
         <section className={styles.container}>
             <div className={styles.header}>
-                <h2 className={styles.title}>Orders Management</h2>
-                <span className={styles.counter}>{filteredOrders.length} orders</span>
+
+                <span className={styles.counter}>{filteredOrders.length} заказов</span>
             </div>
 
             <div className={styles.filters}>
                 <div className={styles.searchContainer}>
                     <label htmlFor="search" className="sr-only">
-                        Search orders
+                        Поиск заказов
                     </label>
                     <div className={styles.searchInput}>
-            <span className={styles.searchIcon}>
-              <i className="fas fa-search"></i>
-            </span>
+                <span className={styles.searchIcon}>
+                    <i className="fas fa-search"></i>
+                </span>
                         <input
                             id="search"
                             type="search"
-                            placeholder="Search by customer, phone, address, or product..."
+                            placeholder="Поиск по клиенту, телефону, адресу или товару..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
@@ -76,10 +76,10 @@ const OrdersTable: FC<OrdersTableProps> = ({orders}) => {
                             value={statusFilter}
                             onChange={(e) => setStatusFilter(e.target.value)}
                         >
-                            <option value="All">All</option>
+                            <option value="All">Все</option>
                             {statuses.map(option => (
                                 <option key={option.id} value={option.name}>
-                                    {option.name === 'All' ? 'All Statuses' : option.name}
+                                    {option.name === 'All' ? 'Все статусы' : option.name}
                                 </option>
                             ))}
                         </select>
@@ -92,27 +92,6 @@ const OrdersTable: FC<OrdersTableProps> = ({orders}) => {
                             </svg>
                         </div>
                     </div>
-
-                    {/*<div className={styles.selectWrapper}>*/}
-                    {/*    <select*/}
-                    {/*        value={confectionerFilter}*/}
-                    {/*        onChange={(e) => setConfectionerFilter(e.target.value)}*/}
-                    {/*    >*/}
-                    {/*        {confectionerOptions.map(option => (*/}
-                    {/*            <option key={option} value={option}>*/}
-                    {/*                {option === 'All' ? 'All Confectioners' : option}*/}
-                    {/*            </option>*/}
-                    {/*        ))}*/}
-                    {/*    </select>*/}
-                    {/*    <div className={styles.selectArrow}>*/}
-                    {/*        <svg className="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"*/}
-                    {/*             fill="currentColor">*/}
-                    {/*            <path fillRule="evenodd"*/}
-                    {/*                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"*/}
-                    {/*                  clipRule="evenodd"/>*/}
-                    {/*        </svg>*/}
-                    {/*    </div>*/}
-                    {/*</div>*/}
                 </div>
             </div>
 
@@ -120,15 +99,14 @@ const OrdersTable: FC<OrdersTableProps> = ({orders}) => {
                 <table className={styles.table}>
                     <thead>
                     <tr>
-                        <th>Order ID</th>
-                        <th>Date</th>
-                        <th>Client</th>
-                        <th>Phone</th>
-                        <th>Address</th>
-                        <th>Status</th>
-                        <th>Confectioner</th>
-                        <th className="text-right">Price</th>
-                        <th>Details</th>
+                        <th>Номер</th>
+                        <th>Дата</th>
+                        <th>Клиент</th>
+                        <th>Адрес</th>
+                        <th>Статус</th>
+                        <th>Кондитер</th>
+                        <th className="text-right">Сумма</th>
+                        <th>Детали</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -136,7 +114,7 @@ const OrdersTable: FC<OrdersTableProps> = ({orders}) => {
                         <tr key={order.id}>
                             <td className="font-semibold">#{order.id}</td>
                             <td>
-                                {new Date(order.registration_date).toLocaleDateString('en-US', {
+                                {new Date(order.registration_date).toLocaleDateString('ru-RU', {
                                     month: 'short',
                                     day: 'numeric',
                                 })}
@@ -145,24 +123,23 @@ const OrdersTable: FC<OrdersTableProps> = ({orders}) => {
                                 </div>
                             </td>
                             <td className="font-semibold">{order.client.name}</td>
-                            <td>{order.client.phone}</td>
                             <td className={styles.truncate} title={order.address}>
                                 {order.delivery_address}
                             </td>
                             <td>
-                <span className={`${styles.status} ${styles[order.status.color]}`}>
-                  {order.status.name}
-                </span>
+                        <span className={`${styles.status} ${styles[order.status.color]}`}>
+                            {order.status.name}
+                        </span>
                             </td>
                             <td>
                                 {order.confectioner?.name}
                             </td>
                             <td className="text-right font-semibold">
-                                ${order.total_cost.toFixed(2)}
+                                {order.total_cost.toFixed(2)}
                             </td>
                             <td>
                                 <Link href={`/admin-order-details/` + order.id}>
-                                    <button className={styles.detailsLink}>View Details</button>
+                                    <button className={styles.detailsLink}>Подробнее</button>
                                 </Link>
                             </td>
                         </tr>
@@ -171,6 +148,7 @@ const OrdersTable: FC<OrdersTableProps> = ({orders}) => {
                 </table>
             </div>
         </section>
+
     );
 };
 

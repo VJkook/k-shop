@@ -20,7 +20,7 @@ const Hero: FC = () => {
             const response = await apiLogin(email, password)
             if (response.data) {
                 console.log('Авторизация прошла успешно')
-                await router.push('/orders')
+                await router.push('/admin')
                 router.reload()
             }
         } catch (error) {
